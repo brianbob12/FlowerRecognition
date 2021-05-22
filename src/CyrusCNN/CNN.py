@@ -26,7 +26,7 @@ from .Exceptions import *
 # Trained using stocastic gradient decent(specifically Adam Optimiser).
 #
 
-class Perceptron:
+class CNN:
     # bare init function becuase of the option to import exsisting network from a folder
     def __init__(self):
         #initalise a map of string to function for activation fuctions

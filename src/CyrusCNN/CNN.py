@@ -1,9 +1,3 @@
-#
-#
-#@author cyrus singer
-#Robot_Gym version 0.1
-#
-#
 
 #dependencies
 #only importing the bare minimum to save runtime
@@ -18,6 +12,11 @@ import numpy#this is actually a dependancy of tensorflow
 import struct#for export and import
 from .Exceptions import *
 
+#import layers
+from .DenseLayer import DenseLayer 
+from .ConvolutionLayer import ConvolutionLayer 
+from .PoolingLayer import PoolingLayer 
+
 #
 #Network
 #
@@ -27,11 +26,6 @@ from .Exceptions import *
 #
 
 class CNN:
-    # bare init function becuase of the option to import exsisting network from a folder
-    def __init__(self):
-        #initalise a map of string to function for activation fuctions
-        self.activationLookup={"relu":relu,"linear":self.linear,"sigmoid":sigmoid,"tanh":tanh}
-
     #create a new neural network based on hyperperameters given as arguments
     def newNetwork(self,inputSize,outputSize,nHidden,activation):
         self.inputSize=inputSize

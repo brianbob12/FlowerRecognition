@@ -16,6 +16,7 @@ from .Exceptions import *
 from .DenseLayer import DenseLayer 
 from .ConvolutionLayer import ConvolutionLayer 
 from .PoolingLayer import PoolingLayer 
+from .FlattenLayer import FlattenLayer
 
 #
 #Network

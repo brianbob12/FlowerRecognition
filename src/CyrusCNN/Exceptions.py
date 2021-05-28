@@ -29,3 +29,13 @@ class missingFile(Exception):
 class fileMissingData(Exception):
     def __init__(self,file):
         self.filePath=file
+
+class invalidStride(Exception):
+    def __init__(self,stride):
+        self.stride=stride
+
+class invalidStrideLength(invalidStride):
+    pass
+
+class invalidStrideType(invalidStride):
+    pass

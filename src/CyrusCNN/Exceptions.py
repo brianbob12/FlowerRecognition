@@ -2,14 +2,12 @@
 #
 #@author cyrus singer
 #
-#
+
 
 #
 #Netork.Exceptions
 #
-#This class holds custom Exceptions used for error handeling with the Perceptron object at Network.Perceptron.Perceptron
-#
-
+#This class holds custom Exceptions used for error handeling 
 class unspecifiedActivation (Exception):
     pass
 
@@ -30,12 +28,14 @@ class fileMissingData(Exception):
     def __init__(self,file):
         self.filePath=file
 
-class invalidStride(Exception):
-    def __init__(self,stride):
-        self.stride=stride
-
 class invalidStrideLength(invalidStride):
     pass
 
 class invalidStrideType(invalidStride):
     pass
+
+class invalidLayerPlacement(Exception):
+    def __init__(self,previousLayerFlat,requiresFlat,requiresNonFlat):
+        self.previousLayerFlat=previousLayerFlat
+        self.requiresFlat=requiresFlat
+        self.requiresNonFlat=requiresNonFlat

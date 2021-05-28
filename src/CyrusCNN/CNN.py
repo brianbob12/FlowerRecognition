@@ -19,47 +19,64 @@ from .PoolingLayer import PoolingLayer
 from .FlattenLayer import FlattenLayer
 
 #
-#Network
+#Convolutional Neural Network
 #
-#This class holds a single neural netowork(MLP) with some parts of the training protocol.
-#As well as export and import protocols.
-# Trained using stocastic gradient decent(specifically Adam Optimiser).
-#
-
+#for now only works with 3 chanells
 class CNN:
-    #create a new neural network based on hyperperameters given as arguments
-    def newNetwork(self,inputSize,outputSize,nHidden,activation):
+    #inits key values 
+    def __init__(self,inputSize):
         self.inputSize=inputSize
-        self.outputSize=outputSize
-        self.nHidden=nHidden#a list of the number of neurons in each hidden layer
-        self.activation=activation#a list of strings length of nHidden+1
+        self.chanells=3
+        self.layers=[]#holds all layers of a neural network
+        self.layerKey=[]#holds string indicators of the type of each layer
+        #DENSE,CONVOLUTE,FLATTEN,POOL
+        self.layerOutputShape=[]#for single processing
+        #the batch size should be added to each output shape for bach processing
 
-        #pre-network safety checks(passing erros)
-        #whilst error handeling is not done here it is usefull to pass erros on to the next program down the line
-        if(len(activation)!=len(nHidden)+1):
-            raise(unspecifiedActivation)#see Network.Exceptions
-        for i in activation:
-            if not i in self.activationLookup.keys():
-                raise(unknownActivationFunction(i))
+    #stride is int
+    def addConvolutionLayer(self,filterSize,stride):
+        #check that the previous layer is not flat
+        if(len(self.layers)!=0):
+            if(self.layerKey[-1]=="DENSE" or self.layerKey[-1]=="FLATTEN"):
+                #the previous layer is flat
+                #a convolutional layer can't go here
+                raise(invalidLayerPlacement(True,False,True))
+        #if we are here we are good to go
+        #compute output size
+        if(len(self.layers)==0):
+            inputShape=[self.inputSize,self.inputSize,3]
+        else:
+            inputShape=self.layerOutputShape[-1]
+        outputShape=[
+            (inputShape[0]-(filterSize//2)*2)/stride,
+            (inputShape[1]-(filterSize//2)*2)/stride,
+            inputShape[2]
+        ] 
 
+        myConvolutionLayer=ConvolutionLayer()
+        myConvolutionLayer.newLayer(filterSize,stride)
+        self.layers.append(myConvolutionLayer)
+        self.layerKey.append("CONVOLUTE")
+        self.layerOutputShape.append(outputShape)
 
-        #lists of weights and biases by layer
-        self.weights=[]#list of tf.Variables
-        self.biases=[]
+    def addPoolingLayer(self,size,stride):
+        #check that the previous layer is not flat
+        if(len(self.layers)!=0):
+            if(self.layerKey[-1]=="DENSE" or self.layerKey[-1]=="FLATTEN"):
+                #the previous layer is flat
+                #a convolutional layer can't go here
+                raise(invalidLayerPlacement(True,False,True))
+        #if we are here we are good to go
+        self.layers.append(PoolingLayer(size,stride))
+        self.layerKey.append("POOL")
 
-        #bias initilisation value
-        biasInit=0.1
+    def addFlattenLayer(self):
+        #doesn't technically need to follow a nonFlatLayer
+        self.layerKey.append("FLATTEN")
 
-        #for the first hidden layer
-        self.biases.append(Variable(constant(biasInit,shape=[nHidden[0]])))
-        self.weights.append(Variable(truncated_normal([inputSize,nHidden[0]],stddev=0.1)))
-        #for every other layer
-        for i in range(1,len(nHidden)):#excludes first hideen layer, excludes output layer
-            self.biases.append(Variable(constant(biasInit,shape=[nHidden[i]])))
-            self.weights.append(Variable(truncated_normal([nHidden[i-1],nHidden[i]],stddev=0.1)))
-        #outputlayer stuff
-        self.biases.append(Variable(constant(biasInit,shape=[outputSize])))
-        self.weights.append(Variable(truncated_normal([nHidden[-1],outputSize],stddev=0.1)))
+    def addDenseLayer(self,layerSize,activation):
+        #stuff
+        pass
 
     #returns a list of pointers to trainable variables
     def getTrainableVariables(self):
@@ -266,20 +283,5 @@ class CNN:
 
     #return deepcopy of self
     def deepcopy(self):
-
-        import copy
-
-        out=Perceptron()
-        out.inputSize=self.inputSize#int so no copy needed
-        out.outputSize=self.outputSize#int so no copy needed
-        out.nHidden=copy.deepcopy(self.nHidden)
-        out.activation=copy.deepcopy(self.activation)
-
-        try:
-            out.weights=copy.deepcopy(self.weights)
-            out.biases=copy.deepcopy(self.biases)
-        except:
-            #weights and biases not initialized
-            pass
-
-        return out
+        return
+        #todo 

@@ -37,11 +37,12 @@ class CNN:
     def addConvolutionLayer(self,filterSize,stride):
         #check that the previous layer is not flat
         if(len(self.layers)!=0):
-            if(self.layerKey[-1]=="DENSE" or self.layerKey[-1]=="FLATTEN"):
+            if(self.layerOutputShape[-1]==1):
                 #the previous layer is flat
                 #a convolutional layer can't go here
-                raise(invalidLayerPlacement(True,False,True))
-        #if we are here we are good to go
+                raise(invalidLayerPlacement(True,False,True))       
+
+       #if we are here we are good to go
         #compute output size
         if(len(self.layers)==0):
             inputShape=[self.inputSize,self.inputSize,3]
@@ -62,46 +63,84 @@ class CNN:
     def addPoolingLayer(self,size,stride):
         #check that the previous layer is not flat
         if(len(self.layers)!=0):
-            if(self.layerKey[-1]=="DENSE" or self.layerKey[-1]=="FLATTEN"):
+            if(self.layerOutputShape[-1]==1):
                 #the previous layer is flat
                 #a convolutional layer can't go here
-                raise(invalidLayerPlacement(True,False,True))
+                raise(invalidLayerPlacement(True,False,True))       
+
+        #grab input shpae
+        if(len(self.layers)==0):
+            inputShape=[self.inputSize,self.inputSize,3]
+        else:
+            inputShape=self.layerOutputShape[-1]
+
+        #calculate output shape same way as convolutional layer
+        outputShape=[
+            (inputShape[0]-(size//2)*2)/stride,
+            (inputShape[1]-(size//2)*2)/stride,
+            inputShape[2]
+        ] 
+        
         #if we are here we are good to go
         self.layers.append(PoolingLayer(size,stride))
         self.layerKey.append("POOL")
+        self.layerOutputShape.append(outputShape)
+
+
 
     def addFlattenLayer(self):
+        #grab input shpae
+        if(len(self.layers)==0):
+            inputShape=[self.inputSize,self.inputSize,3]
+        else:
+            inputShape=self.layerOutputShape[-1]
+        #compute output shape
+        outLen=1
+        for i in inputShape:
+            outLen*=i
+
         #doesn't technically need to follow a nonFlatLayer
+        myFlattenLayer=FlattenLayer()
+        self.layers.append(myFlattenLayer)
         self.layerKey.append("FLATTEN")
+        self.layerOutputShape.append([outLen])
 
     def addDenseLayer(self,layerSize,activation):
-        #stuff
-        pass
+        #grab input shpae
+        if(len(self.layers)==0):
+            inputShape=[self.inputSize,self.inputSize,3]
+        else:
+            inputShape=self.layerOutputShape[-1]
+
+        #check input is flat
+        if(len(inputShape)!=1):
+            #throw
+            raise(invalidLayerPlacement(False,True,False))
+
+        myDenseLayer=DenseLayer()
+        myDenseLayer.newLayer(int(inputShape[0]),layerSize,activation) 
+
+        self.layers.append(myDenseLayer)
+        self.layerKey.append("DENSE")
+        self.layerOutputShape.append([layerSize])
+        
 
     #returns a list of pointers to trainable variables
     def getTrainableVariables(self):
         out=[]
-        for i in range(len(self.nHidden)+1):
-            out.append(self.weights[i])
-            out.append(self.biases[i])
-        return out
+        for layer in self.layers:
+            out+=layer.getTrainableVariables()
 
-    #liniar function returns input
-    @function
-    def linear(self,x):
-        return(x)
+        return out
 
     #evaluates the network for a list of inputs
     #forward propagation
-    @function
+    #@function
     def evaluate(self,x):
-        #print(x)#for debug
-        #note: x has shape(batchsizse,inputSize)
         #ensure that layers are floats
-        layerVals=[x]# a list of the neruon value for each x
-        #[first set of input layer vaues,second set of input layer values]
-        for i in range(len(self.nHidden)+1):#for each hidden layer and the output layer
-            layerVals.append(self.activationLookup[self.activation[i]](matmul(layerVals[-1],self.weights[i])+self.biases[i]))#I love Tensorflow 2!
+        layerVals=[x]#start layerVals with the batch
+        for layer in self.layers:#for each hidden layer and the output layer
+            layerVals.append(layer.execute(layerVals[-1]))#eager execution
         #return final layer as output layer
         return layerVals[-1]
 
@@ -119,8 +158,8 @@ class CNN:
 
         #compute gradients of weights and biases
         with GradientTape() as g:
-            for i in range(len(self.nHidden)+1):#iterate over layers
-                g.watch(self.getTrainableVariables())
+            myTrainableVariables=self.getTrainableVariables()
+            g.watch(myTrainableVariables)
 
             #calculate error
             guess=self.evaluate([[constant(j) for j in i] for i in X])#convert everything in x to tensorflow format
@@ -131,8 +170,8 @@ class CNN:
             error=error/len(Y)
 
         optimizer=Adam(learningRate)
-        grads=g.gradient(error,self.getTrainableVariables())
-        optimizer.apply_gradients(zip(grads,self.getTrainableVariables()),)
+        grads=g.gradient(error,myTrainableVariables)
+        optimizer.apply_gradients(zip(grads,myTrainableVariables),)
         return error
 
     #export currently loaded network to file

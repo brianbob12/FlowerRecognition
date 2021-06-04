@@ -14,5 +14,5 @@ class PoolingLayer:
 
   #has no trainable variables
   #this function is here so that all layers can hava a .getTrainableVariables
-  def getTrainableVariables():
+  def getTrainableVariables(self):
     return []

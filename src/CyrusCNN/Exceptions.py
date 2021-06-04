@@ -28,12 +28,6 @@ class fileMissingData(Exception):
     def __init__(self,file):
         self.filePath=file
 
-class invalidStrideLength(invalidStride):
-    pass
-
-class invalidStrideType(invalidStride):
-    pass
-
 class invalidLayerPlacement(Exception):
     def __init__(self,previousLayerFlat,requiresFlat,requiresNonFlat):
         self.previousLayerFlat=previousLayerFlat

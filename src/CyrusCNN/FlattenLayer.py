@@ -13,5 +13,5 @@ class FlattenLayer:
   def execute(self,input):
     return tf.flatten(input.flatten())
 
-  def getTrainableVariables():
+  def getTrainableVariables(self):
     return []

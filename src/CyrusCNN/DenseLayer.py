@@ -49,8 +49,8 @@ class DenseLayer():
   #function that executes the layer for a list of inputs
   #inp has shape [None,inputSize]
   #returns shape [None,outputSize] 
-  def evaluation(self,inp):
-    return(self.activation(matmul(inp,self.weights)+self.biases))
+  def execute(self,inp):
+    return(self.activation(matmul([inp],self.weights)+self.biases))
 
   #function that returns a shape [2] list of trainable variables
   #because these are tf varialbe it is returning a list of pointers

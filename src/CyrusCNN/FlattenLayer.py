@@ -8,10 +8,10 @@ class FlattenLayer:
   def __init__(self):
     pass
   
-  #input must be numpy
+  
   #returns numpy
-  def execute(self,input):
-    return tf.flatten(input.flatten())
+  def execute(self,inp):
+    return np.array(inp).flatten()
 
   def getTrainableVariables(self):
     return []

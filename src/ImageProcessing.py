@@ -1,3 +1,11 @@
 import numpy as np
+import os
 from PIL import Image
-from PIL import ImageFilter
+
+#Key
+#A  daisy
+#B  dandelion
+#C  rose
+#D  sunflower
+#E  tulip
+

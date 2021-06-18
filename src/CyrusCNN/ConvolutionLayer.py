@@ -16,7 +16,7 @@ class ConvolutionLayer:
   
   #inputs have shape [None,a,a,3] tf.float32
   def execute(self,inputs):
-   return tf.nn.conv2d(inputs,self.filter,self.strides,"VALID") 
+    return tf.nn.conv2d(inputs,self.filter,self.strides,"VALID")
 
   #return a list of the trainable variables
   def getTrainableVariables(self):

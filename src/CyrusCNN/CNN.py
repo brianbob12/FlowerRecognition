@@ -24,7 +24,8 @@ from .FlattenLayer import FlattenLayer
 #for now only works with 3 chanells
 class CNN:
     #inits key values 
-    def __init__(self,inputSize):
+    def __init__(self,inputSize,debug):
+        self.debug=debug
         self.inputSize=inputSize
         self.chanells=3
         self.layers=[]#holds all layers of a neural network
@@ -139,8 +140,13 @@ class CNN:
     def evaluate(self,x):
         #ensure that layers are floats
         layerVals=[x]#start layerVals with the batch
+        if self.debug:
+            c=0
         for layer in self.layers:#for each hidden layer and the output layer
             layerVals.append(layer.execute(layerVals[-1]))#eager execution
+            if(self.debug):
+                print("Finished latayer\t"+self.layerKey[c])
+                c+=1
         #return final layer as output layer
         return layerVals[-1]
 

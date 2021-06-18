@@ -11,7 +11,8 @@ class FlattenLayer:
   
   #returns numpy
   def execute(self,inp):
-    return np.array(inp).flatten()
+    print(np.array(inp).shape())
+    return inp.flatten()
 
   def getTrainableVariables(self):
     return []

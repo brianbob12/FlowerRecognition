@@ -90,6 +90,6 @@ for i in range(trainingIterations):
   #todo holdout error
   wandb.log({"index":i,"training error":error})
   print(str(i)+"\terror\t"+str(float(error)))
-print("FINAL ERROR\t"+str(float(error))
+print("FINAL ERROR\t"+str(float(error)))
 wandb.log({"finalTrainingError":error})
 # %%

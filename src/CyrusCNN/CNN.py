@@ -145,15 +145,16 @@ class CNN:
         for layer in self.layers:#for each hidden layer and the output layer
             layerVals.append(layer.execute(layerVals[-1]))#eager execution
             if(self.debug):
-                print("Finished latayer\t"+self.layerKey[c])
+                print("Finished latayer\t"+self.layerKey[c]+"\t"+str(layerVals[-1].shape))
                 c+=1
         #return final layer as output layer
         return layerVals[-1]
 
     #train a nerual netwrok to fit the data provided
     #returns squared error
+    #X must be in tensorflow format
     #only trianes for one Yindex(Yi) per training example
-    def train(self,X,Y,Yi,learningRate,L2val):
+    def train(self,X,Y,learningRate,L2val):
 
         #very sorry L2 is currtently out of order I will fix this later
 
@@ -168,11 +169,16 @@ class CNN:
             g.watch(myTrainableVariables)
 
             #calculate error
-            guess=self.evaluate([[constant(j) for j in i] for i in X])#convert everything in x to tensorflow format
+            if self.debug:
+                print("EXECUTING")
+            guess=self.evaluate(X)
             #calculate error using sqared error
+            if self.debug:
+                print("TRAINING")
             error=0
             for i in range(len(Y)):
-                error+=(guess[i][Yi[i]]-Y[i][Yi[i]])**2
+                for j in range(len(Y[i])):
+                    error+=(guess[i][j]-Y[i][j])**2
             error=error/len(Y)
 
         optimizer=Adam(learningRate)

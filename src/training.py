@@ -10,13 +10,16 @@ from PIL import Image
 import tensorflow as tf
 import numpy as np
 #%%
-myCNN=CNN(256)
+learningRate=1e-6
+trainingIterations=10
+#%%
+myCNN=CNN(256,False)
 
 myCNN.addConvolutionLayer(3,1)
 myCNN.addPoolingLayer(3,1)
 myCNN.addFlattenLayer()
 myCNN.addDenseLayer(10,"relu")
-myCNN.addDenseLayer(10,"relu")
+myCNN.addDenseLayer(5,"relu")
 
 #%%
 #w and b here
@@ -38,9 +41,9 @@ def getBatch(fileNames):
       y.append([0,0,0,0,1])
 
     im=Image.open("./data/flowers/"+file)
-    x.append(tf.constant(np.asarray(im),dtype=tf.float32,shape=[256,256,3]))
+    x.append(np.asarray(im))
   #endfor
-  return x,y
+  return tf.constant(np.asarray(x),dtype=tf.float32),np.asarray(y)
 #%%
 #get the data
 a=769
@@ -65,6 +68,8 @@ for i in range(e):
 #%%
 x,y=getBatch(files)
 #%%
-x = tf.random.truncated_normal([n,256,256,3])
-print(myCNN.evaluate([x[0]]))
+#x = tf.random.truncated_normal([3,256,256,3])
+for i in range(trainingIterations):
+  error= myCNN.train(x,y,learningRate,0)
+  print(str(i)+"\terror\t"+str(error))
 # %%

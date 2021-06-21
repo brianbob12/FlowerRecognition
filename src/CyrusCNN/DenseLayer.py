@@ -50,7 +50,7 @@ class DenseLayer():
   #inp has shape [None,inputSize]
   #returns shape [None,outputSize] 
   def execute(self,inp):
-    return(self.activation(matmul([inp],self.weights)+self.biases))
+    return((self.activation(matmul([inp],self.weights)+self.biases))[0])
 
   #function that returns a shape [2] list of trainable variables
   #because these are tf varialbe it is returning a list of pointers

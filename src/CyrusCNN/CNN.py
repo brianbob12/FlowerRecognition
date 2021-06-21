@@ -33,6 +33,8 @@ class CNN:
         #DENSE,CONVOLUTE,FLATTEN,POOL
         self.layerOutputShape=[]#for single processing
         #the batch size should be added to each output shape for bach processing
+        #used to keep track of tests
+        self.totalTrainableVariables=0
 
     #stride is int
     def addConvolutionLayer(self,filterSize,stride):
@@ -60,6 +62,7 @@ class CNN:
         self.layers.append(myConvolutionLayer)
         self.layerKey.append("CONVOLUTE")
         self.layerOutputShape.append(outputShape)
+        self.totalTrainableVariables+=filterSize**2
 
     def addPoolingLayer(self,size,stride):
         #check that the previous layer is not flat
@@ -124,7 +127,7 @@ class CNN:
         self.layers.append(myDenseLayer)
         self.layerKey.append("DENSE")
         self.layerOutputShape.append([layerSize])
-        
+        self.totalTrainableVariables+=layerSize*int(inputShape[0])
 
     #returns a list of pointers to trainable variables
     def getTrainableVariables(self):

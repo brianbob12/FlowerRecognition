@@ -12,17 +12,33 @@ import numpy as np
 #%%
 learningRate=1e-6
 trainingIterations=10
+layerMakeup=[]
 #%%
 myCNN=CNN(256,False)
 
 myCNN.addConvolutionLayer(3,1)
+layerMakeup.append("CONV-3-1")
 myCNN.addPoolingLayer(3,1)
+layerMakeup.append("POOL-3-1")
 myCNN.addFlattenLayer()
+layerMakeup.append("FLATTEN")
 myCNN.addDenseLayer(10,"relu")
+layerMakeup.append("DENSE-10-relu")
 myCNN.addDenseLayer(5,"relu")
+layerMakeup.append("DENSE-5-relu")
 
+totalTrainableVariables=myCNN.totalTrainableVariables
 #%%
 #w and b here
+import wandb
+wandb.init(config={
+  "learning rate":learningRate,
+  "number of layers":len(layerMakeup),
+  "layer makeup":str(layerMakeup),
+  "total trainable variables":totalTrainableVariables
+  },
+project="chessRegressflowerRecognition",
+entity='japaneserhino')
 #%%
 #outputs x and y arrays
 def getBatch(fileNames):

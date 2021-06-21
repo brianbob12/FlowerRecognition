@@ -37,7 +37,7 @@ wandb.init(config={
   "layer makeup":str(layerMakeup),
   "total trainable variables":totalTrainableVariables
   },
-project="chessRegressflowerRecognition",
+project="flowerRecognition",
 entity='japaneserhino')
 #%%
 #outputs x and y arrays

@@ -71,5 +71,5 @@ x,y=getBatch(files)
 #x = tf.random.truncated_normal([3,256,256,3])
 for i in range(trainingIterations):
   error= myCNN.train(x,y,learningRate,0)
-  print(str(i)+"\terror\t"+str(error))
+  print(str(i)+"\terror\t"+str(float(error)))
 # %%

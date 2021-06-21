@@ -17,7 +17,7 @@ import tensorflow as tf
 print(tf.config.list_physical_devices("GPU"))
 print(tf.config.list_physical_devices("CPU"))
 #%%
-
+print(myCNN.layerOutputShape)
 #%%
 n=3
 x = tf.random.truncated_normal([n,256,256,3])

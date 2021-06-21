@@ -11,8 +11,11 @@ class FlattenLayer:
   
   #returns numpy
   def execute(self,inp):
-    print(np.array(inp).shape())
-    return inp.flatten()
+    batchSize=inp.shape[0]
+    newShape=1
+    for i in inp.shape[1:]:
+      newShape*=i
+    return tf.reshape(inp,shape=[batchSize,newShape])
 
   def getTrainableVariables(self):
     return []

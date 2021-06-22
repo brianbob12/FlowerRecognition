@@ -10,8 +10,8 @@ from PIL import Image
 import tensorflow as tf
 import numpy as np
 #%%
-learningRate=1e-6
-trainingIterations=10
+learningRate=1e-5
+trainingIterations=100
 layerMakeup=[]
 #%%
 myCNN=CNN(256,False)

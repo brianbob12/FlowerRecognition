@@ -1,0 +1,24 @@
+{
+    "os": "Windows-10-10.0.21387-SP0",
+    "python": "3.8.6",
+    "heartbeatAt": "2021-06-21T17:23:04.113391",
+    "startedAt": "2021-06-21T17:23:00.315395",
+    "docker": null,
+    "gpu": "GeForce GTX 1650 Ti",
+    "gpu_count": 1,
+    "cpu_count": 12,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "src/training.py",
+    "codePath": "src\\training.py",
+    "git": {
+        "remote": "https://github.com/brianbob12/FlowerRecognition.git",
+        "commit": "27561c3e99e4fb892895aec13348eb39740528b1"
+    },
+    "email": "japaneserhino@gmail.com",
+    "root": "C:/Users/japan/OneDrive/Documents/projects/Tensorflow/Flower CNN/FlowerRecognition",
+    "host": "DESKTOP-UFAR1B8",
+    "username": "japan",
+    "executable": "C:\\Users\\japan\\AppData\\Local\\Programs\\Python\\Python38\\python.exe"
+}

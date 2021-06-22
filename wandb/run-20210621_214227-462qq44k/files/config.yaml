@@ -1,0 +1,32 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.10.32
+    framework: tensorflow
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.8.6
+    t:
+      1:
+      - 3
+      2:
+      - 3
+      4: 3.8.6
+      5: 0.10.32
+      8:
+      - 3
+      - 5
+layer makeup:
+  desc: null
+  value: '[''CONV-3-1'', ''POOL-3-1'', ''FLATTEN'', ''DENSE-10-relu'', ''DENSE-5-relu'']'
+learning rate:
+  desc: null
+  value: 1.0e-05
+number of layers:
+  desc: null
+  value: 5
+total trainable variables:
+  desc: null
+  value: 1905179

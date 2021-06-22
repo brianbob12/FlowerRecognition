@@ -92,4 +92,6 @@ for i in range(trainingIterations):
   print(str(i)+"\terror\t"+str(float(error)))
 print("FINAL ERROR\t"+str(float(error)))
 wandb.log({"finalTrainingError":error})
+
+
 # %%

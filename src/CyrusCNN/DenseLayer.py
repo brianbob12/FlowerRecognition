@@ -13,7 +13,7 @@
 #dependencies
 
 from tensorflow import (Variable,matmul,constant)
-from CyrusCNN.Exceptions import unknownActivationFunction
+from CyrusCNN.Exceptions import unknownActivationFunction,missingFileForImport,missingDirectoryForImport,invalidPath
 from tensorflow.random import truncated_normal
 from tensorflow.nn import relu,sigmoid
 from tensorflow.math import tanh
@@ -23,12 +23,14 @@ from .Exceptions import *
 class DenseLayer():
   def __init__(self):
     #initalise a map of string to function for activation fuctions
+    #TODO: use this once globally and pass to all layers
     self.activationLookup={"relu":relu,"linear":self.linear,"sigmoid":sigmoid,"tanh":tanh}
   
   def linear(self,x):
     return (x)
 
   #create a new layer form randomly initialized values
+  #throws unknownActivationFunction if activation function not it activationLookup
   def newLayer(self,inputSize,layerSize,activation):
     self.inputSize=inputSize
     self.size=layerSize
@@ -58,65 +60,117 @@ class DenseLayer():
     #the set of weights and the biases are each a single multi-dimensional variable
     return([self.biases,self.weights])
 
+  #Creates a directory for the layer
+
   #export to a weight and bias file
-  #saves to [path]/[prefix].weights and [path]/[prefix].biases
-  #this function does not check if the file exsists
-  def export(self,path,prefix):
+  #files:
+  # [path]/[subdir]/mat.weights (byteformat)
+  # [path]/[subdir]/mat.biases (byteformat)
+  # [path]/[subdir]/hyper.txt
+  def export(self,path,subdir):
     import struct
+    from os import mkdir 
 
-    out=[]
+    accessPath=path+"\\"+subdir
 
-    with open(path+"\\"+prefix+".weights","wb") as f:
+    #first step is to create a directory for the network if one does not already exist
+    try:
+      mkdir(accessPath)
+    except FileExistsError:
+      pass
+    except Exception as e:
+      raise(invalidPath(accessPath))    
+
+    #save hyper.txt
+    #contins: inputSize, layerSize, activation 
+    with open(accessPath+"\\hyper.txt","w") as f:
+      f.write(str(self.inputSize)+"\n")
+      f.write(str(self.outputSize)+"\n") 
+      f.write(self.activation+"\n")
+    
+    #save mat.weights
+    weightFloats=[]
+    with open(accessPath+"\\mat.weights","wb") as f:
       for i in range(self.weights.get_shape()[0]):
         for j in range(self.weights[i].get_shape()[0]):
-          out.append(float(self.weights[i][j]))
-      f.write(bytearray(struct.pack(str(len(out))+"f",*out)))
+          weightFloats.append(float(self.weights[i][j]))
+      f.write(bytearray(struct.pack(str(len(weightFloats))+"f",*weightFloats)))
 
-    out=[]
+    del weightFloats#this is important because this can be very large and the function can take a long time to load
 
-    with open(path+"\\"+prefix+".biases","wb") as f:
+    #save mat.biases
+    biasFloats=[]
+    with open(accessPath+"\\mat.biases","wb") as f:
       for i in range(self.biases.get_shape()[0]):
-        out.append(float(self.biases[i]))
-      f.write(bytearray(struct.pack(str(len(out))+"f",*out)))
+        biasFloats.append(float(self.biases[i]))
+      f.write(bytearray(struct.pack(str(len(biasFloats))+"f",*biasFloats)))
 
-#function that loads a layer from files
-#gets from to [path]/[prefix].weights and [path]/[prefix].biases
-#this function does not check if the file exsists
-def importLayer(self,path,prefix,inputSize,layerSize,activation):
+#function that loads a layer from files and stores perameters on stack
+#gets from to [path]/[subdir]
+#throws missingFileForImport if file missing a file
+#throws missingDirectoryForImport if entire directory is missing
+def importLayer(self,superdir,subdir):
+  from os import path
 
-  self.inputSize=inputSize
-  self.size=layerSize
+  accessPath=superdir+"\\"+subdir
+  
+  #check if directory exists
+  if not path.exists(accessPath):
+    raise(missingDirectoryForImport(superdir,subdir))
 
+  #import from hpyer.txt
   try:
-    self.activation=self.activationLookup[activation]
-  except KeyError as e:
-    raise unknownActivationFunction(activation)
+    with open(accessPath+"\\hyper.txt","r") as f:
+      fileLines=f.realdines()
+      try:
+        self.inputSize=int(fileLines[0])
+      except ValueError as e:
+        raise(invalidDataInHyperFile(accessPath+"\\hyper.txt","inputSize",fileLines[0]))
+      try:
+        self.size=int(fileLines[1]) 
+      except ValueError as e:
+        raise(invalidDataInHyperFile(accessPath+"\\hyper.txt","size",fileLines[1]))
+      try:
+        self.activation=self.activationLookup[fileLines[2]]
+      except KeyError as e:
+        raise unknownActivationFunction(fileLines[2])
+  except IOError:
+    raise(missingFileForImport(accessPath+"\\hyper.txt"))
 
+  
+  #import weights
   import struct
 
   try:
-    with open(path+"\\"+prefix+".weights","rb") as f:
+    with open(accessPath+"//mat.weights","rb") as f:
       raw=f.read()#type of bytes
-      inp=struct.unpack(str(inputSize*layerSize)+"f",raw)#list of float32s
-      tad=[]
-      for j in range(inputSize):
-        tad2=[]
-        for k in range(layerSize):
-          tad2.append(inp[j*layerSize+k])
-        tad.append(tad2)
-        self.weights=Variable(tad)
 
-  #error handeling
+      try:
+        inp=struct.unpack(str(self.inputSize*self.size)+"f",raw)#list of float32s
+      except struct.error as e:
+        raise(invalidByteFile(accessPath+"//mat.weights"))
+      
+      weights=[] 
+      for i in range(self.inputSize):
+        weights.append([])
+        for j in range(self.size):
+          weights[i].append(inp[i*self.size+j])
+      self.weights=Variable(weights)
+
   except IOError:
-    raise(missingFile(path,path+"\\"+prefix+".weights"))
+    raise(missingFileForImport(accessPath,"mat.weights"))
 
+  #import biases
   try:
-    with open(path+"\\"+prefix+".biases","rb") as f:
+    with open(accessPath+"//mat.biases","rb") as f:
       raw=f.read()#type of bytes
-      inp=struct.unpack(str(layerSize)+"f",raw)#list of float32s
+      try:
+        inp=struct.unpack(str(self.size)+"f",raw)#list of float32s
+      except struct.error as e:
+        raise(invalidByteFile(accessPath+"//mat.biases"))
       self.biases=Variable([i for i in inp])
 
   except IOError:
-    raise(missingFile(path,path+"\\"+prefix+".bases"))
+    raise(missingFileForImport(accessPath,"mat.biases"))
 
      

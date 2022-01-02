@@ -190,152 +190,15 @@ class CNN:
         return error
 
     #export currently loaded network to file
-    def export(self,path):#throws IOerror
-        import os
-        try:
-            os.mkdir(path)
-        except FileExistsError:
-            pass
-        except Exception as e:
-            raise(badPath(path))
-
-
-
-        #store hyperperanmeters in hyper.txt
-        with open(path+"\\hyper.txt","w") as f:
-            f.write(str(self.inputSize)+"\n")
-            f.write(str(self.outputSize)+"\n")
-            for i,v in enumerate(self.nHidden):
-                f.write(str(v))
-                if(i+1!=len(self.nHidden)):
-                    f.write(",")
-            f.write("\n")
-            for i,v in enumerate(self.activation):
-                f.write(v)
-                if(i+1!=len(self.activation)):
-                    f.write(",")
-            f.write("\n")
-
-
-        #set weight and bias files as comma sperated values
-        #note: some percision will be lost when converting binary floats to strings
-        for i in range(len(self.nHidden)+1):
-            out=[]
-            with open(path+"\\w"+str(i)+".weights","wb") as f:
-                for j in range(self.weights[i].get_shape()[0]):
-                    for k in range(self.weights[i][j].get_shape()[0]):
-                        out.append(float(self.weights[i][j][k]))
-                f.write(bytearray(struct.pack(str(len(out))+"f",*out)))
-            out=[]
-            with open(path+"\\b"+str(i)+".biases","wb") as f:
-                for j in range(self.biases[i].get_shape()[0]):
-                    out.append(float(self.biases[i][j]))
-                f.write(bytearray(struct.pack(str(len(out))+"f",*out)))
+    def export(self,path):
+       pass 
 
     #import a network of the format given above
-    def importNetwork(self,path):#throws IOerror and byte error
-        #check if the path is real
-        import os
-        if(not os.path.exists(path)):
-            raise(badPath(path))
-
-        #check hyperperameters
-        try:
-            with open(path+"\\hyper.txt","r") as f:
-                hyperPerameters=f.readlines()
-        except IOError:
-            raise(missingFile(path+"\\hyper.txt"))
-        try:
-            self.inputSize=int(hyperPerameters[0])
-            self.outputSize=int(hyperPerameters[1])
-            self.nHidden=[int(i) for i in hyperPerameters[2].split(",")]
-            self.activation=hyperPerameters[3][:-1].split(",")#exclude final \n
-        except:
-            raise(fileMissingData(path+"\\hyper.txt"))
-
-        #pre-network safety checks(passing erros)
-        if(len(self.activation)!=len(self.nHidden)+1):
-            raise(unspecifiedActivation)#see Network.Exceptions
-        for i in self.activation:
-            if not i in self.activationLookup.keys():
-                raise(unknownActivationFunction(i))
-
-        #initalise variables
-        self.biases=[]
-        self.weights=[]
-        #I know this is a little messy. It is the same segment three times
-        try:
-            with open(path+"\\w0.weights","rb") as f:
-                raw=f.read()#type of bytes
-                inp=struct.unpack(str(self.inputSize*self.nHidden[0])+"f",raw)#list of int
-                tad=[]
-                for j in range(self.inputSize):
-                    tad2=[]
-                    for k in range(self.nHidden[0]):
-                        tad2.append(inp[j*self.nHidden[0]+k])
-                    tad.append(tad2)
-                self.weights.append(Variable(tad))
-        except IOError:
-            raise(missingFile(path,path+"\\w0.weights"))
-        try:
-            with open(path+"\\b0.biases","rb") as f:
-                raw=f.read()#type of bytes
-                inp=struct.unpack(str(self.nHidden[0])+"f",raw)#list of floats
-                self.biases.append(Variable([i for i in inp]))
-
-        except IOError:
-            raise(missingFile(path,path+"\\b0.bases"))
-
-        for i in range(1,len(self.nHidden)):
-            try:
-                with open(path+"\\w"+str(i)+".weights","rb") as f:
-                    raw=f.read()#type of bytes
-                    #print(path+"\\w"+str(i)+".weights")#DEBUG
-                    inp=struct.unpack(str(self.nHidden[i-1]*self.nHidden[i])+"f",raw)#list of int
-                    tad=[]
-                    for j in range(self.nHidden[i-1]):
-                        tad2=[]
-                        for k in range(self.nHidden[i]):
-                            tad2.append(inp[j*self.nHidden[i]+k])
-                        tad.append(tad2)
-                    self.weights.append(Variable(tad))
-
-            except IOError:
-                raise(missingFile(path,path+"\\w"+str(i)+".weights"))
-
-            try:
-                with open(path+"\\b"+str(i)+".biases","rb") as f:
-                    raw=f.read()#type of bytes
-                    inp=struct.unpack(str(self.nHidden[i])+"f",raw)#list of int
-                    self.biases.append(Variable([i for i in inp]))
-
-            except IOError:
-                raise(missingFile(path,path+"\\b"+str(i)+".bases"))
-
-        try:
-            with open(path+"\\w"+str(len(self.nHidden))+".weights","rb") as f:
-                raw=f.read()#type of bytes
-                inp=struct.unpack(str(self.nHidden[-1]*self.outputSize)+"f",raw)#list of int
-                tad=[]
-                for j in range(self.nHidden[-1]):
-                    tad2=[]
-                    for k in range(self.outputSize):
-                        tad2.append(inp[j*self.outputSize+k])
-                    tad.append(tad2)
-                self.weights.append(Variable(tad))
-
-        except IOError:
-            raise(missingFile(path,path+"\\w"+str(len(self.nHidden))+".weights"))
-        try:
-            with open(path+"\\b"+str(len(self.nHidden))+".biases","rb") as f:
-                raw=f.read()#type of bytes
-                inp=struct.unpack(str(self.outputSize)+"f",raw)#list of int
-                self.biases.append(Variable([i for i in inp]))
-
-        except IOError:
-            raise(missingFile(path,path+"\\b"+str(len(self.nHidden))+".bases"))
+    def importNetwork(self,path):
+      pass 
 
     #return deepcopy of self
+    #TODO
     def deepcopy(self):
         return
-        #todo 
+        #TODO 

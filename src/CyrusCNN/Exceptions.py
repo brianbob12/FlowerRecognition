@@ -5,7 +5,7 @@
 
 
 #
-#Netork.Exceptions
+#Network.Exceptions
 #
 #This class holds custom Exceptions used for error handeling 
 class unspecifiedActivation (Exception):

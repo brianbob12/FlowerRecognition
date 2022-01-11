@@ -20,3 +20,9 @@ class PoolingLayer:
   #this function is here so that all layers can hava a .getTrainableVariables
   def getTrainableVariables(self):
     return []
+
+  def exportLayer(superdir,subdir):
+    pass
+
+  def importLayer(superdir,subdir):
+    pass

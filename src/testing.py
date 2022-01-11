@@ -22,3 +22,4 @@ n=3
 x = tf.random.truncated_normal([n,256,256,3])
 print(myCNN.evaluate(x))
 # %%
+myCNN.export(".\\exportTest1")

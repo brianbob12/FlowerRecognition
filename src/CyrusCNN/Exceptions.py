@@ -25,11 +25,10 @@ class missingFileForImport(Exception):
         self.fileName=fileName
 
 class missingDirectoryForImport(Exception):
-    def __init__(self,path,directoryName):
+    def __init__(self,path):
         self.path=path
-        self.directoryName=directoryName
 
-class invalidDataInHyperFile(Exception):
+class invalidDataInFile(Exception):
     def __init__(self,pathOfFile,perameter,value):
         self.pathOfFile=pathOfFile
         self.perameter=perameter#string descriptor

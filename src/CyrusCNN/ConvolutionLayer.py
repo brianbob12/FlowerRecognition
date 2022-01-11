@@ -21,3 +21,9 @@ class ConvolutionLayer:
   #return a list of the trainable variables
   def getTrainableVariables(self):
     return [self.filter]
+
+  def exportLayer(self,superdir,subdir):
+    pass
+
+  def importLayer(self,superdir,subdir):
+    pass

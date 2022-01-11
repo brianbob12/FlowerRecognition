@@ -11,8 +11,10 @@ import tensorflow as tf
 import numpy as np
 #%%
 learningRate=1e-5
-trainingIterations=100
+trainingIterations=10
+batchSize=100
 layerMakeup=[]
+runName="TEST0"
 #%%
 myCNN=CNN(256,False)
 
@@ -35,7 +37,8 @@ wandb.init(config={
   "learning rate":learningRate,
   "number of layers":len(layerMakeup),
   "layer makeup":str(layerMakeup),
-  "total trainable variables":totalTrainableVariables
+  "total trainable variables":totalTrainableVariables,
+  "batchSize":batchSize
   },
 project="flowerRecognition",
 entity='japaneserhino')
@@ -95,3 +98,6 @@ wandb.log({"finalTrainingError":error})
 
 
 # %%
+#export the net
+print("Exporting...")
+myCNN.exportNetwork("./"+runName)

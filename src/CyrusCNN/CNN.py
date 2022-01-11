@@ -190,12 +190,72 @@ class CNN:
         return error
 
     #export currently loaded network to file
-    def export(self,path):
-       pass 
+    def exportNetwork(self,path):
+        from os import mkdir
+        #create directory if one does not already exists
+        try:
+            mkdir(path)
+        except FileExistsError:
+            pass
+        except Exception as e:
+            raise(invalidPath(path))
+        if self.debug:
+            print("exporing layer makeup to:",path+"\\layers.txt")
+        #write layer makeup to text file
+        with open(path+"\\layers.txt","w") as f:
+            for i in self.layerKey:
+                f.write(i+"\n")
+            
+        #save each layer
+        for i,layer in enumerate(self.layers):
+            if self.debug:
+                print("exporting layer",i,"of",len(self.layers),"\t"+path+"\\LAYER"+str(i)+self.layerKey[i])
+            if(self.layerKey[i]!="FLATTEN"):
+                i.exportLayer(path,"LAYER"+str(i)+self.layerKey[i])
+        
+
 
     #import a network of the format given above
-    def importNetwork(self,path):
-      pass 
+    def importNetwork(self,myPath):
+        from os import path
+
+        #check if directory exists
+        if not path.exists(myPath):
+            raise(missingDirectoryForImport(myPath))
+
+
+        #import layer makeup from file 
+        try:
+            with open(myPath+"\\layers.txt","r") as f:
+                fileLines=f.realdines() 
+            for i,line in enumerate(fileLines):
+                if line =="CONVOLUTE":
+                    myConvolutionLayer=ConvolutionLayer()
+                    #throws stuff, passed on
+                    myConvolutionLayer.importLayer(myPath,"LAYER"+str(i)+"CONVOLUTE")
+                    self.layers.append(myConvolutionLayer)
+                    self.layerKey.append(line)
+                elif line =="POOL":
+                    myPoolingLayer=PoolingLayer()
+                    #throws stuff, passed on
+                    myPoolingLayer.importLayer(myPath,"LAYER"+str(i)+"POOL")
+                    self.layers.append(myPoolingLayer)
+                    self.layerKey.append(line) 
+                elif line =="FLATTEN":
+                    myFlattenLayer=FlattenLayer()
+                    #flatten layer does not have to be imported
+                    self.layers.append(myFlattenLayer)
+                    self.layerKey.append(line) 
+                elif line =="DENSE":
+                    myDenseLayer=DenseLayer()
+                    #throws stuff, passed on
+                    myDenseLayer.importLayer(myPath,"LAYER"+str(i)+"DENSE")
+                    self.layers.append(myDenseLayer)
+                    self.layerKey.append(line) 
+                else:
+                    raise(invalidDataInFile(myPath+"\\layers.txt","LAYER"+str(i),line))
+        except IOError:
+            raise(missingFileForImport(myPath+"\\layers.txt"))
 
     #return deepcopy of self
     #TODO

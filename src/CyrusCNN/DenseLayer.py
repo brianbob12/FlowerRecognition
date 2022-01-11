@@ -13,7 +13,7 @@
 #dependencies
 
 from tensorflow import (Variable,matmul,constant)
-from CyrusCNN.Exceptions import unknownActivationFunction,missingFileForImport,missingDirectoryForImport,invalidPath
+from CyrusCNN.Exceptions import *
 from tensorflow.random import truncated_normal
 from tensorflow.nn import relu,sigmoid
 from tensorflow.math import tanh
@@ -67,7 +67,7 @@ class DenseLayer():
   # [path]/[subdir]/mat.weights (byteformat)
   # [path]/[subdir]/mat.biases (byteformat)
   # [path]/[subdir]/hyper.txt
-  def export(self,path,subdir):
+  def exportLayer(self,path,subdir):
     import struct
     from os import mkdir 
 
@@ -116,20 +116,20 @@ def importLayer(self,superdir,subdir):
   
   #check if directory exists
   if not path.exists(accessPath):
-    raise(missingDirectoryForImport(superdir,subdir))
+    raise(missingDirectoryForImport(accessPath))
 
-  #import from hpyer.txt
+  #import from hyper.txt
   try:
     with open(accessPath+"\\hyper.txt","r") as f:
       fileLines=f.realdines()
       try:
         self.inputSize=int(fileLines[0])
       except ValueError as e:
-        raise(invalidDataInHyperFile(accessPath+"\\hyper.txt","inputSize",fileLines[0]))
+        raise(invalidDataInFile(accessPath+"\\hyper.txt","inputSize",fileLines[0]))
       try:
         self.size=int(fileLines[1]) 
       except ValueError as e:
-        raise(invalidDataInHyperFile(accessPath+"\\hyper.txt","size",fileLines[1]))
+        raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[1]))
       try:
         self.activation=self.activationLookup[fileLines[2]]
       except KeyError as e:

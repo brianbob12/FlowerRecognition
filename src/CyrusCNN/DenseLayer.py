@@ -13,7 +13,6 @@
 #dependencies
 
 from tensorflow import (Variable,matmul,constant)
-from CyrusCNN.Exceptions import *
 from tensorflow.random import truncated_normal
 from tensorflow.nn import relu,sigmoid
 from tensorflow.math import tanh
@@ -34,7 +33,7 @@ class DenseLayer():
   def newLayer(self,inputSize,layerSize,activation):
     self.inputSize=inputSize
     self.size=layerSize
-
+    self.activationKey=activation
     try:
       self.activation=self.activationLookup[activation]
     except KeyError as e:
@@ -85,15 +84,15 @@ class DenseLayer():
     #contins: inputSize, layerSize, activation 
     with open(accessPath+"\\hyper.txt","w") as f:
       f.write(str(self.inputSize)+"\n")
-      f.write(str(self.outputSize)+"\n") 
-      f.write(self.activation+"\n")
+      f.write(str(self.size)+"\n") 
+      f.write(self.activationKey+"\n")
     
     #save mat.weights
     weightFloats=[]
-    with open(accessPath+"\\mat.weights","wb") as f:
-      for i in range(self.weights.get_shape()[0]):
-        for j in range(self.weights[i].get_shape()[0]):
-          weightFloats.append(float(self.weights[i][j]))
+    for i in range(self.weights.get_shape()[0]):
+      for j in range(self.weights[i].get_shape()[0]):
+        weightFloats.append(float(self.weights[i][j]))
+    with open(accessPath+"\\mat.weights","wb") as f:      
       f.write(bytearray(struct.pack(str(len(weightFloats))+"f",*weightFloats)))
 
     del weightFloats#this is important because this can be very large and the function can take a long time to load
@@ -131,6 +130,7 @@ def importLayer(self,superdir,subdir):
       except ValueError as e:
         raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[1]))
       try:
+        self.activationKey=fileLines[2]
         self.activation=self.activationLookup[fileLines[2]]
       except KeyError as e:
         raise unknownActivationFunction(fileLines[2])

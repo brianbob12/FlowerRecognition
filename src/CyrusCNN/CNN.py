@@ -211,7 +211,7 @@ class CNN:
             if self.debug:
                 print("exporting layer",i,"of",len(self.layers),"\t"+path+"\\LAYER"+str(i)+self.layerKey[i])
             if(self.layerKey[i]!="FLATTEN"):
-                i.exportLayer(path,"LAYER"+str(i)+self.layerKey[i])
+                layer.exportLayer(path,"LAYER"+str(i)+self.layerKey[i])
         
 
 

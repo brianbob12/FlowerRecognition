@@ -1,5 +1,8 @@
+from importlib import invalidate_caches
+from os import access
 import tensorflow as tf
 import numpy as np
+from .Exceptions import invalidDataInFile, invalidPath, missingDirectoryForImport, missingFileForImport
 
 #non-trainable layer#
 #maxpooling
@@ -21,8 +24,44 @@ class PoolingLayer:
   def getTrainableVariables(self):
     return []
 
-  def exportLayer(superdir,subdir):
-    pass
+  def exportLayer(self,superdir,subdir):
+    from os import mkdir
 
-  def importLayer(superdir,subdir):
-    pass
+    accessPath=superdir+"\\"+subdir
+
+    #create directory
+    try:
+      mkdir(accessPath)
+    except FileExistsError:
+      pass
+    except Exception as e:
+      raise(invalidPath(accessPath))
+
+    #save hyper.txt
+    #has data:size,stride
+    with open(accessPath+"\\hyper.txt","w") as f:
+      f.write(str(self.size)+"\n")
+      f.write(str(self.stride)+"\n")
+
+  def importLayer(self,superdir,subdir):
+    from os import path
+
+    accessPath=subdir+"\\"+superdir
+    #check if directory exists
+    if not path.exists(accessPath):
+      raise(missingDirectoryForImport(accessPath))
+
+    #import from hyper.txt
+    try:
+      with open(accessPath+"\\hyper.txt","r"):
+        fileLines=f.readlines()
+        try:
+          self.size=int(fileLines[0])
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[0]))
+        try:
+          self.stride=int(fileLines[1])
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\hyper.txt","stride",fileLines[1]))
+    except IOError:
+      raise(missingFileForImport(accessPath+"\\hyper.txt"))

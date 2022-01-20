@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
-from CyrusCNN.Exceptions import *
+from .Exceptions import *
 
 class ConvolutionLayer:
   

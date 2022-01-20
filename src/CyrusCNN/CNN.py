@@ -24,7 +24,7 @@ from .FlattenLayer import FlattenLayer
 #for now only works with 3 chanells
 class CNN:
     #inits key values 
-    def __init__(self,inputSize,debug):
+    def __init__(self,inputSize,debug=False):
         self.debug=debug
         self.inputSize=inputSize
         self.chanells=3

@@ -5,49 +5,63 @@
 #E  984   tulip
 
 #%%
+from subprocess import NORMAL_PRIORITY_CLASS
 from CyrusCNN.CNN import CNN as CNN
 from PIL import Image
 import tensorflow as tf
 import numpy as np
 import random
+import time
 #%%
-learningRate=1e-5
-trainingIterations=10
+learningRate=1e-7
+
+trainingIterations=20000
 batchSize=100
+
 shuffleSeed=4739375
+
 crossValSetSize=200
 crossValSetSeed=48964
-layerMakeup=[]
-runName="A0"
-#%%
-myCNN=CNN(256,False)
+interationsPerCrossVal=1
 
+layerMakeup=[]
+runName="A2"
+
+upload=True
+#%%
+myCNN=CNN(256,debug=False,logTraining=True)
+
+myCNN.addConvolutionLayer(5,2)
+layerMakeup.append("CONV-5-2")
+myCNN.addPoolingLayer(5,2)
+layerMakeup.append("POOL-5-2")
 myCNN.addConvolutionLayer(3,1)
 layerMakeup.append("CONV-3-1")
 myCNN.addPoolingLayer(3,1)
 layerMakeup.append("POOL-3-1")
 myCNN.addFlattenLayer()
 layerMakeup.append("FLATTEN")
-myCNN.addDenseLayer(10,"relu")
-layerMakeup.append("DENSE-10-relu")
-myCNN.addDenseLayer(5,"relu")
-layerMakeup.append("DENSE-5-relu")
+myCNN.addDenseLayer(32,"relu")
+layerMakeup.append("DENSE-32-relu")
+myCNN.addDenseLayer(16,"relu")
+layerMakeup.append("DENSE-16-relu")
 
 totalTrainableVariables=myCNN.totalTrainableVariables
 #%%
 #w and b here
-import wandb
-wandb.init(config={
-  "learning rate":learningRate,
-  "number of layers":len(layerMakeup),
-  "layer makeup":str(layerMakeup),
-  "total trainable variables":totalTrainableVariables,
-  "batchSize":batchSize,
-  "crossValSetSize":crossValSetSize,
-  "crossValSetSeed":crossValSetSeed
-  },
-project="flowerRecognition",
-entity='japaneserhino')
+if upload:
+  import wandb
+  wandb.init(config={
+    "learning rate":learningRate,
+    "number of layers":len(layerMakeup),
+    "layer makeup":str(layerMakeup),
+    "total trainable variables":totalTrainableVariables,
+    "batchSize":batchSize,
+    "crossValSetSize":crossValSetSize,
+    "crossValSetSeed":crossValSetSeed
+    },
+  project="flowerRecognition",
+  entity='japaneserhino')
 #%%
 #outputs x and y arrays
 def getBatch(fileNames):
@@ -96,36 +110,34 @@ preShuffledFiles=[i for i in files]
 crossValSet=[]
 random.seed(crossValSetSeed)
 for i in range(crossValSetSize):
-  x=random.randint(0,len(preShuffledFiles))
+  x=random.randint(0,len(preShuffledFiles)-1 )
   crossValSet.append(preShuffledFiles[x])
   del preShuffledFiles[x]
 
 crossValX,crossValY=getBatch(crossValSet)
 #%%
 #determanistic shuffle
-
+shuffledFiles=[]
 random.seed(shuffleSeed)
 while len(preShuffledFiles)!=0:
-  x=random.randint(0,len(preShuffledFiles))
+  x=random.randint(0,len(preShuffledFiles)-1)
   shuffledFiles.append(preShuffledFiles[x])
   del preShuffledFiles[x]
-shuffledFiles=[]
 
 dataSize=len(shuffledFiles)
+print("Data Size:",dataSize)
 #%%
 batchNumber=0
 
 for i in range(trainingIterations): 
+  startTime=time.time()
   #getBatch
   start=batchSize*batchNumber
   start%=dataSize
   end=start+batchSize
   if(end>=dataSize):
     end%=dataSize
-    x,y=getBatch(shuffledFiles[start:])
-    nx,ny=getBatch(shuffledFiles[:end])
-    x+=nx
-    y+=ny
+    x,y=getBatch(shuffledFiles[start:]+shuffledFiles[:end])
   else:
     x,y=getBatch(shuffledFiles[start:end])
   batchNumber+=1
@@ -133,15 +145,22 @@ for i in range(trainingIterations):
   #train
   trainingError= myCNN.train(x,y,learningRate,0)
   crossValError=myCNN.validate(crossValX,crossValY)
+  iterationTime=time.time()-startTime
+  startTime=time.time()
   #todo holdout error
-  wandb.log({"index":i,
-  "training error":trainingError,
-  "cross validation error":crossValError})
+  if upload:
+    wandb.log({
+      "index":i,
+      "training error":trainingError,
+      "cross validation error":crossValError,
+      "iterationTime:":iterationTime})
   print(str(i)+"\ttraining error\t"+str(float(trainingError)),end="")
   print("\tcrossval error\t"+str(float(crossValError)),end="")
+  print("\titerationtime\t"+str(iterationTime),end="")
   print()
 print("FINAL CROSS VAL ERROR\t"+str(float(crossValError)))
-wandb.log({"finalTrainingError":crossValError})
+if upload:
+  wandb.log({"finalTrainingError":crossValError})
 
 
 # %%

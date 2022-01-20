@@ -67,13 +67,16 @@ class ConvolutionLayer:
     #import from hyper.txt
     try:
       with open(accessPath+"\\hyper.txt","r") as f:
-        fileLines=f.realdines()
+        fileLines=f.readlines()
+        #strip line breaks
+        fileLines=[i[:-1] for i in fileLines]
         try:
           self.kernelSize=int(fileLines[0])
         except ValueError as e:
           raise(invalidDataInFile(accessPath+"\\hyper.txt","kernelSize",fileLines[0]))
         try:
           self.strideSize=int(fileLines[1]) 
+          self.strides=[1,self.strideSize,self.strideSize,1]
         except ValueError as e:
           raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[1])) 
     except IOError:
@@ -95,7 +98,7 @@ class ConvolutionLayer:
         try:
           for i in range(self.kernelSize):
             kernel.append([])
-            for j in range(self.kernel):
+            for j in range(self.kernelSize):
               kernel[i].append([])
               for k in range(3):
                 kernel[i][j].append([])

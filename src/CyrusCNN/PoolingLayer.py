@@ -7,10 +7,12 @@ from .Exceptions import invalidDataInFile, invalidPath, missingDirectoryForImpor
 #non-trainable layer#
 #maxpooling
 class PoolingLayer:
-  def __init__(self,size,stride):
+  def __init__(self):
+    pass
+  def newLayer(self,size,stride):
     self.size=size
     self.stride=stride
-
+    
   #input has shape[None,a,a,3]
   def execute(self,inputs):
     #out=[]
@@ -46,15 +48,17 @@ class PoolingLayer:
   def importLayer(self,superdir,subdir):
     from os import path
 
-    accessPath=subdir+"\\"+superdir
+    accessPath=superdir+"\\"+subdir
     #check if directory exists
     if not path.exists(accessPath):
       raise(missingDirectoryForImport(accessPath))
 
     #import from hyper.txt
     try:
-      with open(accessPath+"\\hyper.txt","r"):
+      with open(accessPath+"\\hyper.txt","r") as f:
         fileLines=f.readlines()
+        #strip line breaks
+        fileLines=[i[:-1] for i in fileLines]
         try:
           self.size=int(fileLines[0])
         except ValueError as e:

@@ -86,7 +86,9 @@ class CNN:
         ] 
         
         #if we are here we are good to go
-        self.layers.append(PoolingLayer(size,stride))
+        myPoolingLayer=PoolingLayer()
+        myPoolingLayer.newLayer(size,stride)
+        self.layers.append(myPoolingLayer)
         self.layerKey.append("POOL")
         self.layerOutputShape.append(outputShape)
 
@@ -209,7 +211,7 @@ class CNN:
         #save each layer
         for i,layer in enumerate(self.layers):
             if self.debug:
-                print("exporting layer",i,"of",len(self.layers),"\t"+path+"\\LAYER"+str(i)+self.layerKey[i])
+                print("exporting layer",i+1,"of",len(self.layers),"\t"+path+"\\LAYER"+str(i)+self.layerKey[i])
             if(self.layerKey[i]!="FLATTEN"):
                 layer.exportLayer(path,"LAYER"+str(i)+self.layerKey[i])
         
@@ -227,8 +229,12 @@ class CNN:
         #import layer makeup from file 
         try:
             with open(myPath+"\\layers.txt","r") as f:
-                fileLines=f.realdines() 
+                fileLines=f.readlines() 
+                #strip line breaks
+                fileLines=[i[:-1] for i in fileLines]
             for i,line in enumerate(fileLines):
+                if self.debug:
+                    print("importing layer",i+1,"of",len(fileLines),"\t",myPath+"\\LAYER"+str(i)+line)
                 if line =="CONVOLUTE":
                     myConvolutionLayer=ConvolutionLayer()
                     #throws stuff, passed on

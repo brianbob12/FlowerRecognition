@@ -104,73 +104,75 @@ class DenseLayer():
         biasFloats.append(float(self.biases[i]))
       f.write(bytearray(struct.pack(str(len(biasFloats))+"f",*biasFloats)))
 
-#function that loads a layer from files and stores perameters on stack
-#gets from to [path]/[subdir]
-#throws missingFileForImport if file missing a file
-#throws missingDirectoryForImport if entire directory is missing
-def importLayer(self,superdir,subdir):
-  from os import path
+  #function that loads a layer from files and stores perameters on stack
+  #gets from to [path]/[subdir]
+  #throws missingFileForImport if file missing a file
+  #throws missingDirectoryForImport if entire directory is missing
+  def importLayer(self,superdir,subdir):
+    from os import path
 
-  accessPath=superdir+"\\"+subdir
-  
-  #check if directory exists
-  if not path.exists(accessPath):
-    raise(missingDirectoryForImport(accessPath))
+    accessPath=superdir+"\\"+subdir
+    
+    #check if directory exists
+    if not path.exists(accessPath):
+      raise(missingDirectoryForImport(accessPath))
 
-  #import from hyper.txt
-  try:
-    with open(accessPath+"\\hyper.txt","r") as f:
-      fileLines=f.realdines()
-      try:
-        self.inputSize=int(fileLines[0])
-      except ValueError as e:
-        raise(invalidDataInFile(accessPath+"\\hyper.txt","inputSize",fileLines[0]))
-      try:
-        self.size=int(fileLines[1]) 
-      except ValueError as e:
-        raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[1]))
-      try:
-        self.activationKey=fileLines[2]
-        self.activation=self.activationLookup[fileLines[2]]
-      except KeyError as e:
-        raise unknownActivationFunction(fileLines[2])
-  except IOError:
-    raise(missingFileForImport(accessPath+"\\hyper.txt"))
+    #import from hyper.txt
+    try:
+      with open(accessPath+"\\hyper.txt","r") as f:
+        fileLines=f.readlines()
+        #strip line breaks
+        fileLines=[i[:-1] for i in fileLines]
+        try:
+          self.inputSize=int(fileLines[0])
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\hyper.txt","inputSize",fileLines[0]))
+        try:
+          self.size=int(fileLines[1]) 
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[1]))
+        try:
+          self.activationKey=fileLines[2]
+          self.activation=self.activationLookup[fileLines[2]]
+        except KeyError as e:
+          raise unknownActivationFunction(fileLines[2])
+    except IOError:
+      raise(missingFileForImport(accessPath+"\\hyper.txt"))
 
-  
-  #import weights
-  import struct
+    
+    #import weights
+    import struct
 
-  try:
-    with open(accessPath+"//mat.weights","rb") as f:
-      raw=f.read()#type of bytes
+    try:
+      with open(accessPath+"//mat.weights","rb") as f:
+        raw=f.read()#type of bytes
 
-      try:
-        inp=struct.unpack(str(self.inputSize*self.size)+"f",raw)#list of float32s
-      except struct.error as e:
-        raise(invalidByteFile(accessPath+"//mat.weights"))
-      
-      weights=[] 
-      for i in range(self.inputSize):
-        weights.append([])
-        for j in range(self.size):
-          weights[i].append(inp[i*self.size+j])
-      self.weights=Variable(weights)
+        try:
+          inp=struct.unpack(str(self.inputSize*self.size)+"f",raw)#list of float32s
+        except struct.error as e:
+          raise(invalidByteFile(accessPath+"//mat.weights"))
+        
+        weights=[] 
+        for i in range(self.inputSize):
+          weights.append([])
+          for j in range(self.size):
+            weights[i].append(inp[i*self.size+j])
+        self.weights=Variable(weights)
 
-  except IOError:
-    raise(missingFileForImport(accessPath,"mat.weights"))
+    except IOError:
+      raise(missingFileForImport(accessPath,"mat.weights"))
 
-  #import biases
-  try:
-    with open(accessPath+"//mat.biases","rb") as f:
-      raw=f.read()#type of bytes
-      try:
-        inp=struct.unpack(str(self.size)+"f",raw)#list of float32s
-      except struct.error as e:
-        raise(invalidByteFile(accessPath+"//mat.biases"))
-      self.biases=Variable([i for i in inp])
+    #import biases
+    try:
+      with open(accessPath+"//mat.biases","rb") as f:
+        raw=f.read()#type of bytes
+        try:
+          inp=struct.unpack(str(self.size)+"f",raw)#list of float32s
+        except struct.error as e:
+          raise(invalidByteFile(accessPath+"//mat.biases"))
+        self.biases=Variable([i for i in inp])
 
-  except IOError:
-    raise(missingFileForImport(accessPath,"mat.biases"))
+    except IOError:
+      raise(missingFileForImport(accessPath,"mat.biases"))
 
      

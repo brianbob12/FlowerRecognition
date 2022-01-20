@@ -155,6 +155,18 @@ class CNN:
         #return final layer as output layer
         return layerVals[-1]
 
+    #calculates error from set without training
+    def validate(self,X,Y):
+        guess=self.evaluate(X)
+        #calculate error using sqared error
+        error=0
+        for i in range(len(Y)):
+            for j in range(len(Y[i])):
+                error+=(guess[i][j]-Y[i][j])**2
+        error=error/len(Y)
+        return(error)
+
+
     #train a nerual netwrok to fit the data provided
     #returns squared error
     #X must be in tensorflow format

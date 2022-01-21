@@ -10,20 +10,22 @@ class ConvolutionLayer:
 
     #filterSize is interger
     #stride is a single int
-  def newLayer(self,kernelSize,stride):
+  def newLayer(self,kernelSize,numberOfKernels,stride,inputChannels,seed):
     weightInitSTDDEV=0.1
     self.kernelSize=kernelSize
-    self.kernel=tf.Variable(tf.random.truncated_normal(shape=[kernelSize,kernelSize,3,3],stddev=weightInitSTDDEV))
+    self.numberOfKernels=numberOfKernels
+    self.inputChannels=inputChannels
+    self.filter=tf.Variable(tf.random.truncated_normal(shape=[kernelSize,kernelSize,inputChannels,numberOfKernels],stddev=weightInitSTDDEV,seed=seed))
     self.strideSize=stride 
     self.strides=[1,stride,stride,1]
   
   #inputs have shape [None,a,a,3] tf.float32
   def execute(self,inputs):
-    return tf.nn.conv2d(inputs,self.kernel,self.strides,"VALID")
+    return tf.nn.conv2d(inputs,self.filter,self.strides,"VALID")
 
   #return a list of the trainable variables
   def getTrainableVariables(self):
-    return [self.kernel]
+    return [self.filter]
 
   def exportLayer(self,superdir,subdir):
     import struct
@@ -44,14 +46,16 @@ class ConvolutionLayer:
     with open(accessPath+"\\hyper.txt","w") as f:
       f.write(str(self.kernelSize)+"\n")
       f.write(str(self.strideSize)+"\n") 
+      f.write(str(self.numberOfKernels)+"\n")
+      f.write(str(self.inputChannels)+"\n")
     
     #save mat.kernel
     kernelFloats=[]
-    with open(accessPath+"\\mat.kernel","wb") as f:
+    with open(accessPath+"\\mat.filter","wb") as f:
       for i in range(self.kernelSize):
         for j in range(self.kernelSize):
-          for k in range(3):
-            for l in range(3):
+          for k in range(self.inputChannels):
+            for l in range(self.numberOfKernels):
               kernelFloats.append(float(self.kernel[i][j][k][l]))
       f.write(bytearray(struct.pack(str(len(kernelFloats))+"f",*kernelFloats)))
 

@@ -37,7 +37,7 @@ class CNN:
         self.totalTrainableVariables=0
 
     #stride is int
-    def addConvolutionLayer(self,filterSize,stride):
+    def addConvolutionLayer(self,numberOfKernels,kernelSize,stride,seed=None):
         #check that the previous layer is not flat
         if(len(self.layers)!=0):
             if(self.layerOutputShape[-1]==1):
@@ -48,21 +48,24 @@ class CNN:
        #if we are here we are good to go
         #compute output size
         if(len(self.layers)==0):
+            #shape per batch item
             inputShape=[self.inputSize,self.inputSize,3]
+            inputChannels=3
         else:
             inputShape=self.layerOutputShape[-1]
+            inputChannels=inputShape[2]
         outputShape=[
-            (inputShape[0]-(filterSize//2)*2)/stride,
-            (inputShape[1]-(filterSize//2)*2)/stride,
-            inputShape[2]
+            (inputShape[0]-(kernelSize//2)*2)/stride,
+            (inputShape[1]-(kernelSize//2)*2)/stride,
+            numberOfKernels
         ] 
 
         myConvolutionLayer=ConvolutionLayer()
-        myConvolutionLayer.newLayer(filterSize,stride)
+        myConvolutionLayer.newLayer(numberOfKernels,inputChannels,kernelSize,stride,seed)
         self.layers.append(myConvolutionLayer)
         self.layerKey.append("CONVOLUTE")
         self.layerOutputShape.append(outputShape)
-        self.totalTrainableVariables+=filterSize**2
+        self.totalTrainableVariables+=kernelSize**2
 
     def addPoolingLayer(self,size,stride):
         #check that the previous layer is not flat

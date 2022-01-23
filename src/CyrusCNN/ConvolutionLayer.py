@@ -83,6 +83,14 @@ class ConvolutionLayer:
           self.strides=[1,self.strideSize,self.strideSize,1]
         except ValueError as e:
           raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[1])) 
+        try:
+          self.numberOfKernels=int(fileLines[2])
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\hyper.txt","filterSize",fileLines[2]))
+        try:
+          self.inputChannels=int(fileLines[3]) 
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[3])) 
     except IOError:
       raise(missingFileForImport(accessPath+"\\hyper.txt"))
 
@@ -91,12 +99,12 @@ class ConvolutionLayer:
     import struct
 
     try:
-      with open(accessPath+"//mat.kernel","rb") as f:
+      with open(accessPath+"//mat.filter","rb") as f:
         raw=f.read()#type of bytes  
         try:
           inp=struct.unpack(str(self.kernelSize*self.kernelSize*3*3)+"f",raw)#list of float32s
         except struct.error as e:
-          raise(invalidByteFile(accessPath+"//mat.kernel"))
+          raise(invalidByteFile(accessPath+"//mat.filter"))
       
         kernel=[] 
         try:
@@ -104,14 +112,14 @@ class ConvolutionLayer:
             kernel.append([])
             for j in range(self.kernelSize):
               kernel[i].append([])
-              for k in range(3):
+              for k in range(self.inputChannels):
                 kernel[i][j].append([])
-                for l in range(3):
+                for l in range(self.numberOfKernels):
                   kernel[i][j][k].append(inp[i*self.kernelSize*3*3+j*3*3+k*3+l])
         except Exception as e:
-          raise(invalidByteFile(accessPath+"//mat.kernel"))
+          raise(invalidByteFile(accessPath+"//mat.filer"))
 
-        self.kernel=tf.Variable(kernel)
+        self.filter=tf.Variable(kernel)
 
     except IOError:
-      raise(missingFileForImport(accessPath,"mat.kernel"))
+      raise(missingFileForImport(accessPath,"mat.filter"))

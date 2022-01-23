@@ -5,7 +5,6 @@
 #E  984   tulip
 
 #%%
-from subprocess import NORMAL_PRIORITY_CLASS
 from CyrusCNN.CNN import CNN as CNN
 from PIL import Image
 import tensorflow as tf
@@ -25,11 +24,11 @@ crossValSetSeed=48964
 interationsPerCrossVal=1
 
 layerMakeup=[]
-runName="A2"
+runName="A4"
 
 upload=True
 #%%
-myCNN=CNN(256,debug=False,logTraining=True)
+myCNN=CNN(256,debug=False)
 
 myCNN.addConvolutionLayer(5,2)
 layerMakeup.append("CONV-5-2")
@@ -41,10 +40,10 @@ myCNN.addPoolingLayer(3,1)
 layerMakeup.append("POOL-3-1")
 myCNN.addFlattenLayer()
 layerMakeup.append("FLATTEN")
+myCNN.addDenseLayer(64,"relu")
+layerMakeup.append("DENSE-64-relu")
 myCNN.addDenseLayer(32,"relu")
 layerMakeup.append("DENSE-32-relu")
-myCNN.addDenseLayer(16,"relu")
-layerMakeup.append("DENSE-16-relu")
 
 totalTrainableVariables=myCNN.totalTrainableVariables
 #%%

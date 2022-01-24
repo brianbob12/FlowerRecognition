@@ -109,7 +109,7 @@ class CNN:
 
         #grab input shpae
         if(len(self.layers)==0):
-            inputShape=[self.inputSize,self.inputSize,3]
+            inputShape=[self.inputSize,self.inputSize,self.inputChannels]
         else:
             inputShape=self.layerOutputShape[-1]
 
@@ -165,6 +165,15 @@ class CNN:
         self.layerKey.append("DENSE")
         self.layerOutputShape.append([layerSize])
         self.totalTrainableVariables+=layerSize*int(inputShape[0])
+
+    def addInstanceNormalizationLayer(self,mean,stddev):
+        if(len(self.layers)!=0):
+            if(self.layerOutputShape[-1]==1):
+                #previous layer is flat
+                raise(invalidLayerPlacement(True,False,True))
+       
+        
+
 
     #returns a list of pointers to trainable variables
     def getTrainableVariables(self):

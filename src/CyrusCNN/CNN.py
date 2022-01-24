@@ -31,7 +31,6 @@ class CNN:
         self.debug=debug
         self.inputSize=inputSize
         self.inputChannels=inputChannels
-        self.chanells=3
         self.layers=[]#holds all layers of a neural network
         self.layerKey=[]#holds string indicators of the type of each layer
         #DENSE,CONVOLUTE,FLATTEN,POOL
@@ -44,7 +43,7 @@ class CNN:
     def addConvolutionLayer(self,numberOfKernels,kernelSize,stride,seed=None):
         #check that the previous layer is not flat
         if(len(self.layers)!=0):
-            if(self.layerOutputShape[-1]==1):
+            if(len(self.layerOutputShape[-1])==1):
                 #the previous layer is flat
                 #a convolutional layer can't go here
                 raise(invalidLayerPlacement(True,False,True))       
@@ -65,7 +64,7 @@ class CNN:
         ] 
 
         myConvolutionLayer=ConvolutionLayer()
-        myConvolutionLayer.newLayer(numberOfKernels,layerInputChannels,kernelSize,stride,seed)
+        myConvolutionLayer.newLayer(kernelSize,numberOfKernels,stride,layerInputChannels,seed)
         self.layers.append(myConvolutionLayer)
         self.layerKey.append("CONVOLUTE")
         self.layerOutputShape.append(outputShape)
@@ -95,7 +94,7 @@ class CNN:
         ] 
 
         myTransposeConvolutionLayer=TransposeConvolutionLayer()
-        myTransposeConvolutionLayer.newLayer(numberOfKernels,layerInputChannels,kernelSize,stride,seed)
+        myTransposeConvolutionLayer.newLayer(kernelSize,numberOfKernels,stride,layerInputChannels,seed)
         self.layers.append(myTransposeConvolutionLayer)
         self.layerKey.append("TRANSPOSECONVOLUTE")
         self.layerOutputShape.append(outputShape)

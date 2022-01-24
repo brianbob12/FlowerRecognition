@@ -24,18 +24,18 @@ crossValSetSeed=48964
 interationsPerCrossVal=1
 
 layerMakeup=[]
-runName="A4"
+runName="B0"
 
 upload=True
 #%%
 myCNN=CNN(256,3,debug=False)
 
-myCNN.addConvolutionLayer(5,2)
-layerMakeup.append("CONV-5-2")
+myCNN.addConvolutionLayer(10,11,3)
+layerMakeup.append("CONV-10-11-3")
 myCNN.addPoolingLayer(5,2)
 layerMakeup.append("POOL-5-2")
-myCNN.addConvolutionLayer(3,1)
-layerMakeup.append("CONV-3-1")
+myCNN.addConvolutionLayer(24,3,1)
+layerMakeup.append("CONV-24-3-1")
 myCNN.addPoolingLayer(3,1)
 layerMakeup.append("POOL-3-1")
 myCNN.addFlattenLayer()
@@ -44,8 +44,16 @@ myCNN.addDenseLayer(64,"relu")
 layerMakeup.append("DENSE-64-relu")
 myCNN.addDenseLayer(32,"relu")
 layerMakeup.append("DENSE-32-relu")
+myCNN.addDenseLayer(5,"sigmoid")
+layerMakeup.append("DENSE-5-sigmoid")
 
 totalTrainableVariables=myCNN.totalTrainableVariables
+ttvText=str(totalTrainableVariables)
+for i in range(len(ttvText)):
+  print(ttvText[i],end="")
+  if(i%3==0 and i!=len(ttvText)-1):
+    print(",",end="")
+print(" trainable variables")
 #%%
 #w and b here
 if upload:

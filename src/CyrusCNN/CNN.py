@@ -1,7 +1,8 @@
 
 #dependencies
 #only importing the bare minimum to save runtime
-from tensorflow import (Variable,function,matmul,constant,GradientTape,ones)#this line is too slow
+from tensorflow import (Variable,function,matmul,constant,GradientTape,ones)
+n#this line is too slow
 from tensorflow.random import truncated_normal
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers import Adam
@@ -18,6 +19,7 @@ from .ConvolutionLayer import ConvolutionLayer
 from .PoolingLayer import PoolingLayer 
 from .FlattenLayer import FlattenLayer
 from .TransposeConvolutionLayer import TransposeConvolutionLayer
+from .InstanceNormilizationLayer import InstanceNormalizationLayer
 
 #
 #Convolutional Neural Network
@@ -171,8 +173,19 @@ class CNN:
             if(self.layerOutputShape[-1]==1):
                 #previous layer is flat
                 raise(invalidLayerPlacement(True,False,True))
-       
         
+        if(len(self.layers)==0):
+            inputShape=[self.inputSize,self.inputSize,self.inputChannels]
+        else:
+            inputShape=self.layerOutputShape[-1]
+        
+        outputShape=inputShape.copy()
+
+        myInstanceNormalizationLayer=InstanceNormalizationLayer()
+        myInstanceNormalizationLayer.newLayer(mean,stddev) 
+        self.layers.append(myInstanceNormalizationLayer)
+        self.layerKey.append("INSTANCENORMALIZATION")
+        self.layerOutputShape.append(outputShape)
 
 
     #returns a list of pointers to trainable variables

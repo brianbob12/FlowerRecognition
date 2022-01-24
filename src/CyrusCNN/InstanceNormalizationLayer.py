@@ -6,7 +6,7 @@ from .Exceptions import *
 #normilizes values within each channel
 #must take inputs of shape [batch,chanells,height,width]
 
-class InstanceNormalization():
+class InstanceNormalizationLayer():
 
   def __init__(self):
     pass

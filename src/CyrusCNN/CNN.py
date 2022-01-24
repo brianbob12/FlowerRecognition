@@ -2,7 +2,7 @@
 #dependencies
 #only importing the bare minimum to save runtime
 from tensorflow import (Variable,function,matmul,constant,GradientTape,ones)
-n#this line is too slow
+#this line is too slow
 from tensorflow.random import truncated_normal
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.optimizers import Adam
@@ -19,7 +19,7 @@ from .ConvolutionLayer import ConvolutionLayer
 from .PoolingLayer import PoolingLayer 
 from .FlattenLayer import FlattenLayer
 from .TransposeConvolutionLayer import TransposeConvolutionLayer
-from .InstanceNormilizationLayer import InstanceNormalizationLayer
+from .InstanceNormalizationLayer import InstanceNormalizationLayer
 
 #
 #Convolutional Neural Network

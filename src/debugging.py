@@ -47,7 +47,7 @@ for i in range(d):
 for i in range(e):
   files.append("E"+str(i)+".jpg") 
 #%%
-A4=CNN(256,debug=True)
+A4=CNN(256,3,debug=True)
 A4.importNetwork("./A4")
 
 

@@ -2,7 +2,7 @@
 from CyrusCNN.CNN import CNN as CNN
 
 #%%
-myCNN=CNN(256,True)
+myCNN=CNN(256,3,True)
 
 #%%
 myCNN.addConvolutionLayer(5,2)

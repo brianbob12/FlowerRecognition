@@ -17,6 +17,7 @@ from .DenseLayer import DenseLayer
 from .ConvolutionLayer import ConvolutionLayer 
 from .PoolingLayer import PoolingLayer 
 from .FlattenLayer import FlattenLayer
+from .TransposeConvolutionLayer import TransposeConvolutionLayer
 
 #
 #Convolutional Neural Network
@@ -24,9 +25,10 @@ from .FlattenLayer import FlattenLayer
 #for now only works with 3 chanells
 class CNN:
     #inits key values 
-    def __init__(self,inputSize,debug=False):
+    def __init__(self,inputSize,inputChannels,debug=False):
         self.debug=debug
         self.inputSize=inputSize
+        self.inputChannels=inputChannels
         self.chanells=3
         self.layers=[]#holds all layers of a neural network
         self.layerKey=[]#holds string indicators of the type of each layer
@@ -49,11 +51,11 @@ class CNN:
         #compute output size
         if(len(self.layers)==0):
             #shape per batch item
-            inputShape=[self.inputSize,self.inputSize,3]
-            inputChannels=3
+            inputShape=[self.inputSize,self.inputSize,self.inputChannels]
+            layerInputChannels=self.inputChannels
         else:
             inputShape=self.layerOutputShape[-1]
-            inputChannels=inputShape[2]
+            layerInputChannels=inputShape[2]
         outputShape=[
             (inputShape[0]-(kernelSize//2)*2)/stride,
             (inputShape[1]-(kernelSize//2)*2)/stride,
@@ -61,11 +63,41 @@ class CNN:
         ] 
 
         myConvolutionLayer=ConvolutionLayer()
-        myConvolutionLayer.newLayer(numberOfKernels,inputChannels,kernelSize,stride,seed)
+        myConvolutionLayer.newLayer(numberOfKernels,layerInputChannels,kernelSize,stride,seed)
         self.layers.append(myConvolutionLayer)
         self.layerKey.append("CONVOLUTE")
         self.layerOutputShape.append(outputShape)
-        self.totalTrainableVariables+=kernelSize**2
+        self.totalTrainableVariables+=kernelSize**2*layerInputChannels*numberOfKernels
+        
+    def addTransposeConvolutionLayer(self,numberOfKernels,kernelSize,stride,seed=None):
+        #check that the previous layer is not flat
+        if(len(self.layers)!=0):
+            if(self.layerOutputShape[-1]==1):
+                #the previous layer is flat
+                #a convolutional layer can't go here
+                raise(invalidLayerPlacement(True,False,True))       
+
+       #if we are here we are good to go
+        #compute output size
+        if(len(self.layers)==0):
+            #shape per batch item
+            inputShape=[self.inputSize,self.inputSize,self.inputChannels]
+            layerInputChannels=self.inputChannels
+        else:
+            inputShape=self.layerOutputShape[-1]
+            layerInputChannels=inputShape[2]
+        outputShape=[
+            (inputShape[0]+(kernelSize//2)*2)/stride,
+            (inputShape[1]+(kernelSize//2)*2)/stride,
+            numberOfKernels
+        ] 
+
+        myTransposeConvolutionLayer=TransposeConvolutionLayer()
+        myTransposeConvolutionLayer.newLayer(numberOfKernels,layerInputChannels,kernelSize,stride,seed)
+        self.layers.append(myTransposeConvolutionLayer)
+        self.layerKey.append("TRANSPOSECONVOLUTE")
+        self.layerOutputShape.append(outputShape)
+        self.totalTrainableVariables+=kernelSize**2*layerInputChannels*numberOfKernels
 
     def addPoolingLayer(self,size,stride):
         #check that the previous layer is not flat
@@ -255,6 +287,12 @@ class CNN:
                     #throws stuff, passed on
                     myConvolutionLayer.importLayer(myPath,"LAYER"+str(i)+"CONVOLUTE")
                     self.layers.append(myConvolutionLayer)
+                    self.layerKey.append(line)
+                elif line=="TRANSPOSECONVOLUTE":
+                    myTransposeConvolutionLayer=TransposeConvolutionLayer()
+                    #throws stuff, passed on
+                    myTransposeConvolutionLayer.importLayer(myPath,"LAYER"+str(i)+"TRANSPOSECONVOLUTE")
+                    self.layers.append(myTransposeConvolutionLayer)
                     self.layerKey.append(line)
                 elif line =="POOL":
                     myPoolingLayer=PoolingLayer()

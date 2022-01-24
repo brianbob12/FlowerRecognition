@@ -42,10 +42,10 @@ class DenseLayer():
     #now make the variables
 
     biasInit=0.1
-    weightInitSTDDEV=0.1
+    weightInitSTDDEV=1/inputSize
 
     self.biases=Variable(constant(biasInit,shape=[layerSize]))
-    self.weights=Variable(truncated_normal([inputSize,layerSize],stddev=weightInitSTDDEV))
+    self.weights=Variable(truncated_normal([inputSize,layerSize],stddev=weightInitSTDDEV,mean=0))
  
   #function that executes the layer for a list of inputs
   #inp has shape [None,inputSize]

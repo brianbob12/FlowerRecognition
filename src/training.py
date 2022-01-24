@@ -28,7 +28,7 @@ runName="A4"
 
 upload=True
 #%%
-myCNN=CNN(256,debug=False)
+myCNN=CNN(256,3,debug=False)
 
 myCNN.addConvolutionLayer(5,2)
 layerMakeup.append("CONV-5-2")

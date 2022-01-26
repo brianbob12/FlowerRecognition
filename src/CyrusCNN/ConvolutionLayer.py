@@ -56,7 +56,7 @@ class ConvolutionLayer:
         for j in range(self.kernelSize):
           for k in range(self.inputChannels):
             for l in range(self.numberOfKernels):
-              kernelFloats.append(float(self.kernel[i][j][k][l]))
+              kernelFloats.append(float(self.filter[i][j][k][l]))
       f.write(bytearray(struct.pack(str(len(kernelFloats))+"f",*kernelFloats)))
 
   def importLayer(self,superdir,subdir):

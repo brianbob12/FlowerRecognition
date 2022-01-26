@@ -16,6 +16,7 @@ class InstanceNormalizationLayer():
     self.mean=mean  
 
   #outputs data with specified stddev and mean
+  #TODO this HAS to run on the GPU, far too slow
   def execute(self,inputs):
     out=[]
     n=inputs.shape[2]*inputs.shape[3]
@@ -30,9 +31,12 @@ class InstanceNormalizationLayer():
             sumOfSquared+=i*i
         average=sumOfElements/n
         stddev=tfMath.sqrt(sumOfSquared/n-sumOfElements*sumOfElements)
-        newChanells.append[((channel-average+self.mean)/stddev)*self.stddev]
+        newChanells.append(((channel-average+self.mean)/stddev)*self.stddev)
       out.append(newChanells)
     return out
+  
+  def getTrainableVariables(self):
+    return([])
 
   def exportLayer(self,superdir,subdir):
     from os import mkdir

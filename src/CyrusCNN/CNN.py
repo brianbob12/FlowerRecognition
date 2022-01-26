@@ -332,6 +332,11 @@ class CNN:
                     myDenseLayer.importLayer(myPath,"LAYER"+str(i)+"DENSE")
                     self.layers.append(myDenseLayer)
                     self.layerKey.append(line) 
+                elif line=="INSTANCENORMALIZATION":
+                    myInstanceNormalizationLayer=InstanceNormalizationLayer()
+                    myInstanceNormalizationLayer.importLayer(myPath,"LAYER"+str(i)+"DENSE")
+                    self.layers.append(myInstanceNormalizationLayer)
+                    self.layerKey.append(line)
                 else:
                     raise(invalidDataInFile(myPath+"\\layers.txt","LAYER"+str(i),line))
         except IOError:

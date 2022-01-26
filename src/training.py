@@ -14,7 +14,7 @@ import time
 #%%
 learningRate=1e-8
 
-trainingIterations=30000
+trainingIterations=15000
 batchSize=200
 
 shuffleSeed=4739375
@@ -24,40 +24,37 @@ crossValSetSeed=48964
 interationsPerCrossVal=1
 
 layerMakeup=[]
-runName="B4"
+runName="B5"
 
 upload=True
 #%%
 myCNN=CNN(256,3,debug=False)
 
 myCNN.addConvolutionLayer(48,11,3)
-layerMakeup.append("CONV-10-11-3")
+layerMakeup.append("CONV-48-11-3")
 
 myCNN.addPoolingLayer(5,2)
 layerMakeup.append("POOL-5-2")
 
-myCNN.addConvolutionLayer(24,3,1)
+myCNN.addConvolutionLayer(48,3,1)
 layerMakeup.append("CONV-24-3-1")
 
 myCNN.addPoolingLayer(3,1)
 layerMakeup.append("POOL-3-1")
 
-myCNN.addConvolutionLayer(12,3,1)
+myCNN.addConvolutionLayer(24,3,1)
 layerMakeup.append("CONV-12-3-1")
 
-myCNN.addConvolutionLayer(6,3,1)
-layerMakeup.append("CONV-6-3-1")
-
-myCNN.addConvolutionLayer(6,3,1)
-layerMakeup.append("CONV-6-3-1")
+myCNN.addPoolingLayer(3,1)
+layerMakeup.append("POOL-3-1")
 
 myCNN.addFlattenLayer()
 layerMakeup.append("FLATTEN")
 
-myCNN.addDenseLayer(64,"relu")
+myCNN.addDenseLayer(128,"relu")
 layerMakeup.append("DENSE-64-relu")
 
-myCNN.addDenseLayer(32,"relu")
+myCNN.addDenseLayer(64,"relu")
 layerMakeup.append("DENSE-32-relu")
 
 myCNN.addDenseLayer(5,"sigmoid")

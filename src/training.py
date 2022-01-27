@@ -24,7 +24,7 @@ crossValSetSeed=48964
 interationsPerCrossVal=1
 
 layerMakeup=[]
-runName="B5"
+runName="B6"
 
 upload=True
 #%%
@@ -42,7 +42,7 @@ layerMakeup.append("CONV-24-3-1")
 myCNN.addPoolingLayer(3,1)
 layerMakeup.append("POOL-3-1")
 
-myCNN.addConvolutionLayer(24,3,1)
+myCNN.addConvolutionLayer(48,3,1)
 layerMakeup.append("CONV-12-3-1")
 
 myCNN.addPoolingLayer(3,1)
@@ -64,7 +64,7 @@ totalTrainableVariables=myCNN.totalTrainableVariables
 ttvText=str(totalTrainableVariables)
 for i in range(len(ttvText)):
   print(ttvText[i],end="")
-  if(i%3==0 and i!=len(ttvText)-1):
+  if((len(ttvText)-i-1)%3==0 and i!=len(ttvText)-1):
     print(",",end="")
 print(" trainable variables")
 #%%

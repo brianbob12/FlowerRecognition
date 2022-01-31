@@ -4,7 +4,8 @@ import time
 #a class to manage one training run
 
 class TrainingEpisode:
-  def __init__(self):
+  def __init__(self,name):
+    self.name=name
     self.useWandB=False
     self.crossValErrorHistory=[]
     self.trainingErrorHistory=[]
@@ -82,7 +83,8 @@ class TrainingEpisode:
 
     self.dataset={
       "trainingFiles":[],
-      "crossValFiles":[],
+      "crossValx":[],
+      "crossValy":[],
       "extract":dataset["extract"]#function to produce x,y for a list of files
     }
 
@@ -94,7 +96,7 @@ class TrainingEpisode:
       x=random.randint(0,len(preShuffledFiles)-1 )
       crossValSet.append(preShuffledFiles[x])
       del preShuffledFiles[x]
-    self.dataset["crossValFiles"]=crossValSet
+    self.dataset["crossValx"],self.dataset["crossValy"]=dataset["extract"](crossValSet)
 
     #deterministic shuffle
     shuffledFiles=[]   
@@ -119,6 +121,15 @@ class TrainingEpisode:
       "crossValSeed":self.crossValSelectionSeed
     })
 
+  def uploadToWandB(self,trainingError,iterationTime,crossValError):
+    wandb.log({
+      "index":self.iterationCounter,
+      "trainingError":trainingError,
+      "cross validation error":crossValError,
+      "iterationTime":iterationTime,
+      "estimatedErrorDerivative":self.crossValDerivativeEstimation(self.iterationCounter)
+    })
+
   #training functions
 
   def crossValEstimation(self,iterationCounter):
@@ -133,26 +144,28 @@ class TrainingEpisode:
     return dvdi
 
   #crossValMeasurement must be float
-  def crossValRegression(self,crossValMeasurements,iterationCounters):
+  def crossValRegression(self):
     deda=0
     dedb=0
     dedc=0
     dedd=0
-    n=len(crossValMeasurements)
+    n=len(self.crossValErrorHistory)
     error=0
-    for i in range(crossValMeasurements):
-      crossValEstimation=self.crossValDerivativeEstimation(iterationCounters[i])
-      error+=(crossValEstimation-crossValMeasurements[i])**2
-      pdedv=-2*crossValMeasurements[i]-2*crossValEstimation
+    for i in range(n):
+      iteration=self.crossValErrorHistory[i]["iteration"]
+      recordedError=self.crossValErrorHistory[i]["error"]
+      crossValEstimation=self.crossValDerivativeEstimation(iteration)
+      error+=(crossValEstimation-recordedError)**2
+      pdedv=-2*recordedError-2*crossValEstimation
 
       #A
-      pdeda=math.exp(self.crossValRegressionVariables["B"]*iterationCounters[i])
+      pdeda=math.exp(self.crossValRegressionVariables["B"]*iteration)
       pdeda*=pdedv
       #B
-      pdedb=self.crossValRegressionVariables["A"]*iterationCounters[i]*math.exp(self.crossValRegressionVariables["B"]*iterationCounters[i])
+      pdedb=self.crossValRegressionVariables["A"]*iteration*math.exp(self.crossValRegressionVariables["B"]*iteration)
       pdedb*=pdedv
       #C
-      pdedc=iterationCounters[i]*pdedv 
+      pdedc=iteration*pdedv 
       #D
       pdedd=pdedv
 
@@ -175,7 +188,10 @@ class TrainingEpisode:
     
     return error
 
-  def train(self):
+  #iterationCallback - iteration number, training error,iteration time
+  #crossValCallback - iteration number, crossCal eroor
+  #crossValRegression Callback - iterationNumber, crossValRegressionError, crossValregressionVariables
+  def train(self,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None):
     #getBatch
     start=self.batchSize*self.iterationCounter
     start%=self.trainingDataSize
@@ -189,12 +205,31 @@ class TrainingEpisode:
     #start training
     startTime=time.time()
     trainingError=self.CNN.train(x,y,self.learningRate,0)
+    #end training
     iterationTime=time.time()-startTime
+    if(iterationCallback!=None):
+      iterationCallback(self.iterationCounter,trainingError,iterationTime)
 
     if(self.iterationCounter%self.iterationsPerCrossValSample==0):
-      
+      #cross validate
+      crossValError=self.CNN.validate(self.dataset["crossValx"],self.dataset["crossValy"])
+      #store sample
+      self.crossValErrorHistory.append({
+        "iteration":self.iterationCounter,
+        "error":crossValError
+      })
+
+      #upload if necessary
+      if self.useWandB:
+        self.uploadToWandB(trainingError,iterationTime,crossValError)     
+
+    if(self.iterationCounter%self.iterationsPerCrossValRegress==0):
+      self.crossValRegression()
 
     self.iterationCounter+=1
 
+  def exportNetwork(self):
+    #TODO check if already exists to prevent overwritting
+    self.CNN.export("./"+self.name)
 
   

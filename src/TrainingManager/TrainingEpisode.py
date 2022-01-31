@@ -182,10 +182,19 @@ class TrainingEpisode:
     end=start+self.batchSize
     if(end>=self.dataSize):
       end%=self.dataSize
-      x,y=self.dataset["extract"](self.dataset["trainingFiles"])
+      x,y=self.dataset["extract"](self.dataset["training"][start:]+self.dataset["training"][:end])
+    else:
+      x,y=self.dataset["extract"](self.dataset["training"][start:end])
 
     #start training
     startTime=time.time()
+    trainingError=self.CNN.train(x,y,self.learningRate,0)
+    iterationTime=time.time()-startTime
+
+    if(self.iterationCounter%self.iterationsPerCrossValSample==0):
+      
+
+    self.iterationCounter+=1
 
 
   

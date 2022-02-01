@@ -189,7 +189,7 @@ class TrainingEpisode:
     return error
 
   #iterationCallback - iteration number, training error,iteration time
-  #crossValCallback - iteration number, crossCal eroor
+  #crossValCallback - iteration number, crossVal error
   #crossValRegression Callback - iterationNumber, crossValRegressionError, crossValregressionVariables
   def train(self,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None):
     #getBatch
@@ -223,8 +223,14 @@ class TrainingEpisode:
       if self.useWandB:
         self.uploadToWandB(trainingError,iterationTime,crossValError)     
 
+      if crossValCallback!=None:
+        crossValCallback(self.iterationCounter,crossValError)
+
     if(self.iterationCounter%self.iterationsPerCrossValRegress==0):
-      self.crossValRegression()
+      crossValRegressionError = self.crossValRegression()
+      if crossValRegressCallback!=None:
+        crossValRegressCallback(self.iterationCounter,crossValRegressionError)
+
 
     self.iterationCounter+=1
 

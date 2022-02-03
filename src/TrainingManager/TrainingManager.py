@@ -1,15 +1,15 @@
 from random import triangular
 from typing import final
 
-from numpy import cross
-import TrainingEpisode
+from numpy import cross, save
+from .TrainingEpisode import TrainingEpisode
 
 #a class to manage training using training episodes
 
 class TrainingManager: 
   def __init__(self):
     self.datasets={}
-    self.trainingQue=[]#list of labbda functions to create trainng episodes
+    self.trainingQue=[]#list of lambda functions to create trainng episodes
     self.currentTrainingEpisode=None
     self.exportOn="ALL"#settings for when to export training episdoes
     self.bestCrossValError=None
@@ -18,6 +18,7 @@ class TrainingManager:
     self.crossValRegressionData=[]
 
   #can use one or both
+  #TODO set minimIterations
   def setEpisodeEndRequirements(self,maxIterations=None,minErrorDerivative=None):
     self.maxIterations=maxIterations
     self.minErrorDerivative=minErrorDerivative
@@ -41,8 +42,9 @@ class TrainingManager:
       "extract":extractionFunction
     }
 
-  def runQue(self):
+  def runQue(self,saveDirectory=".\\runs"):
     for function in self.trainingQue:
+      #Garbage collector should be deleteing these once we're done with them
       self.currentTrainingEpisode=function()
       finalCrossValError = self.runEpisode()
 
@@ -57,9 +59,11 @@ class TrainingManager:
 
       if self.exportOn=="BEST":
         if bestTrainingEpisode:
-          self.currentTrainingEpisode.exportNetwork()
+          self.currentTrainingEpisode.exportNetwork(saveDirectory)
       elif self.exportOn=="ALL":
-        self.currentTrainingEpisode.exportNetwork()
+        self.currentTrainingEpisode.exportNetwork(saveDirectory)
+      #export data
+      self.currentTrainingEpisode.exportData(saveDirectory)
 
   def crossValCallback(self,iteration,crossValError):
     print("\t"+str(crossValError),end="")
@@ -67,12 +71,21 @@ class TrainingManager:
     self.lastCrossValDerivativeEstimation=self.currentTrainingEpisode.crossValDerivativeEstimation(iteration)
     print("\t"+str(self.lastCrossValDerivativeEstimation),end="") 
 
-  #TODO figure out what to do here
   def crossValRegressionCallback(self,iteration,crossValRegressionError,crossValRegressionVariables):
+    #TODO remove this next bit when Im done
+    print("CROSSVALREGRESSION")
+    print(crossValRegressionError)
+    print(crossValRegressionVariables)
+
     #log data
     self.crossValRegressionData.append([iteration,crossValRegressionError,crossValRegressionVariables])
 
   def runEpisode(self):
+    print("Running episode",self.currentTrainingEpisode.name)
+    print()
+    print("I\ttrainingError\titerationTime",end="")
+    print("\tcrossValError\tcrossValDerivativeEstimation",end="")
+    print()
     #training variables
     self.lastCrossValDerivativeEstimation=-1
     self.lastCrossVal=-1

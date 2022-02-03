@@ -9,6 +9,7 @@ class TrainingEpisode:
     self.useWandB=False
     self.crossValErrorHistory=[]
     self.trainingErrorHistory=[]
+    self.crossValRegressionHistory=[]
     self.iterationCounter=0
     pass
 
@@ -21,16 +22,22 @@ class TrainingEpisode:
   iterationsPerCrossValRegress,
   trainingErrorRegression,
   crossValRegressionLR,
-  crossValRegressionSeed):
+  crossValRegressionIterationCount=10,#number of iterations per regression moment
+  crossValRegressionSeed=67743):
     self.iterationsPerCrossValSample=iterationsPerCrossValSample
     self.iterationsPerCrossValRegress=iterationsPerCrossValRegress
+    self.crossValRegressionIterationCount=crossValRegressionIterationCount
+
+    #TODO
     self.trainingErrorRegression=trainingErrorRegression
+
     self.crossValRegressionLR=crossValRegressionLR
 
     random.seed(crossValRegressionSeed)
+    #A*e^-bI +cI +d
     self.crossValRegressionVariables={
       "A":random.random(),
-      "B":random.random(),
+      "B":-random.random()*0.001,
       "C":random.random(),
       "D":random.random()
     }
@@ -44,35 +51,38 @@ class TrainingEpisode:
       layerType=CNN.layerKey[i]
       if(layerType=="CONVOLUTE"):
         tad=layerType
-        tad+="-"+layer.numberOfKernels
-        tad+="-"+layer.kernelSize
-        tad+="-"+layer.stride
+        tad+="-"+str(layer.numberOfKernels)
+        tad+="-"+str(layer.kernelSize)
+        tad+="-"+str(layer.strideSize)
       elif(layerType=="TRANSPOSECONVOLUTE"):
         tad=layerType
-        tad+="-"+layer.numberOfKernels
-        tad+="-"+layer.kernelSize
-        tad+="-"+layer.stride
+        tad+="-"+str(layer.numberOfKernels)
+        tad+="-"+str(layer.kernelSize)
+        tad+="-"+str(layer.strideSize)
       elif(layerType=="POOL"):
         tad=layerType
-        tad+="-"+layer.size
-        tad+="-"+layer.stride
+        tad+="-"+str(layer.size)
+        tad+="-"+str(layer.stride)
       elif(layer=="FLATTEN"):
         tad=layerType
       elif(layer=="DENSE"):
         tad=layerType
-        tad+="-"+layer.size
+        tad+="-"+str(layer.size)
         tad+="-"+layer.activationKey
       elif(layer=="INSTANCENORMALIZATION"):
         tad=layerType
-        tad+="-"+layer.mean
-        tad+="-"+layer.stddeve
+        tad+="-"+str(layer.mean)
+        tad+="-"+str(layer.stddeve)
       elif(layer=="ADAIN"):
         #adaptive instance normilization
         #TODO
         pass
+      elif(layer=="RESHAPE"):
+        #TODO
+        pass
       self.layerMakeup.append(tad)
  
-    self.totalTrainableVariables=CNN.totalTrainableVariables()
+    self.totalTrainableVariables=CNN.totalTrainableVariables
 
   #takes a dict: {files,extract}
   #extract is a function returning x,y given a list of files
@@ -108,7 +118,7 @@ class TrainingEpisode:
     
     self.dataset["trainingFiles"]=shuffledFiles
 
-  def setUpWandB(self):
+  def setUpWandB(self,project,entity):
     self.useWandB=True
     import wandb
     wandb.init(config={
@@ -119,7 +129,9 @@ class TrainingEpisode:
       "batchSize":self.batchSize,
       "crossValSetSize":self.crossValSetSize,
       "crossValSeed":self.crossValSelectionSeed
-    })
+    },
+    project=project,
+    entity=entity)
 
   def uploadToWandB(self,trainingError,iterationTime,crossValError):
     wandb.log({
@@ -178,7 +190,7 @@ class TrainingEpisode:
     dedb/=n
     dedc/=n
     dedd/=n
-    error=n
+    error/=n
 
     #update perameters
     self.crossValRegressionVariables["A"]-=self.crossValRegressionLR*deda
@@ -196,23 +208,30 @@ class TrainingEpisode:
     start=self.batchSize*self.iterationCounter
     start%=self.trainingDataSize
     end=start+self.batchSize
-    if(end>=self.dataSize):
-      end%=self.dataSize
-      x,y=self.dataset["extract"](self.dataset["training"][start:]+self.dataset["training"][:end])
+    if(end>=self.trainingDataSize):
+      end%=self.trainingDataSize
+      x,y=self.dataset["extract"](self.dataset["trainingFiles"][start:]+self.dataset["trainingFiles"][:end])
     else:
-      x,y=self.dataset["extract"](self.dataset["training"][start:end])
+      x,y=self.dataset["extract"](self.dataset["trainingFiles"][start:end])
 
     #start training
     startTime=time.time()
-    trainingError=self.CNN.train(x,y,self.learningRate,0)
+    trainingError=float(self.CNN.train(x,y,self.learningRate,0))
     #end training
     iterationTime=time.time()-startTime
     if(iterationCallback!=None):
       iterationCallback(self.iterationCounter,trainingError,iterationTime)
 
+    #store sample
+    self.trainingErrorHistory.append({
+      "iteration":self.iterationCounter,
+      "error":trainingError,
+      "time":iterationTime
+    })
+
     if(self.iterationCounter%self.iterationsPerCrossValSample==0):
       #cross validate
-      crossValError=self.CNN.validate(self.dataset["crossValx"],self.dataset["crossValy"])
+      crossValError=float(self.CNN.validate(self.dataset["crossValx"],self.dataset["crossValy"]))
       #store sample
       self.crossValErrorHistory.append({
         "iteration":self.iterationCounter,
@@ -227,15 +246,61 @@ class TrainingEpisode:
         crossValCallback(self.iterationCounter,crossValError)
 
     if(self.iterationCounter%self.iterationsPerCrossValRegress==0):
-      crossValRegressionError = self.crossValRegression()
-      if crossValRegressCallback!=None:
-        crossValRegressCallback(self.iterationCounter,crossValRegressionError)
+      for i in range(self.crossValRegressionIterationCount):
+        crossValRegressionError = self.crossValRegression()
+        tad={
+          "iteration":self.iterationCounter,
+          "error":crossValRegressionError}
+        for key in self.crossValRegressionVariables.keys():
+          tad[key]=self.crossValRegressionVariables[key]
+        self.crossValRegressionHistory.append(tad)
+        if crossValRegressCallback!=None:
+          crossValRegressCallback(self.iterationCounter,crossValRegressionError,self.crossValRegressionVariables)
 
 
     self.iterationCounter+=1
 
-  def exportNetwork(self):
+  def exportNetwork(self,directory):
     #TODO check if already exists to prevent overwritting
-    self.CNN.export("./"+self.name)
+    self.CNN.exportNetwork(directory+"\\Model\\"+self.name)
 
+  #exports data
+  def exportData(self,directory):
+    #TODO check if directory exists
+    accessPath=directory+"\\"+self.name+"\\errorLogs"
+    #save error data
+    errorData=[["iteration","training error","iteration time","crossValError"]]
+    #index=iteration+1
+    #iteration, training error, iteration time, crossValError
+    for record in self.trainingErrorHistory:
+       errorData.append([record["iteration"],record["error"],record["time"]])
+    for record in self.crossValErrorHistory:
+      errorData[record["iteration"]].append(record["error"])
+    with open(accessPath+"\\"+"errorData.csv","w") as f:
+      for line in errorData:
+        l=""
+        for var in line:
+          l+=var
+          l+=","
+        f.write(l[:-1])#exclude last comma
+        f.write("\n")
+    
+    #clear some data to save memory
+    del errorData
+    
+    #save crossval regression data
+    crossValRegressionData=[["iteration","crossValError"]+[i for i in self.crossValRegressionVariables.keys()]]
+    for record in self.crossValRegressionHistory:
+      tad=[record["iteration"],record["error"]]
+      for key in self.crossValRegressionVariables.keys():
+        tad.append(record[key])
+      crossValRegressionData.append(tad)
+    with open(accessPath+"//crossValRegressionData.csv","w") as f:
+      for line in crossValRegressionData:
+        l=""
+        for var in line:
+          l+=var
+          l+=","
+        f.write(l[:-1])#exclude last comma
+        f.write("\n")
   

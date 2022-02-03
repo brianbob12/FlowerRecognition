@@ -1,9 +1,11 @@
+from msilib.schema import Directory
 from random import triangular
 from typing import final
 
 from numpy import cross, save
 from .TrainingEpisode import TrainingEpisode
 
+from os import mkdir
 #a class to manage training using training episodes
 
 class TrainingManager: 
@@ -11,7 +13,7 @@ class TrainingManager:
     self.datasets={}
     self.trainingQue=[]#list of lambda functions to create trainng episodes
     self.currentTrainingEpisode=None
-    self.exportOn="ALL"#settings for when to export training episdoes
+    self.exportOn="NONE"#settings for when to export training episdoes
     self.bestCrossValError=None
     self.bestTrainingEpisode=-1#index for best training episode
     #settings: BEST(all that beat the best final crossval error)  ALL
@@ -49,6 +51,14 @@ class TrainingManager:
       finalCrossValError = self.runEpisode()
 
       bestTrainingEpisode=False
+
+      try:
+        mkdir(saveDirectory)
+      except FileExistsError as e:
+        pass
+      except Exception as e:
+        print(e)
+
       if self.bestCrossValError!=None:
         if finalCrossValError<self.bestCrossValError:
           self.bestCrossValError=finalCrossValError
@@ -59,10 +69,13 @@ class TrainingManager:
 
       if self.exportOn=="BEST":
         if bestTrainingEpisode:
+          print("saving network to:",saveDirectory)
           self.currentTrainingEpisode.exportNetwork(saveDirectory)
       elif self.exportOn=="ALL":
+        print("saving network to:",saveDirectory)
         self.currentTrainingEpisode.exportNetwork(saveDirectory)
       #export data
+      
       self.currentTrainingEpisode.exportData(saveDirectory)
 
   def crossValCallback(self,iteration,crossValError):
@@ -72,11 +85,6 @@ class TrainingManager:
     print("\t"+str(self.lastCrossValDerivativeEstimation),end="") 
 
   def crossValRegressionCallback(self,iteration,crossValRegressionError,crossValRegressionVariables):
-    #TODO remove this next bit when Im done
-    print("CROSSVALREGRESSION")
-    print(crossValRegressionError)
-    print(crossValRegressionVariables)
-
     #log data
     self.crossValRegressionData.append([iteration,crossValRegressionError,crossValRegressionVariables])
 

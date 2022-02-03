@@ -38,8 +38,8 @@ class TrainingEpisode:
     self.crossValRegressionVariables={
       "A":random.random(),
       "B":-random.random()*0.001,
-      "C":random.random(),
-      "D":random.random()
+      "C":-random.random(),
+      "D":random.random()*0.5
     }
 
   #takes a setup CNN
@@ -151,54 +151,67 @@ class TrainingEpisode:
     return value
 
   def crossValDerivativeEstimation(self,iterationCounter):
-    dvdi=self.crossValRegressionVariables["A"]*self.crossValRegressionVariables["B"]+math.exp(self.crossValRegressionVariables["B"]*iterationCounter)
-    dvdi+=self.crossValRegressionVariables["C"]
-    return dvdi
+    try:
+      dvdi=self.crossValRegressionVariables["A"]*self.crossValRegressionVariables["B"]+math.exp(self.crossValRegressionVariables["B"]*iterationCounter)
+      dvdi+=self.crossValRegressionVariables["C"]
+      return dvdi
+    except Exception as e:
+      print(e)
+      return None
 
   #crossValMeasurement must be float
   def crossValRegression(self):
-    deda=0
-    dedb=0
-    dedc=0
-    dedd=0
-    n=len(self.crossValErrorHistory)
-    error=0
-    for i in range(n):
-      iteration=self.crossValErrorHistory[i]["iteration"]
-      recordedError=self.crossValErrorHistory[i]["error"]
-      crossValEstimation=self.crossValDerivativeEstimation(iteration)
-      error+=(crossValEstimation-recordedError)**2
-      pdedv=-2*recordedError-2*crossValEstimation
+    try:
+      deda=0
+      dedb=0
+      dedc=0
+      dedd=0
+      n=len(self.crossValErrorHistory)
+      error=0
+      for i in range(n):
+        iteration=self.crossValErrorHistory[i]["iteration"]
+        recordedError=self.crossValErrorHistory[i]["error"]
+        crossValEstimation=self.crossValDerivativeEstimation(iteration)
+        error+=(crossValEstimation-recordedError)**2
+        pdedv=-2*recordedError-2*crossValEstimation
 
-      #A
-      pdeda=math.exp(self.crossValRegressionVariables["B"]*iteration)
-      pdeda*=pdedv
-      #B
-      pdedb=self.crossValRegressionVariables["A"]*iteration*math.exp(self.crossValRegressionVariables["B"]*iteration)
-      pdedb*=pdedv
-      #C
-      pdedc=iteration*pdedv 
-      #D
-      pdedd=pdedv
+        #A
+        pdeda=math.exp(self.crossValRegressionVariables["B"]*iteration)
+        pdeda*=pdedv
+        #B
+        pdedb=self.crossValRegressionVariables["A"]*iteration*math.exp(self.crossValRegressionVariables["B"]*iteration)
+        pdedb*=pdedv
+        #C
+        pdedc=iteration*pdedv 
+        #D
+        pdedd=pdedv
 
-      deda+=pdeda
-      dedb+=pdedb
-      dedc+=pdedc
-      dedd+=pdedd
+        deda+=pdeda
+        dedb+=pdedb
+        dedc+=pdedc
+        dedd+=pdedd
 
-    deda/=n
-    dedb/=n
-    dedc/=n
-    dedd/=n
-    error/=n
+      deda/=n
+      dedb/=n
+      dedc/=n
+      dedd/=n
+      error/=n
 
-    #update perameters
-    self.crossValRegressionVariables["A"]-=self.crossValRegressionLR*deda
-    self.crossValRegressionVariables["B"]-=self.crossValRegressionLR*dedb
-    self.crossValRegressionVariables["C"]-=self.crossValRegressionLR*dedc  
-    self.crossValRegressionVariables["D"]-=self.crossValRegressionLR*dedd
-    
-    return error
+      #update perameters
+      self.crossValRegressionVariables["A"]-=self.crossValRegressionLR*deda
+      self.crossValRegressionVariables["B"]-=self.crossValRegressionLR*dedb
+      self.crossValRegressionVariables["C"]-=self.crossValRegressionLR*dedc  
+      self.crossValRegressionVariables["D"]-=self.crossValRegressionLR*dedd
+      return error
+    except Exception as e:
+      print("CrossVal Regression Failed")
+      print(e)
+      print("resetting")
+      self.crossValRegressionVariables["A"]-=random.random()
+      self.crossValRegressionVariables["B"]-=random.random()
+      self.crossValRegressionVariables["C"]-=random.random()  
+      self.crossValRegressionVariables["D"]-=random.random()
+      return 0
 
   #iterationCallback - iteration number, training error,iteration time
   #crossValCallback - iteration number, crossVal error
@@ -262,12 +275,42 @@ class TrainingEpisode:
 
   def exportNetwork(self,directory):
     #TODO check if already exists to prevent overwritting
-    self.CNN.exportNetwork(directory+"\\Model\\"+self.name)
+    from os import mkdir
+
+    myPath=directory+"\\Model\\"+self.name
+    #create directory if one does not already exists
+    try:
+      mkdir(directory+"\\Model") 
+    except FileExistsError:
+      pass
+    except Exception as e:
+      #TODO make this error
+      print(e)
+      raise()
+
+    try:
+      mkdir(directory+"\\Model\\"+self.name)
+    except FileExistsError:
+      pass
+    except Exception as e:
+      print(e)
+      raise()
+    self.CNN.exportNetwork(myPath)
 
   #exports data
   def exportData(self,directory):
-    #TODO check if directory exists
+    from os import mkdir
+    #create directory if one does not already exists
     accessPath=directory+"\\"+self.name+"\\errorLogs"
+    try:
+      mkdir(directory+"\\"+self.name)
+      mkdir(directory+"\\"+self.name+"\\errorLogs")
+    except FileExistsError:
+      pass
+    except Exception as e:
+      #TODO make this error
+      raise()
+    
     #save error data
     errorData=[["iteration","training error","iteration time","crossValError"]]
     #index=iteration+1
@@ -280,7 +323,7 @@ class TrainingEpisode:
       for line in errorData:
         l=""
         for var in line:
-          l+=var
+          l+=str(var)
           l+=","
         f.write(l[:-1])#exclude last comma
         f.write("\n")
@@ -299,7 +342,7 @@ class TrainingEpisode:
       for line in crossValRegressionData:
         l=""
         for var in line:
-          l+=var
+          l+=str(var)
           l+=","
         f.write(l[:-1])#exclude last comma
         f.write("\n")

@@ -9,7 +9,7 @@ from PIL import Image
 #STEP 1
 #setup learning manager and dataset
 tm=TrainingManager()
-tm.setEpisodeEndRequirements(maxIterations=100,minErrorDerivative=0.01)
+tm.setEpisodeEndRequirements(maxIterations=30)
 
 #outputs x and y arrays
 def getBatch(fileNames):
@@ -61,7 +61,7 @@ tm.addDataSet("FlowerDataset",files,getBatch)
 def seriesX(name,learningRate):
   te=TrainingEpisode(name)
   te.instantiateLearningConfig(learningRate,100)
-  te.instantiateMonitoringConfig(1,5,False,1e-6,crossValRegressionIterationCount=20)
+  te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=20)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
   #NOTE: it is important to create a new CNN for each series
   #otherwise each training episode will continue with the same CNN

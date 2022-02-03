@@ -332,7 +332,7 @@ class TrainingEpisode:
     del errorData
     
     #save crossval regression data
-    crossValRegressionData=[["iteration","crossValError"]+[i for i in self.crossValRegressionVariables.keys()]]
+    crossValRegressionData=[["iteration","crossValRegressionError"]+[i for i in self.crossValRegressionVariables.keys()]]
     for record in self.crossValRegressionHistory:
       tad=[record["iteration"],record["error"]]
       for key in self.crossValRegressionVariables.keys():

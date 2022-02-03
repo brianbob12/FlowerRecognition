@@ -1,5 +1,5 @@
 #%%
-from CyrusCNN.CNN import CNN as CNN
+import Elinvar
 from PIL import Image
 import tensorflow as tf
 import numpy as np

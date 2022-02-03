@@ -1,14 +1,12 @@
 #%%
-from TrainingManager.TrainingManager import TrainingManager
-from TrainingManager.TrainingEpisode import TrainingEpisode
-from CyrusCNN.CNN import CNN
+import Elinvar
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 #%%
 #STEP 1
 #setup learning manager and dataset
-tm=TrainingManager()
+tm=Elinvar.TM.TrainingManager()
 tm.setEpisodeEndRequirements(maxIterations=30)
 
 #outputs x and y arrays
@@ -59,26 +57,26 @@ tm.addDataSet("FlowerDataset",files,getBatch)
 #DEFINE training episodes
 
 def seriesX(name,learningRate):
-  te=TrainingEpisode(name)
+  te=Elinvar.TM.TrainingEpisode(name)
   te.instantiateLearningConfig(learningRate,100)
   te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=20)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
   #NOTE: it is important to create a new CNN for each series
   #otherwise each training episode will continue with the same CNN
   #(unless that's what you want)
-  myCNN=CNN(256,3)
-  myCNN.addConvolutionLayer(48,11,3)
-  myCNN.addPoolingLayer(5,2)
-  myCNN.addConvolutionLayer(48,3,1)
-  myCNN.addPoolingLayer(3,1)
-  myCNN.addConvolutionLayer(48,3,1)
-  myCNN.addPoolingLayer(3,1)
-  myCNN.addFlattenLayer()
-  myCNN.addDenseLayer(128,"relu")
-  myCNN.addDenseLayer(64,"relu")
-  myCNN.addDenseLayer(5,"sigmoid")
+  myNet=Elinvar.NN.NeuralNetwork(256,3)
+  myNet.addConvolutionLayer(48,11,3)
+  myNet.addPoolingLayer(5,2)
+  myNet.addConvolutionLayer(48,3,1)
+  myNet.addPoolingLayer(3,1)
+  myNet.addConvolutionLayer(48,3,1)
+  myNet.addPoolingLayer(3,1)
+  myNet.addFlattenLayer()
+  myNet.addDenseLayer(128,"relu")
+  myNet.addDenseLayer(64,"relu")
+  myNet.addDenseLayer(5,"sigmoid")
 
-  te.importNetwork(myCNN)
+  te.importNetwork(myNet)
   return te
 
 tm.trainingQue=[lambda :seriesX("r"+str(i),1e-7*i) for i in range(10)]
@@ -86,3 +84,5 @@ tm.trainingQue=[lambda :seriesX("r"+str(i),1e-7*i) for i in range(10)]
 #STEP 3
 #start training
 tm.runQue()
+
+# %%

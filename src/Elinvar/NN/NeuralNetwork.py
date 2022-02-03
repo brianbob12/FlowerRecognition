@@ -22,10 +22,10 @@ from .TransposeConvolutionLayer import TransposeConvolutionLayer
 from .InstanceNormalizationLayer import InstanceNormalizationLayer
 
 #
-#Convolutional Neural Network
+#Neural Network - supports Convolution
 #
 #for now only works with 3 chanells
-class CNN:
+class NeuralNetwork:
     #inits key values 
     def __init__(self,inputSize,inputChannels,debug=False):
         self.debug=debug

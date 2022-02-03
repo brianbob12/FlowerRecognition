@@ -5,7 +5,7 @@
 #E  984   tulip
 
 #%%
-from CyrusCNN.CNN import CNN as CNN
+from NN.NeuralNetwork import CNN as CNN
 from PIL import Image
 import tensorflow as tf
 import numpy as np

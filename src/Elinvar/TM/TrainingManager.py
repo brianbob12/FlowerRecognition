@@ -10,7 +10,7 @@ from os import mkdir
 class TrainingManager: 
   def __init__(self):
     self.datasets={}
-    self.trainingQue=[]#list of lambda functions to create trainng episodes
+    self.trainingQue=[]#list of lambda functions to create trainng episodes OR a generator
     self.currentTrainingEpisode=None
     self.exportOn="NONE"#settings for when to export training episdoes
     self.bestCrossValError=None

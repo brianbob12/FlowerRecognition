@@ -7,7 +7,7 @@ from PIL import Image
 #STEP 1
 #setup learning manager and dataset
 tm=Elinvar.TM.TrainingManager()
-tm.setEpisodeEndRequirements(maxIterations=30)
+tm.setEpisodeEndRequirements(maxIterations=500)
 
 #outputs x and y arrays
 def getBatch(fileNames):
@@ -59,7 +59,7 @@ tm.addDataSet("FlowerDataset",files,getBatch)
 def seriesX(name,learningRate):
   te=Elinvar.TM.TrainingEpisode(name)
   te.instantiateLearningConfig(learningRate,100)
-  te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=20)
+  te.instantiateMonitoringConfig(1,5,False,1e-7,crossValRegressionIterationCount=100)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
   #NOTE: it is important to create a new CNN for each series
   #otherwise each training episode will continue with the same CNN
@@ -79,7 +79,12 @@ def seriesX(name,learningRate):
   te.importNetwork(myNet)
   return te
 
-tm.trainingQue=[lambda :seriesX("r"+str(i),1e-7*i) for i in range(10)]
+
+def trainingEpisodeGenerator():
+  for i in range(20):
+    yield lambda : (seriesX("r"+str(i),1e-8*(i+1)))
+
+tm.trainingQue=trainingEpisodeGenerator()
 #%%
 #STEP 3
 #start training

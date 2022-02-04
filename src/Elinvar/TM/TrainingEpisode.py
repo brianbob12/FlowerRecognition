@@ -1,3 +1,4 @@
+from bdb import effective
 import math
 import random
 import time
@@ -152,7 +153,7 @@ class TrainingEpisode:
 
   def crossValDerivativeEstimation(self,iterationCounter):
     try:
-      dvdi=self.crossValRegressionVariables["A"]*self.crossValRegressionVariables["B"]+math.exp(self.crossValRegressionVariables["B"]*iterationCounter)
+      dvdi=self.crossValRegressionVariables["A"]*self.crossValRegressionVariables["B"]*math.exp(self.crossValRegressionVariables["B"]*iterationCounter)
       dvdi+=self.crossValRegressionVariables["C"]
       return dvdi
     except Exception as e:
@@ -167,13 +168,23 @@ class TrainingEpisode:
       dedc=0
       dedd=0
       n=len(self.crossValErrorHistory)
+
+      if n==0:
+        return
+      #weight learning rate by trainingExamples
+      criticalN=500
+      if n<criticalN:
+        effectiveLearningRate=n/criticalN * self.crossValRegressionLR
+      else:
+        effectiveLearningRate=self.crossValRegressionLR
+
       error=0
       for i in range(n):
         iteration=self.crossValErrorHistory[i]["iteration"]
         recordedError=self.crossValErrorHistory[i]["error"]
-        crossValEstimation=self.crossValDerivativeEstimation(iteration)
+        crossValEstimation=self.crossValEstimation(iteration)
         error+=(crossValEstimation-recordedError)**2
-        pdedv=-2*recordedError-2*crossValEstimation
+        pdedv=-2*recordedError+2*crossValEstimation
 
         #A
         pdeda=math.exp(self.crossValRegressionVariables["B"]*iteration)
@@ -198,19 +209,20 @@ class TrainingEpisode:
       error/=n
 
       #update perameters
-      self.crossValRegressionVariables["A"]-=self.crossValRegressionLR*deda
-      self.crossValRegressionVariables["B"]-=self.crossValRegressionLR*dedb
-      self.crossValRegressionVariables["C"]-=self.crossValRegressionLR*dedc  
-      self.crossValRegressionVariables["D"]-=self.crossValRegressionLR*dedd
+      self.crossValRegressionVariables["A"]-=effectiveLearningRate*deda
+      self.crossValRegressionVariables["B"]-=effectiveLearningRate*dedb
+      self.crossValRegressionVariables["C"]-=effectiveLearningRate*dedc  
+      self.crossValRegressionVariables["D"]-=effectiveLearningRate*dedd
       return error
     except Exception as e:
+      print()
       print("CrossVal Regression Failed")
       print(e)
       print("resetting")
-      self.crossValRegressionVariables["A"]-=random.random()
-      self.crossValRegressionVariables["B"]-=random.random()
-      self.crossValRegressionVariables["C"]-=random.random()  
-      self.crossValRegressionVariables["D"]-=random.random()
+      self.crossValRegressionVariables["A"]=random.random()
+      self.crossValRegressionVariables["B"]=-random.random()*0.01
+      self.crossValRegressionVariables["C"]=-random.random()  
+      self.crossValRegressionVariables["D"]=random.random()*0.5
       return 0
 
   #iterationCallback - iteration number, training error,iteration time

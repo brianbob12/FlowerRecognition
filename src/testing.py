@@ -61,6 +61,7 @@ def seriesX(name,learningRate):
   te.instantiateLearningConfig(learningRate,100)
   te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=1000)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
+  te.setUpWandB("flowerRecognition","japaneserhino")
   #NOTE: it is important to create a new CNN for each series
   #otherwise each training episode will continue with the same CNN
   #(unless that's what you want)
@@ -84,7 +85,7 @@ def trainingEpisodeGenerator():
   for i in range(20):
     yield lambda : (seriesX("r"+str(i),1e-7*(i+1)))
 
-tm.trainingQue=trainingEpisodeGenerator()
+tm.trainingQue={seriesx("testA",1e-7)}
 #%%
 #STEP 3
 #start training

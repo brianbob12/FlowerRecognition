@@ -1,6 +1,7 @@
 import math
 import random
 import time
+import wandb
 
 #a class to manage one training run
 
@@ -120,8 +121,7 @@ class TrainingEpisode:
     self.dataset["trainingFiles"]=shuffledFiles
 
   def setUpWandB(self,project,entity):
-    self.useWandB=True
-    import wandb
+    self.useWandB=True 
     wandb.init(config={
       "learningRate":self.learningRate,
       "numberOfLayers":len(self.layerMakeup),

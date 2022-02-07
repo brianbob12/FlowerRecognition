@@ -61,7 +61,7 @@ def seriesX(name,learningRate):
   te.instantiateLearningConfig(learningRate,100)
   te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=1000)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
-  te.setUpWandB("flowerRecognition","japaneserhino")
+  
   #NOTE: it is important to create a new CNN for each series
   #otherwise each training episode will continue with the same CNN
   #(unless that's what you want)
@@ -78,6 +78,9 @@ def seriesX(name,learningRate):
   myNet.addDenseLayer(5,"sigmoid")
 
   te.importNetwork(myNet)
+
+  #must be done after network imported
+  te.setUpWandB("flowerRecognition","japaneserhino")
   return te
 
 

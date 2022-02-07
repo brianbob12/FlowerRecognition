@@ -128,7 +128,7 @@ class TrainingEpisode:
       "layer makeup":self.layerMakeup,
       "total trainable variables":self.totalTrainableVariables,
       "batchSize":self.batchSize,
-      "crossValSetSize":self.crossValSetSize,
+      "crossValSetSize":self.crossValSize,
       "crossValSeed":self.crossValSelectionSeed
     },
     project=project,

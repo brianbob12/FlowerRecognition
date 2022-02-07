@@ -1,7 +1,7 @@
-from bdb import effective
 import math
 import random
 import time
+
 #a class to manage one training run
 
 class TrainingEpisode:
@@ -37,10 +37,10 @@ class TrainingEpisode:
     random.seed(crossValRegressionSeed)
     #A*e^-bI +cI +d
     self.crossValRegressionVariables={
-      "A":random.random(),
-      "B":-random.random()*0.001,
-      "C":-random.random(),
-      "D":random.random()*0.5
+      "A":0.3,
+      "B":-0.019,
+      "C":-0.0004,
+      "D":1.0
     }
 
   #takes a setup CNN
@@ -172,7 +172,7 @@ class TrainingEpisode:
       if n==0:
         return
       #weight learning rate by trainingExamples
-      criticalN=500
+      criticalN=50
       if n<criticalN:
         effectiveLearningRate=n/criticalN * self.crossValRegressionLR
       else:
@@ -183,7 +183,7 @@ class TrainingEpisode:
         iteration=self.crossValErrorHistory[i]["iteration"]
         recordedError=self.crossValErrorHistory[i]["error"]
         crossValEstimation=self.crossValEstimation(iteration)
-        error+=(crossValEstimation-recordedError)**2
+        error+=(recordedError-crossValEstimation)**2
         pdedv=-2*recordedError+2*crossValEstimation
 
         #A
@@ -207,7 +207,6 @@ class TrainingEpisode:
       dedc/=n
       dedd/=n
       error/=n
-
       #update perameters
       self.crossValRegressionVariables["A"]-=effectiveLearningRate*deda
       self.crossValRegressionVariables["B"]-=effectiveLearningRate*dedb
@@ -219,10 +218,10 @@ class TrainingEpisode:
       print("CrossVal Regression Failed")
       print(e)
       print("resetting")
-      self.crossValRegressionVariables["A"]=random.random()
-      self.crossValRegressionVariables["B"]=-random.random()*0.01
-      self.crossValRegressionVariables["C"]=-random.random()  
-      self.crossValRegressionVariables["D"]=random.random()*0.5
+      self.crossValRegressionVariables["A"]=0.3
+      self.crossValRegressionVariables["B"]=-0.019
+      self.crossValRegressionVariables["C"]=-0.0004 
+      self.crossValRegressionVariables["D"]=1
       return 0
 
   #iterationCallback - iteration number, training error,iteration time
@@ -330,7 +329,7 @@ class TrainingEpisode:
     for record in self.trainingErrorHistory:
        errorData.append([record["iteration"],record["error"],record["time"]])
     for record in self.crossValErrorHistory:
-      errorData[record["iteration"]].append(record["error"])
+      errorData[record["iteration"]+1].append(record["error"])
     with open(accessPath+"\\"+"errorData.csv","w") as f:
       for line in errorData:
         l=""

@@ -49,6 +49,10 @@ class TrainingManager:
       self.currentTrainingEpisode=function()
       finalCrossValError = self.runEpisode()
 
+      #TEMP 
+      print(self.currentTrainingEpisode.crossValRegressionHistory[-1])
+      print(self.currentTrainingEpisode.crossValRegressionVariables)
+
       bestTrainingEpisode=False
 
       try:

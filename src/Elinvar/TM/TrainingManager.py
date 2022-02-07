@@ -12,7 +12,7 @@ class TrainingManager:
     self.datasets={}
     self.trainingQue=[]#list of lambda functions to create trainng episodes OR a generator
     self.currentTrainingEpisode=None
-    self.exportOn="NONE"#settings for when to export training episdoes
+    self.exportOn="ALL"#settings for when to export training episdoes
     self.bestCrossValError=None
     self.bestTrainingEpisode=-1#index for best training episode
     #settings: BEST(all that beat the best final crossval error)  ALL

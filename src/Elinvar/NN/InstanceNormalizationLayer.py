@@ -1,5 +1,6 @@
 
-from tensorflow import math as tfMath
+from statistics import mean
+from tensorflow import reduce_mean
 from .Exceptions import *
 
 #performs instance normilization
@@ -18,21 +19,10 @@ class InstanceNormalizationLayer():
   #outputs data with specified stddev and mean
   #TODO this HAS to run on the GPU, far too slow
   def execute(self,inputs):
-    out=[]
-    n=inputs.shape[2]*inputs.shape[3]
-    for batch in inputs:
-      newChanells=[]
-      for channel in batch:
-        sumOfElements=0
-        sumOfSquared= 0
-        for row in channel:
-          for i in row:
-            sumOfElements+=i
-            sumOfSquared+=i*i
-        average=sumOfElements/n
-        stddev=tfMath.sqrt(sumOfSquared/n-sumOfElements*sumOfElements)
-        newChanells.append(((channel-average+self.mean)/stddev)*self.stddev)
-      out.append(newChanells)
+    means=reduce_mean(inputs,[-2,-3])
+    meanOfSquares=reduce_mean(inputs**2,[-2,-3])
+    standardDeviations=meanOfSquares-means**2
+    out=(inputs-means)/standardDeviations
     return out
   
   def getTrainableVariables(self):

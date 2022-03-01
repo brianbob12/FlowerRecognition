@@ -25,9 +25,11 @@ from .InstanceNormalizationLayer import InstanceNormalizationLayer
 #Neural Network - supports Convolution
 #
 #for now only works with 3 chanells
-class NeuralNetwork:
+class SequentialNeuralNetwork:
     #inits key values 
-    def __init__(self,inputSize,inputChannels,debug=False):
+    #errorFunction of type ErrorFunction
+    def __init__(self,inputSize,inputChannels,errorFunction,debug=False): 
+        self.errorFunction=errorFunction
         self.debug=debug
         self.inputSize=inputSize
         self.inputChannels=inputChannels
@@ -212,14 +214,13 @@ class NeuralNetwork:
         return layerVals[-1]
 
     #calculates error from set without training
-    def validate(self,X,Y):
+    def validate(self,X,Y,indexes=None):
         guess=self.evaluate(X)
         #calculate error using sqared error
-        error=0
-        for i in range(len(Y)):
-            for j in range(len(Y[i])):
-                error+=(guess[i][j]-Y[i][j])**2
-        error=error/len(Y)
+        if self.errorFunction.multipleLabels:
+            error=self.errorFunction.execute(guess,Y)
+        else:
+            error=self.errorFunction.execute(guess,Y,indexes)
         return(error)
 
 
@@ -227,7 +228,7 @@ class NeuralNetwork:
     #returns squared error
     #X must be in tensorflow format
     #only trianes for one Yindex(Yi) per training example
-    def train(self,X,Y,learningRate,L2val):
+    def train(self,X,Y,learningRate,indexes=None):
 
         #very sorry L2 is currtently out of order I will fix this later
 
@@ -248,11 +249,10 @@ class NeuralNetwork:
             #calculate error using sqared error
             if self.debug:
                 print("TRAINING")
-            error=0
-            for i in range(len(Y)):
-                for j in range(len(Y[i])):
-                    error+=(guess[i][j]-Y[i][j])**2
-            error=error/len(Y)
+            if self.errorFunction.multipleLabels:
+                error=self.errorFunction.execute(guess,Y)
+            else:
+                error=self.errorFunction.execute(guess,Y,indexes)
 
         optimizer=Adam(learningRate)
         grads=g.gradient(error,myTrainableVariables)

@@ -65,7 +65,10 @@ def seriesX(name,learningRate):
   #NOTE: it is important to create a new CNN for each series
   #otherwise each training episode will continue with the same CNN
   #(unless that's what you want)
-  myNet=Elinvar.NN.NeuralNetwork(256,3)
+  #myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogtis()
+  myErrorFunction=Elinvar.NN.ErrorFunctions.MSE(True)
+
+  myNet=Elinvar.NN.SequentialNeuralNetwork(256,3,myErrorFunction)
   myNet.addConvolutionLayer(48,11,3)
   myNet.addPoolingLayer(5,2)
   myNet.addConvolutionLayer(48,3,1)
@@ -80,7 +83,7 @@ def seriesX(name,learningRate):
   te.importNetwork(myNet)
 
   #must be done after network imported
-  te.setUpWandB("flowerRecognition","japaneserhino")
+  #te.setUpWandB("flowerRecognition","japaneserhino")
   return te
 
 

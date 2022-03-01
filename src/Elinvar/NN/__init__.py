@@ -1,4 +1,6 @@
-from .NeuralNetwork import NeuralNetwork
+from .ErrorFunctions import ErrorFunction
+
+from .SequentialNeuralNetwork import SequentialNeuralNetwork
 from .ConvolutionLayer import ConvolutionLayer
 from .TransposeConvolutionLayer import TransposeConvolutionLayer
 from .DenseLayer import DenseLayer

@@ -1,6 +1,6 @@
 
 from statistics import mean
-from tensorflow import reduce_mean
+from tensorflow import reduce_mean,transpose,broadcast_to
 from .Exceptions import *
 
 #performs instance normilization
@@ -17,12 +17,27 @@ class InstanceNormalizationLayer():
     self.mean=mean  
 
   #outputs data with specified stddev and mean
-  #TODO this HAS to run on the GPU, far too slow
+  
+  #WARNING: the following is complicated and not memory efficient
   def execute(self,inputs):
+    inputShape=inputs.shape
     means=reduce_mean(inputs,[-2,-3])
     meanOfSquares=reduce_mean(inputs**2,[-2,-3])
     standardDeviations=meanOfSquares-means**2
-    out=(inputs-means)/standardDeviations
+    #NOTE: the following madness creates new memory addresses full of stuff
+    #this should be updated at somepoint to make it much more vRAM efficient
+
+    #this gets means ready to do an itemwise subtraction
+    #it has to have the same shape as the input
+    formattedMeans=transpose(
+      broadcast_to(means,[inputShape[1],inputShape[2],inputShape[0],inputShape[3]]),
+      perm=[2,0,1,3])
+    #gets it ready for itemwise division
+    formattedStddev=transpose(
+      broadcast_to(standardDeviations,[inputShape[1],inputShape[2],inputShape[0],inputShape[3]]),
+      perm=[2,0,1,3])
+
+    out=((inputs-formattedMeans+self.mean)/formattedStddev)*self.stddev
     return out
   
   def getTrainableVariables(self):

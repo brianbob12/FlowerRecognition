@@ -58,7 +58,7 @@ tm.addDataSet("FlowerDataset",files,getBatch)
 
 def seriesX(name,learningRate):
   te=Elinvar.TM.TrainingEpisode(name)
-  te.instantiateLearningConfig(learningRate,200)
+  te.instantiateLearningConfig(learningRate,100)
   te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=1000)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
   

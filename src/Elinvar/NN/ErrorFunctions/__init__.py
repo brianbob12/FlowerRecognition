@@ -1,3 +1,3 @@
 from .ErrorFunction import ErrorFunction
 from .MSE import MSE
-from .SoftmaxCrossEntropyWithLogits import SoftmaxCrossEntropyWithLogtis
+from .SoftmaxCrossEntropyWithLogits import SoftmaxCrossEntropyWithLogits

@@ -58,15 +58,14 @@ tm.addDataSet("FlowerDataset",files,getBatch)
 
 def seriesX(name,learningRate):
   te=Elinvar.TM.TrainingEpisode(name)
-  te.instantiateLearningConfig(learningRate,100)
+  te.instantiateLearningConfig(learningRate,200)
   te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=1000)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
   
   #NOTE: it is important to create a new CNN for each series
   #otherwise each training episode will continue with the same CNN
   #(unless that's what you want)
-  #myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogtis()
-  myErrorFunction=Elinvar.NN.ErrorFunctions.MSE(True)
+  myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits()
 
   myNet=Elinvar.NN.SequentialNeuralNetwork(256,3,myErrorFunction)
   myNet.addConvolutionLayer(48,11,3)
@@ -89,7 +88,7 @@ def seriesX(name,learningRate):
 
 def trainingEpisodeGenerator():
   for i in range(20):
-    yield lambda : (seriesX("r"+str(i),1e-7*(i+1)))
+    yield lambda : (seriesX("r"+str(i),1e-9*(i+1)))
 
 tm.trainingQue=[lambda: seriesX("testA",1e-9)]
 #%%

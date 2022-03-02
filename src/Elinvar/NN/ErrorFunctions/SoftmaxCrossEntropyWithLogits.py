@@ -5,7 +5,7 @@ from .ErrorFunction import ErrorFunction
 from tensorflow.nn import softmax_cross_entropy_with_logits
 from tensorflow import reduce_mean
 
-class SoftmaxCrossEntropyWithLogtis(ErrorFunction):
+class SoftmaxCrossEntropyWithLogits(ErrorFunction):
   def __init__(self):
     super().__init__(True)
 

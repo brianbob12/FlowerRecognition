@@ -1,7 +1,6 @@
-from random import triangular
-from typing import final
+#try to make this selective
+import wandb
 
-from numpy import cross, save
 from .TrainingEpisode import TrainingEpisode
 
 from os import mkdir
@@ -10,6 +9,8 @@ from os import mkdir
 class TrainingManager: 
   def __init__(self):
     self.datasets={}
+    self.useWandB=False
+    self.listenWandB=False#weather the TM is currently monitering data for WandB
     self.trainingQue=[]#list of lambda functions to create trainng episodes OR a generator
     self.currentTrainingEpisode=None
     self.exportOn="ALL"#settings for when to export training episdoes
@@ -17,6 +18,27 @@ class TrainingManager:
     self.bestTrainingEpisode=-1#index for best training episode
     #settings: BEST(all that beat the best final crossval error)  ALL
     self.crossValRegressionData=[]
+
+  def setUpWandB(self,project,entity):
+    self.WandBProject=project
+    self.WandBEntity=entity
+    self.currentRun=None
+ 
+  #get config from TraingingEpisode
+  def startNewWandBRun(self,config):
+    self.currentRun=wandb.init(
+      config=config,
+      project=self.WandBProject,
+      entity=self.WandBEntity,
+      reinit=True
+    )
+
+  def uploadToWandB(self,data):
+    wandb.log(data)
+
+  def endWandBRun(self):
+    if self.currentRun!=None:
+      self.currentRun.finish()
 
   #can use one or both
   #TODO set minimIterations
@@ -43,7 +65,8 @@ class TrainingManager:
       "extract":extractionFunction
     }
 
-  def runQue(self,saveDirectory=".\\runs"):
+  #episodeCallback has args: TrainingEpisode
+  def runQue(self,saveDirectory=".\\runs",episodeCallback=None):
     for function in self.trainingQue:
       #Garbage collector should be deleteing these once we're done with them
       self.currentTrainingEpisode=function()
@@ -81,6 +104,10 @@ class TrainingManager:
       
       self.currentTrainingEpisode.exportData(saveDirectory)
 
+      #deal with callback
+      if(episodeCallback!=None):
+        episodeCallback(self.currentTrainingEpisode)
+
   def crossValCallback(self,iteration,crossValError):
     print("\t"+str(crossValError),end="")
     self.lastCrossVal=crossValError
@@ -101,11 +128,21 @@ class TrainingManager:
     self.lastCrossValDerivativeEstimation=-1
     self.lastCrossVal=-1
 
+    #wandbstuff
+    wandbCallback=None
+    if self.useWandB and self.listenWandB:
+      wandbCallback=self.uploadToWandB
+
     running=True
     #setupCallbacks
     iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+str(trainingError)+"\t"+str(iterationTime),end="")
     while running:
-      self.currentTrainingEpisode.train(iterationCallback,self.crossValCallback,self.crossValRegressionCallback)
+      self.currentTrainingEpisode.train(
+        iterationCallback,
+        self.crossValCallback,
+        self.crossValRegressionCallback,
+        wandbCallback
+        )
       print()
       #check exit requirements
       if self.maxIterationsConstraint:

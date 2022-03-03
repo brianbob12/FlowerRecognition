@@ -1,6 +1,7 @@
 import math
 import random
 import time
+
 import wandb
 
 #a class to manage one training run
@@ -13,7 +14,6 @@ class TrainingEpisode:
     self.trainingErrorHistory=[]
     self.crossValRegressionHistory=[]
     self.iterationCounter=0
-    pass
 
   def instantiateLearningConfig(self,learningRate,batchSize):
     self.learningRate=learningRate
@@ -134,14 +134,15 @@ class TrainingEpisode:
     project=project,
     entity=entity)
 
-  def uploadToWandB(self,trainingError,iterationTime,crossValError):
-    wandb.log({
+  def getDataForUpload(self,trainingError,iterationTime,crossValError):
+    data={
       "index":self.iterationCounter,
       "trainingError":trainingError,
       "cross validation error":crossValError,
       "iterationTime":iterationTime,
       "estimatedErrorDerivative":self.crossValDerivativeEstimation(self.iterationCounter)
-    })
+    }
+    return data
 
   #training functions
 
@@ -227,7 +228,7 @@ class TrainingEpisode:
   #iterationCallback - iteration number, training error,iteration time
   #crossValCallback - iteration number, crossVal error
   #crossValRegression Callback - iterationNumber, crossValRegressionError, crossValregressionVariables
-  def train(self,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None):
+  def train(self,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None,wandbCallback=None):
     #getBatch
     start=self.batchSize*self.iterationCounter
     start%=self.trainingDataSize
@@ -261,10 +262,8 @@ class TrainingEpisode:
         "iteration":self.iterationCounter,
         "error":crossValError
       })
-
-      #upload if necessary
-      if self.useWandB:
-        self.uploadToWandB(trainingError,iterationTime,crossValError)     
+      if wandbCallback!=None:
+        wandbCallback(self.getDataForUpload(trainingError,iterationTime,crossValError))
 
       if crossValCallback!=None:
         crossValCallback(self.iterationCounter,crossValError)

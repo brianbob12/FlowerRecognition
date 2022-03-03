@@ -18,7 +18,18 @@
     {
       "Name":"__init__",
       "MandatoryArgs":[],
-      "OptionalArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"name",
+          "Type":"str",
+          "Description":"Sets name property."
+        },
+        {
+          "Name":"protected",
+          "Type":"bool",
+          "Description":"option to block clear function"
+        }
+      ],
       "Returns":[],
       "Throws":[],
       "Description":""

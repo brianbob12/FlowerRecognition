@@ -1,0 +1,142 @@
+{
+  "Name":"DenseLayer",
+  "Superclass":"BuildableNode",
+  "Subclasses":[],
+  "Description":"Densely connected layer",
+  "Properties":[
+    {
+      "Name":"size",
+      "Type":"int",
+      "Description":"The number of neurons in the layer"
+    },
+    {
+      "Name":"activationKey",
+      "Type":"str",
+      "Description":"The key corresponding to the selected activation function."
+    },
+    {
+      "Name":"weights",
+      "Type":"tf.Variable",
+      "Description":"The weights of the layer arranged in a matrix of shape=[inputSize,size]."
+    },
+    {
+      "Name":"biases",
+      "Type":"tf.Variable",
+      "Description":"The biases of the layer arranged in a matrix of shape=[size]."
+    },
+    {
+      "Name":"inputSize",
+      "Type":"int",
+      "Description":"Number of floating point inputs to the layer."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"name",
+          "Type":"str",
+          "Description":"Sets name property"
+        },
+        {
+          "Name":"protected",
+          "Type":"bool",
+          "Description":"option to block clear function"
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
+    },
+    {
+      "Name":"build",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Builds parents if parents of type Buildable. Creates matrices mapping input size to output size. Requires a set connection."
+    },
+    {
+      "Name":"newLayer",
+      "MandatoryArgs":[
+        {
+          "Name":"layerSize",
+          "Type":"int",
+          "Description":"The number of neurons in the layer"
+        },
+        {
+          "Name":"activationFunction",
+          "Type":"str",
+          "Description":"Key to activation function. One of: 'relu', 'linear', 'sigmoid', or 'tanh'."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.unknownActivationFunction(activationFunction)"
+      ],
+      "Description":"Creates a new layer instead of importing the layer." 
+    },
+    {
+      "Name":"getTrainableVariables",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"List<tf.Variable>",
+          "Description":"[biases(shape=[size]),weights(shape=[inputSize,size])]"
+        }
+      ],
+      "Throws":[],
+      "Description":"returns a list of the trainable tf.Variables in the layer."
+    },
+    {
+      "name":"exportLayer",
+      "MandatoryArgs":[
+        {
+          "Name":"path",
+          "Type":"str",
+          "Description":"Path the network is being saved to."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)"
+      ],
+      "Description":"Saves this layer to a specified folder. Saves three files: [path]/[subdir]/mat.weights, [path]/[subdir]:mat.biases, [path]/[subdir]/hyper.txt  ."
+    },
+    {
+      "name":"importLayer",
+      "MandatoryArgs":[
+        {
+          "Name":"path",
+          "Type":"str",
+          "Description":"Path the network is being saved to."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)",
+        "Elinvar.NN.missingFileForImport(path,fileName)",
+        "Elinvar.NN.missingDirectoryForImport(path)",
+        "Elinvar.NN.unknownActivationFunction(activationFunction)"
+      ],
+      "Description":"Loads this layer from a specified folder. Requires three files: [path]/[subdir]/mat.weights, [path]/[subdir]:mat.biases, [path]/[subdir]/hyper.txt  ."
+    }
+  ],
+  "Notes":"Can only connect to a single Node"
+}

@@ -40,6 +40,11 @@
       "Name":"protected",
       "Type":"bool",
       "Description":"If true, disables the clear function"
+    },
+    {
+      "Name":"hasTrainableVariables",
+      "Type":"bool",
+      "Description":"True if Node has trainable variables"
     }
   ],
   "Functions":[
@@ -55,12 +60,10 @@
         {
           "Name":"protected",
           "Type":"bool",
-          "Description":"property"
+          "Description":"option to block clear function"
         }
       ],
-      "Returns":[
-
-      ],
+      "Returns":[],
       "Throws":[],
       "Description":"init function sets up key variables"
     },
@@ -92,6 +95,29 @@
       "Returns":[],
       "Throws":[],
       "Description":"Clears value from execution even if protected."
+    },
+    {
+      "Name":"getTrainableVariables",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"List",
+          "Description":"By default, empty list. This is overridden by children."
+        }
+      ],
+      "Throws":[],
+      "Description":"Returns trainable tf.Variables as a list."
+    },
+    {
+      "Name":"connect",
+      "MandatoryArgs":[
+        {
+          "Name":"connections",
+          "Type":"List<Node>",
+          "Description":"A list of nodes to connect to. Order may be important. Updates inputConnections."
+        }
+      ]
     }
   ],
   "Notes":"This is used as a template for types of nodes including junctions,layers,inputs, and outputs"

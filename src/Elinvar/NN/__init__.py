@@ -1,9 +1,10 @@
 from .ErrorFunctions import ErrorFunction
 
+from .Nodes import *
+
 from .SequentialNeuralNetwork import SequentialNeuralNetwork
 from .ConvolutionLayer import ConvolutionLayer
 from .TransposeConvolutionLayer import TransposeConvolutionLayer
-from .DenseLayer import DenseLayer
 from .FlattenLayer import FlattenLayer
 from .InstanceNormalizationLayer import InstanceNormalizationLayer
 from .AdaIN import AdaIN

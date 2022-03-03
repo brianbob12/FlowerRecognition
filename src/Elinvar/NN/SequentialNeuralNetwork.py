@@ -14,7 +14,7 @@ import struct#for export and import
 from .Exceptions import *
 
 #import layers
-from .DenseLayer import DenseLayer 
+from .Nodes.DenseLayer import DenseLayer 
 from .ConvolutionLayer import ConvolutionLayer 
 from .PoolingLayer import PoolingLayer 
 from .FlattenLayer import FlattenLayer

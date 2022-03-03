@@ -13,39 +13,41 @@
 #dependencies
 
 from tensorflow import (Variable,matmul,constant)
+from .BuildableNode import BuildableNode
 from tensorflow.random import truncated_normal
 from tensorflow.nn import relu,sigmoid
 from tensorflow.math import tanh
 
-from .Exceptions import *
+from ..Exceptions import *
 
-class DenseLayer():
-  def __init__(self):
-    #initalise a map of string to function for activation fuctions
-    #TODO: use this once globally and pass to all layers
+class DenseLayer(BuildableNode):
+  def __init__(self,name=None,protected=False):
+    super().__init__(name=name,protected=protected)
+    self.hasTrainableVariables=True 
     self.activationLookup={"relu":relu,"linear":self.linear,"sigmoid":sigmoid,"tanh":tanh}
   
   def linear(self,x):
     return (x)
 
-  #create a new layer form randomly initialized values
   #throws unknownActivationFunction if activation function not it activationLookup
-  def newLayer(self,inputSize,layerSize,activation):
-    self.inputSize=inputSize
+  def newLayer(self,layerSize,activationFunction):
     self.size=layerSize
-    self.activationKey=activation
+    self.activationKey=activationFunction
     try:
-      self.activation=self.activationLookup[activation]
+      self.activation=self.activationLookup[activationFunction]
     except KeyError as e:
-      raise unknownActivationFunction(activation)
+      raise unknownActivationFunction(activationFunction)
+
+  #TODO
+  def build(self):
     
     #now make the variables
 
     biasInit=0.1
-    weightInitSTDDEV=1/inputSize
+    weightInitSTDDEV=1/self.inputSize
 
-    self.biases=Variable(constant(biasInit,shape=[layerSize]))
-    self.weights=Variable(truncated_normal([inputSize,layerSize],stddev=weightInitSTDDEV,mean=0))
+    self.biases=Variable(constant(biasInit,shape=[self.size]))
+    self.weights=Variable(truncated_normal([self.inputSize,self.size],stddev=weightInitSTDDEV,mean=0))
  
   #function that executes the layer for a list of inputs
   #inp has shape [None,inputSize]

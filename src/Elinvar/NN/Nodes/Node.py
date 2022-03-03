@@ -16,6 +16,7 @@ class Node:
     self.executed=False
     self.protected=protected
     self.value=None
+    self.hasTrainableVariables=False
 
   #private
   #this is made to be overwritten
@@ -44,5 +45,10 @@ class Node:
   def protectedClear(self):
     self.value=None
     self.executed=None
-    
 
+  def getTrainableVariables(self):
+    return []
+    
+  def connect(self,connections):
+    self.inputConnections=connections
+    return

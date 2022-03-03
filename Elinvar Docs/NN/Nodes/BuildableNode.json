@@ -1,0 +1,36 @@
+{
+  "Name":"BuildableNode",
+  "Superclass":"Node",
+  "Subclasses":[
+    "ConvolutionLayer",
+    "DenseLayer",
+    "TransposeConvolutionLayer"
+  ],
+  "Description":"Holds node that require building. Building is done from the top of the networkd down",
+  "Properties":[
+    {
+      "Name":"built",
+      "Type":"bool",
+      "Description":"Holds if the Node is built currently."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
+    },
+    {
+      "Name":"build",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Builds parents if parents of type Buildable. Made to be overridden, does different thing for each subclass."
+    }
+  ],
+  "Notes":""
+}

@@ -1,0 +1,98 @@
+{
+  "Name":"Node",
+  "Superclass":"None",
+  "Subclasses":[
+    "BuildableNode",
+    "AdaIN",
+    "InstanceNormalization",
+    "PoolingLayer",
+    "Flatten",
+    "UpscalingLayer"
+  ],
+  "Description":"Holds nodes in a network that input data perform an operation and output a variable.",
+  "Properties":[
+    {
+      "Name":"name",
+      "Type":"str",
+      "Description":"Holds a name for the node."
+    },
+    {
+      "Name":"inputConnections",
+      "Type":"List<Node>",
+      "Description":"List of nodes that contain inputs."
+    },
+    {
+      "Name":"outputShape",
+      "Type":"List<Int>",
+      "Description":"Shape of node output."
+    },
+    {
+      "Name":"value",
+      "Type":"Any",
+      "Description":"The value of the node on this execution run"
+    },
+    {
+      "Name":"executed",
+      "Type":"bool",
+      "Description":"Wether or not this node has been executed since it was last cleared."
+    },
+    {
+      "Name":"protected",
+      "Type":"bool",
+      "Description":"If true, disables the clear function"
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"name",
+          "Type":"str",
+          "Description":"Sets name property."
+        },
+        {
+          "Name":"protected",
+          "Type":"bool",
+          "Description":"property"
+        }
+      ],
+      "Returns":[
+
+      ],
+      "Throws":[],
+      "Description":"init function sets up key variables"
+    },
+    {
+      "Name":"getValue",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"Any",
+          "Description":"output of shape outputShape"
+        }
+      ],
+      "Throws":[],
+      "Description":"Returns Node output, will store value for future calls. Made to be overwritten"
+    },
+    {
+      "Name":"clear",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Clears value from execution. Will not clear if protected."
+    },
+    {
+      "Name":"protectedClear",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Clears value from execution even if protected."
+    }
+  ],
+  "Notes":"This is used as a template for types of nodes including junctions,layers,inputs, and outputs"
+}

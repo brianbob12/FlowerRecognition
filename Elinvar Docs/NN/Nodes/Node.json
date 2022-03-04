@@ -117,7 +117,13 @@
           "Type":"List<Node>",
           "Description":"A list of nodes to connect to. Order may be important. Updates inputConnections."
         }
-      ]
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.invalidNodeConnection(receivedShape,requiredShape)"
+      ],
+      "Description":"Adds specified Node to inputConnections."
     }
   ],
   "Notes":"This is used as a template for types of nodes including junctions,layers,inputs, and outputs"

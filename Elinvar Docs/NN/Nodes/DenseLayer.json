@@ -55,8 +55,10 @@
       "MandatoryArgs":[],
       "OptionalArgs":[],
       "Returns":[],
-      "Throws":[],
-      "Description":"Builds parents if parents of type Buildable. Creates matrices mapping input size to output size. Requires a set connection."
+      "Throws":[
+        "Elinvar.NN.notEnoughNodeConnections(numberOfConnectionsReceived,requiredConnections)"
+      ],
+      "Description":"Creates matrices mapping input size to output size. Requires a set connection of output shape [None]."
     },
     {
       "Name":"newLayer",

@@ -37,17 +37,26 @@ class DenseLayer(BuildableNode):
       self.activation=self.activationLookup[activationFunction]
     except KeyError as e:
       raise unknownActivationFunction(activationFunction)
+ 
 
-  #TODO
+
+  #TODO make it throw an error if inputShape not [None]
   def build(self):
-    
+    if len(self.inputConnections<1):
+      raise(notEnoughNodeConnections(len(self.inputConnections),1))
     #now make the variables
+
+    inputShape=self.inputConnections[0].outputShape
+    self.inputSize=inputShape[0]
 
     biasInit=0.1
     weightInitSTDDEV=1/self.inputSize
 
     self.biases=Variable(constant(biasInit,shape=[self.size]))
     self.weights=Variable(truncated_normal([self.inputSize,self.size],stddev=weightInitSTDDEV,mean=0))
+
+    self.built=True
+
  
   #function that executes the layer for a list of inputs
   #inp has shape [None,inputSize]
@@ -105,6 +114,11 @@ class DenseLayer(BuildableNode):
       for i in range(self.biases.get_shape()[0]):
         biasFloats.append(float(self.biases[i]))
       f.write(bytearray(struct.pack(str(len(biasFloats))+"f",*biasFloats)))
+
+  def connect(self, connections):
+    if len(connections[0].shape)!=1:
+      raise(invalidNodeConnection(connections[0].shape,[None]))
+    super().connect(connections)
 
   #function that loads a layer from files and stores perameters on stack
   #gets from to [path]/[subdir]

@@ -40,7 +40,7 @@
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[],
-      "Description":"Builds parents if parents of type Buildable. Made to be overridden, does different thing for each subclass."
+      "Description":"Made to be overridden, does different thing for each subclass."
     }
   ],
   "Notes":""

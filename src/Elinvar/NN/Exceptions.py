@@ -47,3 +47,27 @@ class invalidLayerPlacement(Exception):
         self.previousLayerFlat=previousLayerFlat
         self.requiresFlat=requiresFlat
         self.requiresNonFlat=requiresNonFlat
+        
+class invalidNodeConnection(Exception):
+    def __init__(self,inputShape,requiredShape):
+        self.inputShape=inputShape
+        self.requiredShape=requiredShape
+
+    def __str__(self):
+        out="INVALID NODE CONNECTION\tRequired shape of "
+        out+=str(self.requiredShape)
+        out+=" but received shape of "
+        out+=str(self.inputShape)
+        return out
+
+class notEnoughNodeConnections(Exception):
+    def __init__(self,numberOfConnectionsReceived,requiredConnections):
+        self.numberOfConnectionsReceived=numberOfConnectionsReceived
+        self.requiredConnections=requiredConnections
+
+    def __str__(self):
+        out="NOT ENOUGH CONNECTIONS\tRequired "
+        out+=str(self.requiredConnections)
+        out+=" connections but only has "
+        out+=str(self.numberOfConnectionsReceived)
+        return out

@@ -81,6 +81,20 @@
       "Description":"Returns Node output, will store value for future calls. Made to be overwritten"
     },
     {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List",
+          "Description":"Input has shape=[len(inputConnections)]."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Produces an output based on input connection values."
+    },
+    {
       "Name":"clear",
       "MandatoryArgs":[],
       "OptionalArgs":[],

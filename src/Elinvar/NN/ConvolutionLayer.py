@@ -1,33 +1,88 @@
-import tensorflow as tf
 import numpy as np
+from tensorflow import Variable
+from tf.nn import conv2d
+from tf.random import normal
 
 from .Exceptions import *
 
 class ConvolutionLayer:
   
-  def __init__(self):
-    pass
+  def __init__(self,name=None,protected=False):
+    super().__init__(name=name,protected=protected)
+    self.hasTrainableVariables=True
+    #tracks if network has been imported
+    self.imported=False
 
     #filterSize is interger
     #stride is a single int
-  def newLayer(self,kernelSize,numberOfKernels,stride,inputChannels,seed):
+  def newLayer(self,kernelSize,numberOfKernels,stride):
     weightInitSTDDEV=0.1
     self.kernelSize=kernelSize
     self.numberOfKernels=numberOfKernels
-    self.inputChannels=inputChannels
-    self.filter=tf.Variable(tf.random.truncated_normal(shape=[kernelSize,kernelSize,inputChannels,numberOfKernels],stddev=weightInitSTDDEV,seed=seed))
+    self.inputChannels=0#until connections are set
+    self.imported=False
     self.strideSize=stride 
     self.strides=[1,stride,stride,1]
+    self.inputShape=None
   
+  def build(self,seed=None):
+    if self.built: return
+
+    if len(self.inputConnections<1):
+      raise(notEnoughNodeConnections(len(self.inputConnections),1)) 
+
+
+    self.filter=Variable(normal(shape=[self.kernelSize,self.kernelSize,self.inputChannels,self.numberOfKernels]))
+
+     
+
+  def connect(self,connections):
+    if len(connections)==0:
+      return
+    #checks
+    if len(self.connections)>0:
+      shape0=self.inputShape[0]
+      shape1=self.inputShape[1]      
+    else:
+      shape0=connections[0].outputShape[0]
+      shape1=connections[0].outputShape[1]
+      #this check is important
+      if shape0 ==None or shape1==None:
+        #NOTE: this should really be a different error
+        raise(invalidNodeConnection(connections[0].outputShape,[None,None,None]))
+
+    for prospectNode in connections:
+      if prospectNode.outputShape[0]!=shape0 or prospectNode.outputShape[1]!=shape1:
+        raise(invalidNodeConnection(prospectNode.outputShape,[shape0,shape1,None]))
+
+    #connect
+    if not self.imported:
+      for node in connections:
+        self.inputChannels+=node.outputShape[2]
+
+    self.inputShape=[shape0,shape1,self.inputChannels]
+    self.outputShape=[
+      (shape0-(self.kernelSize//2)*2)/self.stride,
+      (shape1-(self.kernelSize//2)*2)/self.stride,
+      self.numberOfKernels
+    ]
+    super().connect(connections)
+
   #inputs have shape [None,a,a,3] tf.float32
   def execute(self,inputs):
-    return tf.nn.conv2d(inputs,self.filter,self.strides,"VALID")
+    if not self.built:
+      raise(operationWithUnbuiltNode("execute"))
+    else:
+      return conv2d(inputs,self.filter,self.strides,"VALID")
 
   #return a list of the trainable variables
   def getTrainableVariables(self):
     return [self.filter]
 
   def exportLayer(self,superdir,subdir):
+    if not self.built:
+      raise(operationWithUnbuiltNode("exportLayer"))
+
     import struct
     from os import mkdir
     
@@ -119,7 +174,8 @@ class ConvolutionLayer:
         except Exception as e:
           raise(invalidByteFile(accessPath+"//mat.filer"))
 
-        self.filter=tf.Variable(kernel)
+        self.filter=Variable(kernel)
 
     except IOError:
       raise(missingFileForImport(accessPath,"mat.filter"))
+    self.imported=True

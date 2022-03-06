@@ -41,6 +41,37 @@
       "Returns":[],
       "Throws":[],
       "Description":"Made to be overridden, does different thing for each subclass."
+    },
+    {
+      "Name":"getValue",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"Any",
+          "Description":"output of shape outputShape"
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.operationWithUnbuiltNode(operation)"
+      ],
+      "Description":"Returns Node output, will store value for future calls. Made to be overwritten"
+    },
+    {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List",
+          "Description":"Input has shape=[len(inputConnections)]."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.operationWithUnbuiltNode(operation)"
+      ],
+      "Description":"Produces an output based on input connection values."
     }
   ],
   "Notes":""

@@ -14,7 +14,7 @@
 
 from tensorflow import (Variable,matmul,constant)
 from .BuildableNode import BuildableNode
-from tensorflow.random import truncated_normal
+from tensorflow.random import normal
 from tensorflow.nn import relu,sigmoid
 from tensorflow.math import tanh
 
@@ -32,6 +32,7 @@ class DenseLayer(BuildableNode):
   #throws unknownActivationFunction if activation function not it activationLookup
   def newLayer(self,layerSize,activationFunction):
     self.size=layerSize
+    self.outputShape=[layerSize]
     self.activationKey=activationFunction
     try:
       self.activation=self.activationLookup[activationFunction]
@@ -41,7 +42,9 @@ class DenseLayer(BuildableNode):
 
 
   #TODO make it throw an error if inputShape not [None]
-  def build(self):
+  def build(self,seed=None):
+    if self.built:return
+
     if len(self.inputConnections<1):
       raise(notEnoughNodeConnections(len(self.inputConnections),1))
     #now make the variables
@@ -53,7 +56,7 @@ class DenseLayer(BuildableNode):
     weightInitSTDDEV=1/self.inputSize
 
     self.biases=Variable(constant(biasInit,shape=[self.size]))
-    self.weights=Variable(truncated_normal([self.inputSize,self.size],stddev=weightInitSTDDEV,mean=0))
+    self.weights=Variable(normal([self.inputSize,self.size],stddev=weightInitSTDDEV,mean=0,seed=seed))
 
     self.built=True
 
@@ -62,13 +65,22 @@ class DenseLayer(BuildableNode):
   #inp has shape [None,inputSize]
   #returns shape [None,outputSize] 
   def execute(self,inp):
-    return((self.activation(matmul([inp],self.weights)+self.biases))[0])
+    if not self.built:
+      raise(operationWithUnbuiltNode("execute"))
+    else:
+      return((self.activation(matmul([inp],self.weights)+self.biases))[0])
 
   #function that returns a shape [2] list of trainable variables
   #because these are tf varialbe it is returning a list of pointers
   def getTrainableVariables(self):
     #the set of weights and the biases are each a single multi-dimensional variable
     return([self.biases,self.weights])
+
+  def connect(self, connections):
+    if len(connections)==0: return
+    if len(connections[0].shape)!=1:
+      raise(invalidNodeConnection(connections[0].shape,[None]))
+    super().connect(connections)
 
   #Creates a directory for the layer
 
@@ -78,6 +90,9 @@ class DenseLayer(BuildableNode):
   # [path]/[subdir]/mat.biases (byteformat)
   # [path]/[subdir]/hyper.txt
   def exportLayer(self,path,subdir):
+    if not self.built:
+      raise(operationWithUnbuiltNode("exportLayer"))
+
     import struct
     from os import mkdir 
 
@@ -115,16 +130,12 @@ class DenseLayer(BuildableNode):
         biasFloats.append(float(self.biases[i]))
       f.write(bytearray(struct.pack(str(len(biasFloats))+"f",*biasFloats)))
 
-  def connect(self, connections):
-    if len(connections[0].shape)!=1:
-      raise(invalidNodeConnection(connections[0].shape,[None]))
-    super().connect(connections)
 
   #function that loads a layer from files and stores perameters on stack
   #gets from to [path]/[subdir]
-  #throws missingFileForImport if file missing a file
-  #throws missingDirectoryForImport if entire directory is missing
   def importLayer(self,superdir,subdir):
+    
+
     from os import path
 
     accessPath=superdir+"\\"+subdir
@@ -145,6 +156,7 @@ class DenseLayer(BuildableNode):
           raise(invalidDataInFile(accessPath+"\\hyper.txt","inputSize",fileLines[0]))
         try:
           self.size=int(fileLines[1]) 
+          self.outputShape=[self.size]
         except ValueError as e:
           raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[1]))
         try:
@@ -190,5 +202,7 @@ class DenseLayer(BuildableNode):
 
     except IOError:
       raise(missingFileForImport(accessPath,"mat.biases"))
+
+    self.built=True
 
      

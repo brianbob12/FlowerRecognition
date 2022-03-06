@@ -71,3 +71,12 @@ class notEnoughNodeConnections(Exception):
         out+=" connections but only has "
         out+=str(self.numberOfConnectionsReceived)
         return out
+
+class operationWithUnbuiltNode(Exception):
+    def __init__(self,operation):
+        self.operation=operation
+
+    def __str__(self):
+        out="OPERATION WITH UNBUILT LAYER\tOperation:"
+        out+=self.operation
+        return out

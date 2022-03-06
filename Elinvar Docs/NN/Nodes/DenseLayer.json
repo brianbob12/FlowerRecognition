@@ -53,12 +53,18 @@
     {
       "Name":"build",
       "MandatoryArgs":[],
-      "OptionalArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"seed",
+          "Type":"int",
+          "Description":"Random seed for weights generation."
+        }
+      ],
       "Returns":[],
       "Throws":[
         "Elinvar.NN.notEnoughNodeConnections(numberOfConnectionsReceived,requiredConnections)"
       ],
-      "Description":"Creates matrices mapping input size to output size. Requires a set connection of output shape [None]."
+      "Description":"Creates matrices mapping input size to output size. Only the first connection will be used. Sets biases to zero but generates weights across a normal distribution with the specified seed."
     },
     {
       "Name":"newLayer",
@@ -92,7 +98,7 @@
         }
       ],
       "Throws":[],
-      "Description":"returns a list of the trainable tf.Variables in the layer."
+      "Description":"Returns a list of the trainable tf.Variables in the layer."
     },
     {
       "name":"exportLayer",
@@ -111,12 +117,13 @@
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[
-        "Elinvar.NN.invalidPath(path)"
+        "Elinvar.NN.invalidPath(path)",
+        "Elinvar.NN.operationWithUnbuiltNode(operation)"
       ],
-      "Description":"Saves this layer to a specified folder. Saves three files: [path]/[subdir]/mat.weights, [path]/[subdir]:mat.biases, [path]/[subdir]/hyper.txt  ."
+      "Description":"Saves this layer to a specified folder. Saves three files: [path]/[subdir]/mat.weights, [path]/[subdir]:mat.biases, [path]/[subdir]/hyper.txt. This will  not work if layer is not built."
     },
     {
-      "name":"importLayer",
+      "Name":"importLayer",
       "MandatoryArgs":[
         {
           "Name":"path",
@@ -137,7 +144,23 @@
         "Elinvar.NN.missingDirectoryForImport(path)",
         "Elinvar.NN.unknownActivationFunction(activationFunction)"
       ],
-      "Description":"Loads this layer from a specified folder. Requires three files: [path]/[subdir]/mat.weights, [path]/[subdir]:mat.biases, [path]/[subdir]/hyper.txt  ."
+      "Description":"Loads this layer from a specified folder. Requires three files: [path]/[subdir]/mat.weights, [path]/[subdir]:mat.biases, [path]/[subdir]/hyper.txt  . This also builds the layer."
+    },
+    {
+      "Name":"connect",
+      "MandatoryArgs":[
+        {
+          "Name":"connections",
+          "Type":"List<Node>",
+          "Descriptions":"List of nodes. All nodes after the first will be ignored in execution. Nodes must have shape: [None]"
+        }
+      ],
+      "OptionalArgs":[],
+      "Throws":[
+        "Elinvar.NN.invalidNodeConnection(receivedShape,requiredShape)"
+      ],
+      "Returns":[],
+      "Description":"Sets specified nodes as inputConnections."
     }
   ],
   "Notes":"Can only connect to a single Node"

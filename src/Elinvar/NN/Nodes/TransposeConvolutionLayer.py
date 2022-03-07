@@ -1,7 +1,7 @@
 import tensorflow as tf
 import numpy as np
 
-from .Exceptions import *
+from ..Exceptions import *
 
 from .ConvolutionLayer import ConvolutionLayer
 

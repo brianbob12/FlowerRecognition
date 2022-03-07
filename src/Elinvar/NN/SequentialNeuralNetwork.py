@@ -15,10 +15,10 @@ from .Exceptions import *
 
 #import layers
 from .Nodes.DenseLayer import DenseLayer 
-from .ConvolutionLayer import ConvolutionLayer 
+from .Nodes.ConvolutionLayer import ConvolutionLayer 
 from .PoolingLayer import PoolingLayer 
 from .FlattenLayer import FlattenLayer
-from .TransposeConvolutionLayer import TransposeConvolutionLayer
+from .Nodes.TransposeConvolutionLayer import TransposeConvolutionLayer
 from .InstanceNormalizationLayer import InstanceNormalizationLayer
 
 #

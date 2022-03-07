@@ -3,7 +3,7 @@ from tensorflow import Variable
 from tf.nn import conv2d
 from tf.random import normal
 
-from .Exceptions import *
+from ..Exceptions import *
 
 class ConvolutionLayer:
   

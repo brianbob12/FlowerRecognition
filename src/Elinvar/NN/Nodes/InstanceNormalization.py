@@ -1,16 +1,19 @@
 
 from tensorflow import reduce_mean,transpose,broadcast_to
 from tensorflow.math import reduce_std
-from .Exceptions import *
+from tensorflow import concat
+from ..Exceptions import *
+from .Node import Node
 
-#performs instance normilization
-#normilizes values within each channel
+#performs instance normalization
+#normalizes values within each channel
 #must take inputs of shape [batch,chanells,height,width]
 
-class InstanceNormalizationLayer():
+class InstanceNormalization(Node):
 
-  def __init__(self):
-    pass
+  def __init__(self,name=None,protected=None):
+    super().__init__(name=name,protected=protected)
+    self.hasTrainableVariables=False
 
   def newLayer(self,mean,stddev):
     self.stddev=stddev
@@ -20,6 +23,7 @@ class InstanceNormalizationLayer():
   
   #WARNING: the following is complicated and not memory efficient
   def execute(self,inputs):
+    myInputs=concat(inputs,-1)
     inputShape=inputs.shape
     means=reduce_mean(inputs,[-2,-3])
     standardDeviations=reduce_std(inputs,[-2,-3])
@@ -38,9 +42,35 @@ class InstanceNormalizationLayer():
 
     out=((inputs-formattedMeans)/formattedStddev)*self.stddev + self.mean
     return out
+
+  def connect(self,connections):
+    if len(connections)==0:
+      return
+    #checks
+    if len(self.connections)>0:
+      shape0=self.inputShape[0]
+      shape1=self.inputShape[1]      
+    else:
+      shape0=connections[0].outputShape[0]
+      shape1=connections[0].outputShape[1]
+      #this check is important
+      if shape0 ==None or shape1==None:
+        #NOTE: this should really be a different error
+        raise(invalidNodeConnection(connections[0].outputShape,[None,None,None]))
+
+    for prospectNode in connections:
+      if prospectNode.outputShape[0]!=shape0 or prospectNode.outputShape[1]!=shape1:
+        raise(invalidNodeConnection(prospectNode.outputShape,[shape0,shape1,None]))
+
+    #connect
+    if not self.imported:
+      for node in connections:
+        self.inputChannels+=node.outputShape[2]
+
+    self.inputShape=[shape0,shape1,self.inputChannels]
+    self.outputShape=self.inputShape#NOTE: same memory adress
+    super().connect(connections)
   
-  def getTrainableVariables(self):
-    return([])
 
   def exportLayer(self,superdir,subdir):
     from os import mkdir

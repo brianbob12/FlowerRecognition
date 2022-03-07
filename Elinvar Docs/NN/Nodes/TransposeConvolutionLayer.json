@@ -1,0 +1,8 @@
+{
+  "Name":"TransposeConvolutionLayer",
+  "Superclass":"ConvolutionLayer",
+  "Description":"2d transpose convolution layer.",
+  "Properties":[],
+  "Functions":[],
+  "Notes":[]
+}

@@ -1,8 +1,10 @@
 {
   "Name":"ConvolutionLayer",
   "Superclass":"BuildableNode",
-  "Subclasses":[],
-  "Description":"2d convolution layer",
+  "Subclasses":[
+    "TransposeConvolutionLayer"
+  ],
+  "Description":"2d convolution layer.",
   "Properties":[
     {
       "Name":"kernelSize",
@@ -145,5 +147,6 @@
       "Returns":[],
       "Description":"Sets specified nodes as inputConnections."
     }
-  ]
+  ],
+  "Notes":""
 }

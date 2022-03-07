@@ -14,7 +14,7 @@ class TransposeConvolutionLayer(ConvolutionLayer):
   def connect(self,connections):
     super().connect(connections)
     self.outputShape=[
-      self.inputShape[0]-((self.kernelSize//2)*2)/self.stride,
-      self.inputShape[1]-((self.kernelSize//2)*2)/self.stride,
+      self.inputShape[0]+((self.kernelSize//2)*2)/self.stride,
+      self.inputShape[1]+((self.kernelSize//2)*2)/self.stride,
       self.numberOfKernels
     ]

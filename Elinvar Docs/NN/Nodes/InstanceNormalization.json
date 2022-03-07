@@ -2,7 +2,7 @@
   "Name":"InstanceNormalization",
   "Superclass":"Node",
   "Subclasses":[],
-  "Description":"Node that does instance normalization. This is normalization across chanenls.",
+  "Description":"Node that does instance normalization. This is normalization across channels.",
   "Properties":[
     {
       "Name":"mean",

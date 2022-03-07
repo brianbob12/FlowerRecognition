@@ -1,35 +1,18 @@
 {
-  "Name":"ConvolutionLayer",
-  "Superclass":"BuildableNode",
-  "Subclasses":[
-    "TransposeConvolutionLayer"
-  ],
-  "Description":"2d convolution layer.",
+  "Name":"MaxPoolingNode",
+  "Superclass":"Node",
+  "Subclasses":[],
+  "Description":"2d max pooling layer.",
   "Properties":[
     {
-      "Name":"kernelSize",
+      "Name":"size",
       "Type":"int",
-      "Description":"The side length of the square kernels."
+      "Description":"The side length of the pooling filter."
     },
     {
-      "Name":"numberOfKernels",
+      "Name":"stride",
       "Type":"int",
-      "Description":"Number of kernels per input channel."
-    },
-    {
-      "Name":"inputChannels",
-      "Type":"int",
-      "Description":"Number of input channels to the node. This is the 4th element of the shape of the 1st connection."
-    },
-    {
-      "Name":"filter",
-      "Type":"tf.Variable",
-      "Description":"A filter consisting of multiple convolution kernels. This is a trainable variable"
-    },
-    {
-      "Name":"strideSize",
-      "Type":"int",
-      "Description":"The x/y stride for the filters."
+      "Description":"Stride of the pooling filter."
     },
     {
       "Name":"inputShape",
@@ -39,33 +22,12 @@
   ],
   "Functions":[
     {
-      "Name":"build",
-      "MandatoryArgs":[],
-      "OptionalArgs":[
-        {
-          "Name":"seed",
-          "Type":"int",
-          "Description":"Random seed for filter generation"
-        }
-      ],
-      "Returns":[],
-      "Throws":[
-        "Elinvar.NN.notEnoughNodeConnections(numberOfConnectionsReceived,requiredConnections)"
-      ],
-      "Description":"Creates the filter based on inputChannels. Requires at least one connection. If there are multiple connections, connections will be treated as additional channels, therefore all connections must have the same first two elements of shape."
-    },
-    {
       "Name":"newLayer",
       "MandatoryArgs":[
         {
-          "Name":"kernelSize",
+          "Name":"size",
           "Type":"int",
-          "Description":"Sets kernelSize property."
-        },
-        {
-          "Name":"numberOfKernels",
-          "Type":"int",
-          "Description":"Sets numberOfKernels property."
+          "Description":"Sets filterSize property."
         },
         {
           "Name":"stride",
@@ -76,20 +38,9 @@
       "OptionalArgs":[],
       "Throws":[],
       "Returns":[],
-      "Description":"Creates a new layer instead of importing a layer."
+      "Description":"Creates a new node instead of importing a node."
     },
-    {
-      "Name":"getTrainableVariables",
-      "MandatoryArgs":[],
-      "OptionalArgs":[],
-      "Returns":[
-        {
-          "Type":"List<tf.Variable>",
-          "Description":"[filter(shape=[kernelSize,kernelSize,inputChannels,outputChannels]"
-        }
-      ],
-      "Description":"Returns a list of the trainable tf.Variables in the layer. In this case, returns filter property."
-    },
+    
     {
       "name":"exportLayer",
       "MandatoryArgs":[
@@ -133,7 +84,7 @@
         "Elinvar.NN.missingFileForImport(path,fileName)",
         "Elinvar.NN.missingDirectoryForImport(path)"
       ],
-      "Description":"Loads this layer from a specified folder. This does not build the node. The node must have connections set before using this function."
+      "Description":"Loads this layer from a specified folder. This does not build the node."
     },
     {
       "Name":"connect",
@@ -168,7 +119,7 @@
           "Description":"Has shape outputShape"
         }
       ],
-      "Description":"Performs 2d convolution on inputs."
+      "Description":"Performs 2d max pooling on each input channel."
     }
   ],
   "Notes":""

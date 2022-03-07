@@ -41,7 +41,7 @@ class ConvolutionLayer:
     if len(connections)==0:
       return
     #checks
-    if len(self.connections)>0:
+    if len(self.inputConnections)>0:
       shape0=self.inputShape[0]
       shape1=self.inputShape[1]      
     else:
@@ -59,7 +59,7 @@ class ConvolutionLayer:
     #connect
     if not self.imported:
       for node in connections:
-        self.inputChannels+=node.outputShape[2]
+        self.inputChannels+=node.outputShape[-1]
 
     self.inputShape=[shape0,shape1,self.inputChannels]
     self.outputShape=[

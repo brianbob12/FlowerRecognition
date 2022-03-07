@@ -3,3 +3,4 @@ from .BuildableNode import BuildableNode
 from .ConvolutionLayer import ConvolutionLayer
 from .TransposeConvolutionLayer import TransposeConvolutionLayer
 from .InstanceNormalization import InstanceNormalization
+from .MaxPoolingNode import MaxPoolingNode

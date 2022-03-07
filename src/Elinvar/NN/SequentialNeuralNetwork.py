@@ -16,7 +16,7 @@ from .Exceptions import *
 #import layers
 from .Nodes.DenseLayer import DenseLayer 
 from .Nodes.ConvolutionLayer import ConvolutionLayer 
-from .PoolingLayer import PoolingLayer 
+from .Nodes.MaxPoolingNode import PoolingLayer 
 from .FlattenLayer import FlattenLayer
 from .Nodes.TransposeConvolutionLayer import TransposeConvolutionLayer
 from .Nodes.InstanceNormalization import InstanceNormalizationLayer

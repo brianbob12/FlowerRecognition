@@ -7,7 +7,7 @@
     {
       "Name":"size",
       "Type":"int",
-      "Description":"The number of neurons in the layer"
+      "Description":"The number of neurons in the layer."
     },
     {
       "Name":"activationKey",

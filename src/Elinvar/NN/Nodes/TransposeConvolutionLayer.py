@@ -15,6 +15,7 @@ class TransposeConvolutionLayer(ConvolutionLayer):
       return conv2d_transpose(inputs,self.filter,self.strides,"VALID")
 
   def connect(self,connections):
+    #there's a little bit of redundancy here
     super().connect(connections)
     self.outputShape=[
       self.inputShape[0]+((self.kernelSize//2)*2)/self.stride,

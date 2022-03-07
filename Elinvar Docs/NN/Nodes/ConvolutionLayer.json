@@ -145,6 +145,25 @@
       ],
       "Returns":[],
       "Description":"Sets specified nodes as inputConnections."
+    },
+    {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List<tf.Tensor>",
+          "Description":"A tf.Tensor from each input connection. "
+        }
+      ],
+      "OptionalArgs":[],
+      "Throws":[],
+      "Returns":[
+        {
+          "Type":"tf.Tensor",
+          "Description":"Has shape outputShape"
+        }
+      ],
+      "Description":"Performs 2d convolution on inputs."
     }
   ],
   "Notes":""

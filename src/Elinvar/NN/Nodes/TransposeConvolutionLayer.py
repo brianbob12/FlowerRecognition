@@ -9,6 +9,9 @@ class TransposeConvolutionLayer(ConvolutionLayer):
 
   #override execute
   def execute(self, inputs):
+    if not self.built:
+      raise(operationWithUnbuiltNode("execute"))
+    else:
       return conv2d_transpose(inputs,self.filter,self.strides,"VALID")
 
   def connect(self,connections):

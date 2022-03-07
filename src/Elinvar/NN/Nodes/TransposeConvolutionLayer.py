@@ -13,7 +13,7 @@ class TransposeConvolutionLayer(ConvolutionLayer):
     if not self.built:
       raise(operationWithUnbuiltNode("execute"))
     else:
-      myInputs=concat(inputs)
+      myInputs=concat(inputs,-1)
       return conv2d_transpose(myInputs,self.filter,self.strides,"VALID")
 
   def connect(self,connections):

@@ -74,7 +74,7 @@ class ConvolutionLayer:
     if not self.built:
       raise(operationWithUnbuiltNode("execute"))
     else:
-      myInput=concat(inputs)
+      myInput=concat(inputs,-1)
       return conv2d(myInput,self.filter,self.strides,"VALID")
 
   #return a list of the trainable variables

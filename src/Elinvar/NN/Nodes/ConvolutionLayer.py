@@ -2,6 +2,7 @@ import numpy as np
 from tensorflow import Variable
 from tf.nn import conv2d
 from tf.random import normal
+from tf import concat
 
 from ..Exceptions import *
 
@@ -73,7 +74,8 @@ class ConvolutionLayer:
     if not self.built:
       raise(operationWithUnbuiltNode("execute"))
     else:
-      return conv2d(inputs,self.filter,self.strides,"VALID")
+      myInput=concat(inputs)
+      return conv2d(myInput,self.filter,self.strides,"VALID")
 
   #return a list of the trainable variables
   def getTrainableVariables(self):

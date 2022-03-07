@@ -19,7 +19,7 @@ from .Nodes.ConvolutionLayer import ConvolutionLayer
 from .PoolingLayer import PoolingLayer 
 from .FlattenLayer import FlattenLayer
 from .Nodes.TransposeConvolutionLayer import TransposeConvolutionLayer
-from .InstanceNormalizationLayer import InstanceNormalizationLayer
+from .Nodes.InstanceNormalization import InstanceNormalizationLayer
 
 #
 #Neural Network - supports Convolution

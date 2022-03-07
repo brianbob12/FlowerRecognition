@@ -1,4 +1,5 @@
 from tf.nn import conv2d_transpose
+from tf import concat
 import numpy as np
 
 from ..Exceptions import *
@@ -12,7 +13,8 @@ class TransposeConvolutionLayer(ConvolutionLayer):
     if not self.built:
       raise(operationWithUnbuiltNode("execute"))
     else:
-      return conv2d_transpose(inputs,self.filter,self.strides,"VALID")
+      myInputs=concat(inputs)
+      return conv2d_transpose(myInputs,self.filter,self.strides,"VALID")
 
   def connect(self,connections):
     #there's a little bit of redundancy here

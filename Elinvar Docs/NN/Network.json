@@ -4,7 +4,21 @@
   "Subclasses":[],
   "Description":"A network of nodes that is trainable through training protocols.",
   "Properties":[
-
+    {
+      "Name":"Nodes",
+      "Type":"List<Node>",
+      "Description":"A list of nodes used for exporting the network."
+    },
+    {
+      "Name":"Input Nodes",
+      "Type":"List<Node>",
+      "Description":"List of nodes sometimes used as imports to the network."
+    },
+    {
+      "Name":"Output Nodes",
+      "Type":"List<Node>",
+      "Description":"List of nodes sometimes taken as outputs of the network."
+    }
   ],
   "Functions":[
 

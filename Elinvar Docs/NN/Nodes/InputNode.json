@@ -1,0 +1,30 @@
+{
+  "Name":"InputNode",
+  "Superclass":"Node",
+  "Subclasses":[],
+  "Description":"Node that provides values to other nodes by overwriting the execute function.",
+  "Properties":[
+    {
+      "Name":"onExecute",
+      "Type":"None=>tf.Tensor",
+      "Description":"Callback set for provision of the value of the network. Runs in the execute function."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"setOnExecute",
+      "MandatoryArgs":[
+        {
+          "Name":"onExecute",
+          "Type":"None=>tf.Tensor",
+          "Description":"Sets the onExecute property."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
+    }
+  ],
+  "Notes":""
+}

@@ -2,5 +2,8 @@ from .Node import Node
 from .BuildableNode import BuildableNode
 from .ConvolutionLayer import ConvolutionLayer
 from .TransposeConvolutionLayer import TransposeConvolutionLayer
-from .InstanceNormalization import InstanceNormalization
+from .InstanceNormalizationNode import InstanceNormalization
+from .AdaIN import AdaIN
+from .MaxPoolingNode import MaxPoolingNode
+from .FlattenNode import FlattenNode
 from .MaxPoolingNode import MaxPoolingNode

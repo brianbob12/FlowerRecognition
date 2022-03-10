@@ -3,10 +3,11 @@ from tensorflow import Variable
 from tf.nn import conv2d
 from tf.random import normal
 from tf import concat
+from .BuildableNode import BuildableNode
 
 from ..Exceptions import *
 
-class ConvolutionLayer:
+class ConvolutionLayer(BuildableNode):
   
   def __init__(self,name=None,protected=False):
     super().__init__(name=name,protected=protected)

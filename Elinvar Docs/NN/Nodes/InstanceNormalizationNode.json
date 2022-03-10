@@ -1,5 +1,5 @@
 {
-  "Name":"InstanceNormalization",
+  "Name":"InstanceNormalizationNode",
   "Superclass":"Node",
   "Subclasses":[],
   "Description":"Node that does instance normalization. This is normalization across channels.",

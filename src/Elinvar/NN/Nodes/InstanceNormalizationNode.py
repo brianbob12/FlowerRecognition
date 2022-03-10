@@ -9,7 +9,7 @@ from .Node import Node
 #normalizes values within each channel
 #must take inputs of shape [batch,chanells,height,width]
 
-class InstanceNormalization(Node):
+class InstanceNormalizationNode(Node):
 
   def __init__(self,name=None,protected=None):
     super().__init__(name=name,protected=protected)

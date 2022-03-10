@@ -1,0 +1,13 @@
+{
+  "Name":"Network",
+  "Superclass":"None",
+  "Subclasses":[],
+  "Description":"A network of nodes that is trainable through training protocols.",
+  "Properties":[
+
+  ],
+  "Functions":[
+
+  ],
+  "Notes":""
+}

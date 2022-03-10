@@ -17,9 +17,9 @@ from .Exceptions import *
 from .Nodes.DenseLayer import DenseLayer 
 from .Nodes.ConvolutionLayer import ConvolutionLayer 
 from .Nodes.MaxPoolingNode import PoolingLayer 
-from .FlattenLayer import FlattenLayer
+from .Nodes.FlattenNode import FlattenLayer
 from .Nodes.TransposeConvolutionLayer import TransposeConvolutionLayer
-from .Nodes.InstanceNormalization import InstanceNormalizationLayer
+from .Nodes.InstanceNormalizationNode import InstanceNormalizationLayer
 
 #
 #Neural Network - supports Convolution

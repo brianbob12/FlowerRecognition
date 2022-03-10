@@ -1,0 +1,30 @@
+{
+  "Name":"FlattenNode",
+  "Superclass":"Node",
+  "Subclasses":[],
+  "Description":"Flattens all inputs into tensor of shape[None] whilst persevering batch shape.",
+  "Properties":[
+
+  ],
+  "Functions":[
+    {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List",
+          "Description":"Input has any shape" 
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tf.Tensor",
+          "Description":"Has shape:[batchSize,None]"
+        }
+      ],
+      "Description":"Flattens tensors whilst preserving batch shape."
+    }
+  ],
+  "Notes":""
+}

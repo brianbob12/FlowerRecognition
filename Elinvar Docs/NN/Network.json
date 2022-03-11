@@ -21,7 +21,68 @@
     }
   ],
   "Functions":[
-
+    {
+      "Name":"Execute",
+      "MandatoryArgs":[
+        {
+          "Name":"requestedOutputs",
+          "Type":"List<Node>",
+          "Description":"A list of nodes that you want to get the value of."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"List<tf.Tensor>",
+          "Description":"Output of each node in requestedOutputs"
+        }
+      ],
+      "Throws":[],
+      "Description":"Uses the network to process the inputs into the required output. Only executes the nodes necessary to calculate the requested outputs. "
+    },
+    {
+      "Name":"Clear",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"exceptionNodes",
+          "Type":"List<Node>",
+          "Descriptions":"Nodes not to clear."
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Clears the value of all nodes except for specified exceptions."
+    },
+    {
+      "Name":"ProtectedClear",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"exceptionNodes",
+          "Type":"List<Node>",
+          "Descriptions":"Nodes not to clear."
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Runs protectedClear on all nodes except specified exceptions."
+    },
+    {
+      "Name":"train",
+      "MandatoryArgs":[
+        {
+          "Name":""
+        }
+      ]
+    },
+    {
+      "Name":"exportNetwork "
+    },
+    {
+      "Name":"importNetwork"
+    }
+    
   ],
   "Notes":""
 }

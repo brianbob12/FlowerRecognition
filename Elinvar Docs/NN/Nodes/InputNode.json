@@ -12,17 +12,24 @@
   ],
   "Functions":[
     {
-      "Name":"setOnExecute",
+      "Name":"setup",
       "MandatoryArgs":[
         {
           "Name":"onExecute",
           "Type":"None=>tf.Tensor",
           "Description":"Sets the onExecute property."
+        },
+        {
+          "Name":"outputShape",
+          "Type":"List<int>",
+          "Description":"Sets outputShape property."
         }
       ],
       "OptionalArgs":[],
       "Returns":[],
-      "Throws":[],
+      "Throws":[
+        "Elinvar.NN.nodeNotSetup(attemptedOperation)"
+      ],
       "Description":""
     }
   ],

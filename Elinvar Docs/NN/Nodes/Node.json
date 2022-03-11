@@ -6,8 +6,10 @@
     "AdaIN",
     "InstanceNormalization",
     "PoolingLayer",
+    "MaxPoolingNode",
     "Flatten",
-    "UpscalingLayer"
+    "UpscalingLayer",
+    "InputNode"
   ],
   "Description":"Holds nodes in a network that input data perform an operation and output a variable.",
   "Properties":[

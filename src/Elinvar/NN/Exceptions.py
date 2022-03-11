@@ -80,3 +80,13 @@ class operationWithUnbuiltNode(Exception):
         out="OPERATION WITH UNBUILT LAYER\tOperation:"
         out+=self.operation
         return out
+
+class nodeNotSetup(Exception):
+    def __init__(self,attemptedOperation):
+        self.attemptedOperation=attemptedOperation
+        pass
+    def __str__(self):
+        out="LAYER NOT SET UP\n"
+        out+="Layer must be set up before attempting "
+        out+=self.attemptedOperation
+        return out

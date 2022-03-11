@@ -47,6 +47,11 @@
       "Name":"hasTrainableVariables",
       "Type":"bool",
       "Description":"True if Node has trainable variables"
+    },
+    {
+      "Name":"ID",
+      "Type":"int",
+      "Description":"A unique identifier of the node used for export and import"
     }
   ],
   "Functions":[
@@ -63,6 +68,11 @@
           "Name":"protected",
           "Type":"bool",
           "Description":"option to block clear function"
+        },
+        {
+          "Name":"ID",
+          "Type":"int",
+          "Description":"Sets ID property."
         }
       ],
       "Returns":[],
@@ -140,6 +150,13 @@
         "Elinvar.NN.invalidNodeConnection(receivedShape,requiredShape)"
       ],
       "Description":"Adds specified Node to inputConnections."
+    },
+    {
+      "Name":"exportNode",
+      "MandatoryArgs":[]
+    },
+    {
+      "Name":"importNode"
     }
   ],
   "Notes":"This is used as a template for types of nodes including junctions,layers,inputs, and outputs"

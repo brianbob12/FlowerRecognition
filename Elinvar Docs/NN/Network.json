@@ -77,10 +77,38 @@
       ]
     },
     {
-      "Name":"exportNetwork "
+      "Name":"exportNetwork ",
+      "MandatoryArgs":[
+        {
+          "Name":"networkPath",
+          "Type":"str",
+          "Description":"The relative path to save the network to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)"
+      ],
+      "Description":"Saves a built network to a directory for later use."
     },
     {
-      "Name":"importNetwork"
+      "Name":"importNetwork",
+      "MandatoryArgs":[
+        {
+          "Name":"networkPath",
+          "Type":"str",
+          "Description":"The relative path to save the network to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.missingDirectoryForImport(path)",
+        "Elinvar.NN.invalidDataInFile(filePath)",
+        "Elinvar.NN.missingFileForImport(filePath)"
+      ],
+      "Description":"Imports a network from a specified directory. This will create and connect the nodes as they were when the network was exported."
     }
     
   ],

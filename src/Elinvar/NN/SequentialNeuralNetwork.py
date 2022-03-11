@@ -342,8 +342,3 @@ class SequentialNeuralNetwork:
         except IOError:
             raise(missingFileForImport(myPath+"\\layers.txt"))
 
-    #return deepcopy of self
-    #TODO
-    def deepcopy(self):
-        return
-        #TODO 

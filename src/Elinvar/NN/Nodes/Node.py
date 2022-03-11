@@ -8,7 +8,7 @@
 #a node can be perserved which disables the clear function
 
 class Node:
-  def __init__(self,name=None,protected=False):
+  def __init__(self,name=None,protected=False,id=None):
     self.name=name
     self.inputConnections=[]#list of nodes
     self.outputShape=None#outputshape
@@ -17,6 +17,11 @@ class Node:
     self.protected=protected
     self.value=None
     self.hasTrainableVariables=False
+    if id!=None:
+      self.ID=ID
+    else:
+      from random import randint
+      self.ID=randint(0,2**31)
 
   #private
   #this is made to be overwritten

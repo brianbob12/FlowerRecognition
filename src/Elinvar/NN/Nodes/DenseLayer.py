@@ -104,7 +104,7 @@ class DenseLayer(BuildableNode):
     except FileExistsError:
       pass
     except Exception as e:
-      raise(invalidPath(accessPath))    
+      raise(invalidPath(accessPath))
 
     #save hyper.txt
     #contins: inputSize, layerSize, activation 

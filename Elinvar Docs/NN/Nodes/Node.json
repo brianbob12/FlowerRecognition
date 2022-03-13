@@ -153,10 +153,53 @@
     },
     {
       "Name":"exportNode",
-      "MandatoryArgs":[]
+      "MandatoryArgs":[
+        {
+          "Name":"path",
+          "Type":"str",
+          "Description":"Path the network is being saved to."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)"
+      ],
+      "Description":"Exports ID, and connections. Checks directory existence and validity."
     },
     {
-      "Name":"importNode"
+      "Name":"importNode",
+      "MandatoryArgs":[
+        {
+          "Name":"myPath",
+          "Type":"str",
+          "Description":"Path the network is being saved to. Has to be called myPath to avoid a collision."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        }
+      ],
+      "Throws":[],
+      "Description":"Imports ID and connections."
     }
   ],
   "Notes":"This is used as a template for types of nodes including junctions,layers,inputs, and outputs"

@@ -34,7 +34,7 @@ class MaxPoolingNode(Node):
       shape1=self.inputShape[1]
     else:
       shape0=connections[0].outputShape[0]
-      shape1=connections[1].outputShape[1]
+      shape1=connections[0].outputShape[1]
       if shape0==None or shape1==None:
         #NOTE: this should really be a different error
         raise(invalidNodeConnection(connections[0].outputShape,[None,None,None,None]))
@@ -49,8 +49,8 @@ class MaxPoolingNode(Node):
 
     self.inputShape=[shape0,shape1,self.inputChannels]
     self.outputShape=[
-      (self.inputShape[0]-(self.size//2)*2)/self.stride,
-      (self.inputShape[1]-(self.size//2)*2)/self.stride,
+      (self.inputShape[0]-self.size)/self.stride,
+      (self.inputShape[1]-self.size)/self.stride,
       self.inputChannels
     ]
 

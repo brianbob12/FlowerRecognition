@@ -6,7 +6,10 @@ from tensorflow import reshape
 #function that gets an input of any shape and has output shape [None]
 
 class FlattenNode(Node):
- 
+  
+  #TODO count output shape
+  def connect(self, connections):
+      return super().connect(connections)
   
   #returns numpy
   def execute(self,inputs):

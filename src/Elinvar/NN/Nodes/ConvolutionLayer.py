@@ -16,9 +16,10 @@ class ConvolutionLayer(BuildableNode):
 
     #filterSize is interger
     #stride is a single int
-  def newLayer(self,kernelSize,numberOfKernels,stride):
+  def newLayer(self,kernelSize,numberOfKernels,stride,padding):
     weightInitSTDDEV=0.1
     self.kernelSize=kernelSize
+    self.padding=padding
     self.numberOfKernels=numberOfKernels
     self.inputChannels=0#until connections are set
     self.imported=False
@@ -63,8 +64,8 @@ class ConvolutionLayer(BuildableNode):
 
     self.inputShape=[shape0,shape1,self.inputChannels]
     self.outputShape=[
-      (shape0-(self.kernelSize//2)*2)/self.stride,
-      (shape1-(self.kernelSize//2)*2)/self.stride,
+      (shape0-self.kernelSize+self.padding*2)/self.strideSize+1,
+      (shape1-self.kernelSize+self.padding*2)/self.strideSize+1,
       self.numberOfKernels
     ]
     super().connect(connections)

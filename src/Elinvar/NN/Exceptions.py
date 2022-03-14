@@ -8,6 +8,9 @@
 #Network.Exceptions
 #
 #This class holds custom Exceptions used for error handeling 
+from numpy import require
+
+
 class unspecifiedActivation (Exception):
     pass
 
@@ -89,4 +92,14 @@ class nodeNotSetup(Exception):
         out="LAYER NOT SET UP\n"
         out+="Layer must be set up before attempting "
         out+=self.attemptedOperation
+        return out
+
+class invalidInputNodeShape(Exception):
+    def __init__(self,receivedShape,requiredShape):
+        self.receivedShape=receivedShape
+        self.requiredShape=requiredShape
+
+    def __str__(self):
+        out="INVALID INPUT NODE SHAPE\n"
+        out+=f"This input node required shape {self.requiredShape} but received {self.receivedShape}."
         return out

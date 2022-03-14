@@ -5,25 +5,80 @@
   "Description":"A network of nodes that is trainable through training protocols.",
   "Properties":[
     {
-      "Name":"Nodes",
-      "Type":"List<Node>",
-      "Description":"A list of nodes used for exporting the network."
+      "Name":"nodes",
+      "Type":"Dict<int><Node>",
+      "Description":"A dictionary mapping ids to nodes. Contains all nodes including input and output"
     },
     {
-      "Name":"Input Nodes",
+      "Name":"inputNodes",
       "Type":"List<Node>",
       "Description":"List of nodes sometimes used as imports to the network."
     },
     {
-      "Name":"Output Nodes",
+      "Name":"outputNodes",
       "Type":"List<Node>",
       "Description":"List of nodes sometimes taken as outputs of the network."
     }
   ],
   "Functions":[
     {
-      "Name":"Execute",
+      "Name":"addNodes",
       "MandatoryArgs":[
+        {
+          "Name":"nodes",
+          "Type":"List<Node>",
+          "Description":"A list of nodes to add to the network. "
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Adds the given nodes the Nodes property. This may change Node ID's if there is a collision."
+    },
+    {
+      "Name":"addInputNodes",
+      "MandatoryArgs":[
+        {
+          "Name":"Nodes",
+          "Type":"List<Node>",
+          "Description":"A list of nodes to add to the network. "
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Adds the given nodes the Nodes property as well as the InputNodesProperty. This may change Node ID's if there is a collision."
+    },
+    {
+      "Name":"addOutputNodes",
+      "MandatoryArgs":[
+        {
+          "Name":"Nodes",
+          "Type":"List<Node>",
+          "Description":"A list of nodes to add to the network. "
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Adds the given nodes the Nodes property as well as the OutputNodesProperty. This may change Node ID's if there is a collision."
+    },
+    {
+      "Name":"build",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Builds all nodes in the network starting from input nodes working down. If any nodes are not connected they will not be built."
+    },
+    {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"Dict<int><tf.Tensor>",
+          "Description":"Maps the IDs of input nodes to their value."
+        },
         {
           "Name":"requestedOutputs",
           "Type":"List<Node>",
@@ -37,17 +92,19 @@
           "Description":"Output of each node in requestedOutputs"
         }
       ],
-      "Throws":[],
+      "Throws":[
+        "Elinvar.NN.invalidInputNodeShape(receivedShape,inputShape)"
+      ],
       "Description":"Uses the network to process the inputs into the required output. Only executes the nodes necessary to calculate the requested outputs. "
     },
     {
-      "Name":"Clear",
+      "Name":"clear",
       "MandatoryArgs":[],
       "OptionalArgs":[
         {
           "Name":"exceptionNodes",
-          "Type":"List<Node>",
-          "Descriptions":"Nodes not to clear."
+          "Type":"List<int>",
+          "Descriptions":"IDs of Nodes not to clear."
         }
       ],
       "Returns":[],
@@ -55,13 +112,13 @@
       "Description":"Clears the value of all nodes except for specified exceptions."
     },
     {
-      "Name":"ProtectedClear",
+      "Name":"protectedClear",
       "MandatoryArgs":[],
       "OptionalArgs":[
         {
           "Name":"exceptionNodes",
-          "Type":"List<Node>",
-          "Descriptions":"Nodes not to clear."
+          "Type":"List<int>",
+          "Descriptions":"IDs of Nodes not to clear."
         }
       ],
       "Returns":[],

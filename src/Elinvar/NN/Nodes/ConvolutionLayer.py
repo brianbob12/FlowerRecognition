@@ -1,8 +1,7 @@
 import numpy as np
-from tensorflow import Variable
-from tf.nn import conv2d
-from tf.random import normal
-from tf import concat
+from tensorflow import Variable,concat
+from tensorflow.nn import conv2d
+from tensorflow.random import normal
 from .BuildableNode import BuildableNode
 
 from ..Exceptions import *

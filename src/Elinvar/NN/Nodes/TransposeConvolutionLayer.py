@@ -1,5 +1,5 @@
-from tf.nn import conv2d_transpose
-from tf import concat
+from tensorflow.nn import conv2d_transpose
+from tensorflow import concat
 import numpy as np
 
 from ..Exceptions import *

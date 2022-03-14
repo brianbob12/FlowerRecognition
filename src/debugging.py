@@ -47,10 +47,18 @@ for i in range(d):
 for i in range(e):
   files.append("E"+str(i)+".jpg") 
 #%%
-A4=CNN(256,3,debug=True)
-A4.importNetwork("./A4")
-
-
+myNet=Elinvar.NN.Network()
+input1=Elinvar.NN.Nodes.InputNode()
+input1.setup(lambda :tf.zeros([5,10]),[10])
+dense1=Elinvar.NN.Nodes.DenseLayer()
+dense1.newLayer(2,"linear")
+dense1.connect([input1])
+myNet.addInputNodes([input1])
+myNet.addOutputNodes([dense1])
+#%%
+myNet.build()
+#%%
+myNet.execute({input1.ID:tf.random.normal([5,10])},[dense1])
 #%%
 testBatchX,testBatchY=getBatch(files[0:10])
 ev=A4.evaluate(testBatchX)

@@ -4,7 +4,7 @@ from turtle import shape
 from tensorflow import concat
 from .Node import Node
 
-from tf.nn import max_pool2d
+from tensorflow.nn import max_pool2d
 import numpy as np
 from ..Exceptions import invalidDataInFile, invalidNodeConnection, invalidPath, missingDirectoryForImport, missingFileForImport
 

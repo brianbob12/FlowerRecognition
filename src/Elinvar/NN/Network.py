@@ -1,5 +1,5 @@
 from random import randint
-from NN import *
+from .Nodes import *
 
 class Network:
   
@@ -15,6 +15,10 @@ class Network:
       nodeID=node.ID
       changed=False
       while nodeID in self.nodes.keys():
+        #check if the node is the same
+        if node==self.nodes[nodeID]:
+          break
+        #else
         nodeID=randint(0,2**31)
         changed=True
       if changed:
@@ -22,20 +26,27 @@ class Network:
       self.nodes[nodeID]=node
 
   def addInputNodes(self,nodes):
-    self.AddNodes(nodes)
-    self.addInputNodes+=nodes
+    self.addNodes(nodes)
+    self.inputNodes+=nodes
 
   def addOutputNodes(self,nodes):
-    self.AddNodes(nodes)
-    self.addOutputNodes+=nodes
+    self.addNodes(nodes)
+    self.outputNodes+=nodes
 
   #private
   def buildNode(self,node):
-    if isinstance(node,BuildableNode):
-      if node.build:
-        return
+    #first build connections
     for inputNode in node.inputConnections:
       self.buildNode(inputNode)
+
+    #then if buildable, build
+    if isinstance(node,BuildableNode):
+      if node.built:
+        return
+      else:
+        node.build()
+    
+    
 
   def build(self):
     for outputNode in self.outputNodes:

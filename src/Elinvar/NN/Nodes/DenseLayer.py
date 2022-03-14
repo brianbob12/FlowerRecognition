@@ -45,7 +45,7 @@ class DenseLayer(BuildableNode):
   def build(self,seed=None):
     if self.built:return
 
-    if len(self.inputConnections<1):
+    if len(self.inputConnections)<1:
       raise(notEnoughNodeConnections(len(self.inputConnections),1))
     #now make the variables
 
@@ -78,8 +78,8 @@ class DenseLayer(BuildableNode):
 
   def connect(self, connections):
     if len(connections)==0: return
-    if len(connections[0].shape)!=1:
-      raise(invalidNodeConnection(connections[0].shape,[None]))
+    if len(connections[0].outputShape)!=1:
+      raise(invalidNodeConnection(connections[0].outputShape,[None]))
     super().connect(connections)
 
   #Creates a directory for the layer

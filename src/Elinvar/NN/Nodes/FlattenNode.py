@@ -6,10 +6,18 @@ from tensorflow import reshape
 #function that gets an input of any shape and has output shape [None]
 
 class FlattenNode(Node):
-  
+
+  def __init__(self, name=None, protected=False, ID=None):
+      super().__init__(name, protected, ID)
+      self.outputShape=[0]
+
   #TODO count output shape
   def connect(self, connections):
-      return super().connect(connections)
+    tad=0
+    for node in connections:
+      tad+=sum(node.outputShape)
+    self.outputShape[0]+=tad
+    return super().connect(connections)
   
   #returns numpy
   def execute(self,inputs):

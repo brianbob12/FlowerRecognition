@@ -64,8 +64,8 @@ class ConvolutionLayer(BuildableNode):
 
     self.inputShape=[shape0,shape1,self.inputChannels]
     self.outputShape=[
-      (shape0-self.kernelSize+self.padding*2)/self.strideSize+1,
-      (shape1-self.kernelSize+self.padding*2)/self.strideSize+1,
+      int((shape0-self.kernelSize+self.padding*2)/self.strideSize+1),
+      int((shape1-self.kernelSize+self.padding*2)/self.strideSize+1),
       self.numberOfKernels
     ]
     super().connect(connections)

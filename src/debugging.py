@@ -67,10 +67,8 @@ myNet.addOutputNodes([dense1])
 #%%
 myNet.build()
 #%%
-myNet.execute({input1.ID:tf.random.normal([5,10])},[dense1])
+print(myNet.execute({input1.ID:tf.random.normal([5,10])},[dense1]))
 #%%
-testBatchX,testBatchY=getBatch(files[0:10])
-ev=A4.evaluate(testBatchX)
-print(ev)
+
 #%
 # %%

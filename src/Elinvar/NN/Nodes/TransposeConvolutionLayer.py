@@ -20,7 +20,7 @@ class TransposeConvolutionLayer(ConvolutionLayer):
     #there's a little bit of redundancy here
     super().connect(connections)
     self.outputShape=[
-      self.inputShape[0]+((self.kernelSize//2)*2)/self.stride,
-      self.inputShape[1]+((self.kernelSize//2)*2)/self.stride,
+      int(self.inputShape[0]+((self.kernelSize//2)*2)/self.stride),
+      int(self.inputShape[1]+((self.kernelSize//2)*2)/self.stride),
       self.numberOfKernels
     ]

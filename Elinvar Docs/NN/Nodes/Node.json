@@ -77,7 +77,7 @@
       ],
       "Returns":[],
       "Throws":[],
-      "Description":"init function sets up key variables"
+      "Description":"init function sets up key variables."
     },
     {
       "Name":"getValue",

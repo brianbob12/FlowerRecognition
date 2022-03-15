@@ -1,9 +1,0 @@
-{
-  "Name":"TrainingProtocol",
-  "Description":"Holds information and processes for training a network as it can often be complicated.",
-  "Properties":[
-    {
-      "Name":"errorFunction"
-    }
-  ]
-}

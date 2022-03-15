@@ -1,0 +1,17 @@
+{
+  "Name":"XYTraining",
+  "Superclass":"TrainingProtocol",
+  "Subclasses":[],
+  "Description":"A training protocol that compares the calculated output(guess) to the expected output(Y)",
+  "Properties":[
+    {
+      "Name":"errorFunction",
+      "Type":"ErrorFunction",
+      "Description":"The error function applied between the X and Y to calculate error. "
+    }
+  ],
+  "Function":[
+
+  ],
+  "Notes":""
+}

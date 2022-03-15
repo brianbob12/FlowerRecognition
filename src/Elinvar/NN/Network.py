@@ -34,24 +34,27 @@ class Network:
     self.outputNodes+=nodes
 
   #private
-  def buildNode(self,node):
+  def buildNode(self,node,seed):
     #first build connections
-    for inputNode in node.inputConnections:
-      self.buildNode(inputNode)
+    for i,inputNode in enumerate(node.inputConnections):
+      self.buildNode(inputNode,seed=seed+3*i)
 
     #then if buildable, build
     if isinstance(node,BuildableNode):
       if node.built:
         return
       else:
-        node.build()
+        node.build(seed=seed)
     
     
 
-  def build(self):
-    for outputNode in self.outputNodes:
-      self.buildNode(outputNode)
+  def build(self,seed=None):
+    if seed==None:
+      seed=randint(0,2**31)
+    for i,outputNode in enumerate(self.outputNodes):
+      self.buildNode(outputNode,seed+i*2)
     self.built=True
+    return seed
 
   def execute(self,inputs,requestedOutputs):
     #clear

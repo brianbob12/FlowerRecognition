@@ -49,7 +49,7 @@ for i in range(e):
 #%%
 myNet=Elinvar.NN.Network()
 input1=Elinvar.NN.Nodes.InputNode()
-input1.setup(lambda :getBatch(files[:10]),[255,255,3])
+input1.setup(lambda :getBatch(files[:10]),[256,256,3])
 conv1=Elinvar.NN.Nodes.ConvolutionLayer()
 conv1.newLayer(5,4,1,0)
 conv1.connect([input1])
@@ -65,7 +65,8 @@ myNet.addInputNodes([input1])
 myNet.addNodes([conv1,pool1,flatten1])
 myNet.addOutputNodes([dense1])
 #%%
-myNet.build()
+myNet.build(seed=2212)
+#%%
 #%%
 x,y=getBatch(files[:10])
 print(myNet.execute({input1.ID:x},[dense1]))

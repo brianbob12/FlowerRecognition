@@ -20,9 +20,9 @@ class MaxPoolingNode(Node):
     self.size=size
     self.stride=stride
     self.inputChannels=0#until connections are set
+    self.padding=0
     
   def execute(self,inputs):
-    print(inputs)
     myInput=concat(inputs,-1)
     return max_pool2d(myInput,[self.size,self.size],self.stride,"VALID")
 
@@ -50,8 +50,8 @@ class MaxPoolingNode(Node):
 
     self.inputShape=[shape0,shape1,self.inputChannels]
     self.outputShape=[
-      int((self.inputShape[0]-self.size)/self.stride),
-      int((self.inputShape[1]-self.size)/self.stride),
+      int((self.inputShape[0]-self.size+self.padding*2)/self.stride+1),
+      int((self.inputShape[1]-self.size+self.padding*2)/self.stride+1),
       self.inputChannels
     ]
 

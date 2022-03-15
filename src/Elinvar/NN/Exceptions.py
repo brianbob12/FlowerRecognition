@@ -95,7 +95,7 @@ class nodeNotSetup(Exception):
         pass
     def __str__(self):
         out="LAYER NOT SET UP\n"
-        out+="Layer must be set up before attempting "
+        out+="Node must be set up before attempting "
         out+=self.attemptedOperation
         return out
 

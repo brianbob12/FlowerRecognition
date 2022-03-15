@@ -1,4 +1,5 @@
-import numpy as np
+
+from numpy import prod
 from .Node import Node
 from tensorflow import concat
 from tensorflow import reshape
@@ -15,7 +16,7 @@ class FlattenNode(Node):
   def connect(self, connections):
     tad=0
     for node in connections:
-      tad+=sum(node.outputShape)
+      tad+=prod(node.outputShape)
     self.outputShape[0]+=tad
     return super().connect(connections)
   
@@ -23,8 +24,5 @@ class FlattenNode(Node):
   def execute(self,inputs):
     myInput=concat(inputs,1)
     batchSize=myInput.shape[0]
-    newShape=1
-    #I think this is ok because it it just uses shapes which aren't stored in VRAM anyway
-    for i in myInput.shape[1:]:
-      newShape*=i
-    return reshape(myInput,shape=[batchSize,newShape])
+
+    return reshape(myInput,shape=[batchSize,self.outputShape[0]])

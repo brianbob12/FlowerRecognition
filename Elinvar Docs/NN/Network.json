@@ -66,8 +66,19 @@
     {
       "Name":"build",
       "MandatoryArgs":[],
-      "OptionalArgs":[],
-      "Returns":[],
+      "OptionalArgs":[
+        {
+          "Name":"seed",
+          "Type":"int",
+          "Description":"Seed for all random trainable variables generated within the nodes."
+        }
+      ],
+      "Returns":[
+        {
+          "Type":"int",
+          "Description":"Seed for the network. This will be randomly assigned if a value is not given."
+        }
+      ],
       "Throws":[],
       "Description":"Builds all nodes in the network starting from input nodes working down. If any nodes are not connected they will not be built."
     },

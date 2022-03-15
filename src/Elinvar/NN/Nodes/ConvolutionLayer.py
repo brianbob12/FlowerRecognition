@@ -34,7 +34,7 @@ class ConvolutionLayer(BuildableNode):
       raise(notEnoughNodeConnections(len(self.inputConnections),1)) 
 
 
-    self.filter=Variable(normal(shape=[self.kernelSize,self.kernelSize,self.inputChannels,self.numberOfKernels]))
+    self.filter=Variable(normal(shape=[self.kernelSize,self.kernelSize,self.inputChannels,self.numberOfKernels],seed=seed))
     self.built=True
 
      

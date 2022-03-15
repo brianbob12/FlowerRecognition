@@ -30,11 +30,12 @@ class ConvolutionLayer(BuildableNode):
   def build(self,seed=None):
     if self.built: return
 
-    if len(self.inputConnections<1):
+    if len(self.inputConnections)<1:
       raise(notEnoughNodeConnections(len(self.inputConnections),1)) 
 
 
     self.filter=Variable(normal(shape=[self.kernelSize,self.kernelSize,self.inputChannels,self.numberOfKernels]))
+    self.built=True
 
      
 

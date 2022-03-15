@@ -76,12 +76,17 @@ class notEnoughNodeConnections(Exception):
         return out
 
 class operationWithUnbuiltNode(Exception):
-    def __init__(self,operation):
+    def __init__(self,nodeID,operation,nodeName=None):
         self.operation=operation
+        self.nodeID=nodeID
+        self.nodeName=nodeName
 
     def __str__(self):
         out="OPERATION WITH UNBUILT LAYER\tOperation:"
         out+=self.operation
+        out+=f"\nNodeID:{self.nodeID}"
+        if self.nodeName!=None:
+            out+=f"\nNode name: {self.nodeName}"
         return out
 
 class nodeNotSetup(Exception):

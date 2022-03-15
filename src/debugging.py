@@ -67,7 +67,8 @@ myNet.addOutputNodes([dense1])
 #%%
 myNet.build()
 #%%
-print(myNet.execute({input1.ID:tf.random.normal([5,10])},[dense1]))
+x,y=getBatch(files[:10])
+print(myNet.execute({input1.ID:x},[dense1]))
 #%%
 
 #%

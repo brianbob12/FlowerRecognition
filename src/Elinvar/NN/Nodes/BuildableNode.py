@@ -18,6 +18,6 @@ class BuildableNode(Node):
 
   def getValue(self):
     if not self.built:
-      raise(operationWithUnbuiltNode("getValue"))
+      raise(operationWithUnbuiltNode(self.ID,"getValue"))
     else:
       return super().getValue()

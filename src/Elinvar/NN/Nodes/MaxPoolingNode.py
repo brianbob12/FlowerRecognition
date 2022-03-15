@@ -42,7 +42,7 @@ class MaxPoolingNode(Node):
     
     for prospectNode in connections:
       if prospectNode.outputShape[0]!=shape0 or prospectNode.outputShape[1]!=shape1:
-        raise(invalidNodeConnection(prospectNode.outputShape,[shape0,shape1,None]))
+        raise(invalidNodeConnection(prospectNode.outputShape,[shape0,shape1,None])) 
 
     #connect
     for node in connections:
@@ -54,6 +54,8 @@ class MaxPoolingNode(Node):
       int((self.inputShape[1]-self.size)/self.stride),
       self.inputChannels
     ]
+
+    super().connect(connections)
 
   def exportLayer(self,superdir,subdir):
     from os import mkdir

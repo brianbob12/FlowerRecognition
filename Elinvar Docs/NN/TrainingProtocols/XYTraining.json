@@ -11,7 +11,14 @@
     }
   ],
   "Function":[
-
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
+    }
   ],
   "Notes":""
 }

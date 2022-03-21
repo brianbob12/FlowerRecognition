@@ -13,5 +13,6 @@ class XYTraining (TrainingProtocol):
     super().__init__(learningRate,optimizer,requiredOutputNodes)
     self.errorFunction=errorFunction
   
-  def getError(self,networkOutputs,Y):
+  def getError(self,networkOutputs,getErrorArgs):
+    Y=getErrorArgs[0]
     return(self.errorFunction.execute(networkOutputs,Y))

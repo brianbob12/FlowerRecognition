@@ -59,7 +59,7 @@ pool1.connect([conv1])
 flatten1=Elinvar.NN.Nodes.FlattenNode()
 flatten1.connect([pool1])
 dense1=Elinvar.NN.Nodes.DenseLayer()
-dense1.newLayer(2,"linear")
+dense1.newLayer(5,"linear")
 dense1.connect([flatten1])
 myNet.addInputNodes([input1])
 myNet.addNodes([conv1,pool1,flatten1])
@@ -71,6 +71,10 @@ myNet.build(seed=2212)
 x,y=getBatch(files[:10])
 print(myNet.execute({input1.ID:x},[dense1]))
 #%%
-
-#%
+#%%
+lr=1e-7
+optimizer=tf.keras.optimizers.Adam
+myTrainingProtocol=Elinvar.NN.TraingProtocols.XYTraining(1e-7,optimizer,[dense1],Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits)
+#%%
+print(myNet.train({input1.ID:x},myTrainingProtocol,[y]))
 # %%

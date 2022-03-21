@@ -54,6 +54,11 @@
           "Name":"networkOutputs",
           "Type":"List<tf.Tensor>",
           "Description":"A list of the outputs of the requestedOutputs in the order they are in the property. "
+        },
+        {
+          "Name":"getErrorArgs",
+          "Type":"List<Any>",
+          "Description":"A list of arguments needed to compute the error."
         }
       ],
       "OptionalArgs":[],

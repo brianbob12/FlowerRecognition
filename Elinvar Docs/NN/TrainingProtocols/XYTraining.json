@@ -49,9 +49,9 @@
           "Description":"A list of the outputs of the requestedOutputs in the order they are in the property. "
         },
         {
-          "Name":"Y",
+          "Name":"getErrorArgs",
           "Type":"List<tf.Tensor>",
-          "Description":"A list of the expected values from the network. Has same shape as network Outputs"
+          "Description":"Contains a single element: A list of the expected values from the network. Has same shape as network Outputs."
         }
       ],
       "OptionalArgs":[],

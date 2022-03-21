@@ -1,4 +1,4 @@
-from tensorflow import Tesnsor
+from tensorflow import constant
 
 class TrainingProtocol:
   def __init__(self,learningRate,optimizer,requiredOutputNodes):
@@ -6,5 +6,5 @@ class TrainingProtocol:
     self.optimizer=optimizer
     self.requiredOutputNodes=requiredOutputNodes
 
-  def getError(self,networkOutputs):
-    return(Tensor(0))
+  def getError(self,networkOutputs,getErrorArgs):
+    return(constant(0))

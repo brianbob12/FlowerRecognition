@@ -1,5 +1,6 @@
 from random import randint
 from .Nodes import *
+from tensorflow import GradientTape
 
 class Network:
   
@@ -65,6 +66,30 @@ class Network:
     
     #produce outputs
     return([i.getValue() for i in requestedOutputs])
+
+  def train(self,inputs,trainingProtocol,getErrorArgs):
+    #get trainable variables
+    myTrainableVariables=[]
+    for ID,node in self.nodes.items():
+      if node.hasTrainableVariables:
+        myTrainableVariables.append(node.getTrainableVariables)
+    
+    with GradientTape() as g:
+      g.watch(myTrainableVariables)
+
+      networkOutputs=self.execute(inputs,trainingProtocol.requiredOutputNodes)
+
+      error=trainingProtocol.getError(networkOutputs,getErrorArgs)
+
+    #TODO move this to TrainingProtocol.py
+    optimizer=trainingProtocol.optimizer(trainingProtocol.learningRate)
+    
+    grads=g.gradient(error,myTrainableVariables)
+
+    optimizer.apply_gradients(zip(grads,myTrainableVariables))
+
+    return error
+
 
   def clear(self,exceptionNodes=[]):
     for nodeID in self.nodes.keys():

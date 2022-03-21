@@ -109,6 +109,35 @@
       "Description":"Uses the network to process the inputs into the required output. Only executes the nodes necessary to calculate the requested outputs. "
     },
     {
+      "Name":"train",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"Dict<int><tf.Tensor>",
+          "Description":"Maps the IDs of input nodes to their value."
+        },
+        {
+          "Name":"trainingProtocol",
+          "Type":"TrainingProtocol",
+          "Description":"The training protocol used to update the trainable parameters."
+        },
+        {
+          "Name":"getErrorArgs",
+          "Type":"List<Any>",
+          "Description":"The list of arguments needed to compute the error. What's in this depends on the training protocol used. "
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tf.Tensor",
+          "Description":"error"
+        }
+      ],
+      "Throws":[],
+      "Description":"Updates the trainable perimeters of the network to minimize error."
+    },
+    {
       "Name":"clear",
       "MandatoryArgs":[],
       "OptionalArgs":[

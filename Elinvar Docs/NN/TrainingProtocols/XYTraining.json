@@ -55,7 +55,12 @@
         }
       ],
       "OptionalArgs":[],
-      "Returns":[],
+      "Returns":[
+        {
+          "Type":"tf.Tensor",
+          "Description":"Error."
+        }
+      ],
       "Throws":[],
       "Description":"Produces a value for error based on the value of requiredOutputNodes. It calls getValue on each outputNode. Made to be overwritten."
     } 

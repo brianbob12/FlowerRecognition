@@ -13,12 +13,52 @@
   "Function":[
     {
       "Name":"__init__",
-      "MandatoryArgs":[],
+      "MandatoryArgs":[
+        {
+          "Name":"learningRate",
+          "Type":"float",
+          "Description":"Sets learningRate property"
+        },
+        {
+          "Name":"optimizer",
+          "Type":"tf.keras.optimizers.Optimizer",
+          "Description":"Sets optimizer property"
+        },
+        {
+          "Name":"requiredOutputNodes",
+          "Type":"List<Node>",
+          "Description":"Sets requiredOutputNodes property."
+        },
+        {
+          "Name":"errorFunction",
+          "Type":"ErrorFunction",
+          "Description":"Error function used to compute error between outputted values and Y. "
+        }
+      ],
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[],
       "Description":""
-    }
+    },
+    {
+      "Name":"geError",
+      "MandatoryArgs":[
+        {
+          "Name":"networkOutputs",
+          "Type":"List<tf.Tensor>",
+          "Description":"A list of the outputs of the requestedOutputs in the order they are in the property. "
+        },
+        {
+          "Name":"Y",
+          "Type":"List<tf.Tensor>",
+          "Description":"A list of the expected values from the network. Has same shape as network Outputs"
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Produces a value for error based on the value of requiredOutputNodes. It calls getValue on each outputNode. Made to be overwritten."
+    } 
   ],
   "Notes":""
 }

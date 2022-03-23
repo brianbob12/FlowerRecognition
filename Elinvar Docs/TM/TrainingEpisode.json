@@ -1,4 +1,23 @@
 {
   "Name":"TrainingEpisode",
-  "Superclass":""
+  "Superclass":"None",
+  "Subclasses":[],
+  "Description":"A container for a training exercise involving the same network and the same dataset.",
+  "Properties":[
+    {
+      "Name":"name",
+      "Type":"str",
+      "Description":"The name of the trainingEpisode. This is used for exporting and therefor should be unique."
+    },
+    {
+      "Name":"useWandB",
+      "Type":"bool",
+      "Description":"Indicates wether weights and biases logging will be used."
+    },
+    {
+      "Name":"crossValErrorHistory",
+      "Type":"List<Dict<string><Any>>",
+      "Description":"History of the cross validation error. Consists of dicts containing iteration and error."
+    }
+  ]
 }

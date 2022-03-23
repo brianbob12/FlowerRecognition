@@ -59,7 +59,7 @@ class Network:
 
   def execute(self,inputs,requestedOutputs):
     #clear
-    self.clear
+    self.clear()
     #deal with inputs
     for key in inputs.keys():
       self.nodes[key].onExecute=(lambda value:(lambda :value))(inputs[key])
@@ -67,24 +67,35 @@ class Network:
     #produce outputs
     return([i.getValue() for i in requestedOutputs])
 
+  def getError(self,inputs,trainingProtocol,getErrorArgs):
+    networkOutputs=self.execute(inputs,trainingProtocol.requiredOutputNodes)
+    error=trainingProtocol.getError(networkOutputs,getErrorArgs)
+    return error
+
   def train(self,inputs,trainingProtocol,getErrorArgs):
+    #all computation has to occur after watching trainableVariables
+    #therefore we need to do a clear
+    #nodes that are protected may mess this up
+    self.clear()
+
     #get trainable variables
     myTrainableVariables=[]
     for ID,node in self.nodes.items():
       if node.hasTrainableVariables:
-        myTrainableVariables.append(node.getTrainableVariables)
-    
+        myTrainableVariables+=node.getTrainableVariables()
+
     with GradientTape() as g:
       g.watch(myTrainableVariables)
-
-      networkOutputs=self.execute(inputs,trainingProtocol.requiredOutputNodes)
-
-      error=trainingProtocol.getError(networkOutputs,getErrorArgs)
+      error=self.getError(inputs,trainingProtocol,getErrorArgs)
+      grads=g.gradient(error,myTrainableVariables)
 
     #TODO move this to TrainingProtocol.py
     optimizer=trainingProtocol.optimizer(trainingProtocol.learningRate)
-    
-    grads=g.gradient(error,myTrainableVariables)
+
+    for i,v in enumerate(grads):
+      if v is None:
+        #TODO figure this out
+        pass
 
     optimizer.apply_gradients(zip(grads,myTrainableVariables))
 

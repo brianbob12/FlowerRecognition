@@ -3,6 +3,7 @@ import Elinvar
 from PIL import Image
 import tensorflow as tf
 import numpy as np
+import random
 #%%
 #outputs x and y arrays
 def getBatch(fileNames):
@@ -46,6 +47,8 @@ for i in range(d):
   files.append("D"+str(i)+".jpg") 
 for i in range(e):
   files.append("E"+str(i)+".jpg") 
+
+random.shuffle(files)
 #%%
 myNet=Elinvar.NN.Network()
 input1=Elinvar.NN.Nodes.InputNode()
@@ -67,14 +70,17 @@ myNet.addOutputNodes([dense1])
 #%%
 myNet.build(seed=2212)
 #%%
-#%%
-x,y=getBatch(files[:10])
-print(myNet.execute({input1.ID:x},[dense1]))
-#%%
-#%%
 lr=1e-7
 optimizer=tf.keras.optimizers.Adam
-myTrainingProtocol=Elinvar.NN.TraingProtocols.XYTraining(1e-7,optimizer,[dense1],Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits)
+myTrainingProtocol=Elinvar.NN.TrainingProtocols.XYTraining(1e-9,optimizer,[dense1],Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits())
 #%%
-print(myNet.train({input1.ID:x},myTrainingProtocol,[y]))
+x,y=getBatch(files[:100])
+print(myNet.getError({input1.ID:x},myTrainingProtocol,[y]))
+print()
+#%%
+#%%
+for i in range(10):
+  print(myNet.train({input1.ID:x},myTrainingProtocol,[y]))
+#%%
+print(myNet.getError({input1.ID:x},myTrainingProtocol,[y]))
 # %%

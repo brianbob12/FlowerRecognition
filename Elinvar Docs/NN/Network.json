@@ -138,6 +138,35 @@
       "Description":"Updates the trainable perimeters of the network to minimize error."
     },
     {
+      "Name":"getError",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"Dict<int><tf.Tensor>",
+          "Description":"Maps the IDs of input nodes to their value."
+        },
+        {
+          "Name":"trainingProtocol",
+          "Type":"TrainingProtocol",
+          "Description":"The training protocol used to update the trainable parameters."
+        },
+        {
+          "Name":"getErrorArgs",
+          "Type":"List<Any>",
+          "Description":"The list of arguments needed to compute the error. What's in this depends on the training protocol used. "
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tf.Tensor",
+          "Description":"error"
+        }
+      ],
+      "Throws":[],
+      "Description":"Produces the training error of the model for the given getErrorArgs."
+    },
+    {
       "Name":"clear",
       "MandatoryArgs":[],
       "OptionalArgs":[

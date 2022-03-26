@@ -16,8 +16,112 @@
     },
     {
       "Name":"crossValErrorHistory",
-      "Type":"List<Dict<string><Any>>",
+      "Type":"List<Dict<str><any>>",
       "Description":"History of the cross validation error. Consists of dicts containing iteration and error."
+    },
+    {
+      "Name":"trainingErrorHistory",
+      "Type":"List<Dict<str><any>>",
+      "Description":"History of the training error. Consists of dicts containing interaction, error, and time."
+    }, 
+    {
+      "Name":"iterationCounter",
+      "Type":"int",
+      "Description":"The number of iterations that have occurred."
+    },
+    {
+      "Name":"batchSize",
+      "Type":"int",
+      "Description":"Number of examples per batch."
+    },
+    {
+      "Name":"trainingDataSize",
+      "Type":"int",
+      "Description":"Number of training examples in the training data set."
+    },
+    {
+      "Name":"crossValSetSize",
+      "Type":"int",
+      "Description":"Number of instances in the cross validation set."
+    },
+    {
+      "Name":"crossValSelectionSeed",
+      "Type":"int",
+      "Description":"Random seed used for the selection of the cross validation set. "
     }
-  ]
+    {
+      "Name":"dataset",
+      "Type":"Dict<str><any>",
+      "Description":"Dataset for the training. Has four components: trainingFiles, crossValx, crossValy, extract. Extract is a function that produces an x,y for a given file."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[
+        {
+          "Name":"name",
+          "Type":"str",
+          "Description":"Sets the name property."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up inputted properties."
+    },
+    {
+      "Name":"instantiateLearningConfig",
+      "MandatoryArgs":[
+        {
+          "Name":"batchSize",
+          "Type":"int",
+          "Description":"The number of training examples per batch."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Loads in data for learning"
+    },
+    {
+      "Name":"instantiateMonitoringConfig",
+      "MandatoryArgs":[
+        {
+          "Name":"iterationsPerCrossValSample",
+          "Type":"int",
+          "Description":"Number of iterations between cross validation tests."
+        },
+        {
+          "Name":"iterationsPerCrossValRegress",
+          "Type":"int",
+          "Description":"Number of iterations between "
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up monitoring of the training process."
+    },
+    {
+      "Name":"setDataSet",
+      "MandatoryArgs":[
+        {
+          "Name":"dataset",
+          "Type":"Dict<str><any>",
+          "Description":"{flies,extract} : files is a list of files, extract is file->x,y"
+        },
+        {
+          "Name":"datasetShuffleSeed",
+          "Type":"int",
+          "Description":""
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
+    }
+  ],
+  "Notes":""
 }

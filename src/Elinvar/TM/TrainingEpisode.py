@@ -15,34 +15,13 @@ class TrainingEpisode:
     self.crossValRegressionHistory=[]
     self.iterationCounter=0
 
-  def instantiateLearningConfig(self,learningRate,batchSize):
-    self.learningRate=learningRate
+  def instantiateLearningConfig(self,batchSize):
     self.batchSize=batchSize
 
   def instantiateMonitoringConfig(self,
-  iterationsPerCrossValSample,
-  iterationsPerCrossValRegress,
-  trainingErrorRegression,
-  crossValRegressionLR,
-  crossValRegressionIterationCount=10,#number of iterations per regression moment
-  crossValRegressionSeed=67743):
+  iterationsPerCrossValSample,):
     self.iterationsPerCrossValSample=iterationsPerCrossValSample
-    self.iterationsPerCrossValRegress=iterationsPerCrossValRegress
-    self.crossValRegressionIterationCount=crossValRegressionIterationCount
 
-    #TODO
-    self.trainingErrorRegression=trainingErrorRegression
-
-    self.crossValRegressionLR=crossValRegressionLR
-
-    random.seed(crossValRegressionSeed)
-    #A*e^-bI +cI +d
-    self.crossValRegressionVariables={
-      "A":0.3,
-      "B":-0.019,
-      "C":-0.0004,
-      "D":1.0
-    }
 
   #takes a setup CNN
   def importNetwork(self,CNN):

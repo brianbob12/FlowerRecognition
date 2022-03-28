@@ -64,8 +64,12 @@ flatten1.connect([pool1])
 dense1=Elinvar.NN.Nodes.DenseLayer()
 dense1.newLayer(5,"linear")
 dense1.connect([flatten1])
+
+dense2=Elinvar.NN.Nodes.DenseLayer()
+dense2.newLayer(5,"linear")
+
 myNet.addInputNodes([input1])
-myNet.addNodes([conv1,pool1,flatten1])
+myNet.addNodes([conv1,pool1,flatten1,dense2])
 myNet.addOutputNodes([dense1])
 #%%
 myNet.build(seed=2212)
@@ -73,14 +77,28 @@ myNet.build(seed=2212)
 lr=1e-7
 optimizer=tf.keras.optimizers.Adam
 myTrainingProtocol=Elinvar.NN.TrainingProtocols.XYTraining(1e-9,optimizer,[dense1],Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits())
+
 #%%
-x,y=getBatch(files[:100])
-print(myNet.getError({input1.ID:x},myTrainingProtocol,[y]))
-print()
+myTrainingEpisode=Elinvar.TM.TrainingEpisode("test1")
+myTrainingEpisode.instantiateLearningConfig(100)
+myTrainingEpisode.instantiateMonitoringConfig(10)
+
+myTrainingEpisode.importNetwork(myNet)
 #%%
+def extract(files):
+  x,y=getBatch(files)
+  return {input1.ID:x},y
+
+myDataset={
+  "files":files,
+  "extract":extract
+}
+
+myTrainingEpisode.setDataSet(myDataset,1234,400,4321)
 #%%
-for i in range(10):
-  print(myNet.train({input1.ID:x},myTrainingProtocol,[y]))
+for i in range(50):
+  myTrainingEpisode.train(myTrainingProtocol)
 #%%
-print(myNet.getError({input1.ID:x},myTrainingProtocol,[y]))
+print(myTrainingEpisode.crossValErrorHistory)
+print(myTrainingEpisode.trainingErrorHistory)
 # %%

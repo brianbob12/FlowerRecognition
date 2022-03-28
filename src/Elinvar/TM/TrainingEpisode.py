@@ -14,6 +14,7 @@ class TrainingEpisode:
     self.trainingErrorHistory=[]
     self.crossValRegressionHistory=[]
     self.iterationCounter=0
+    self.network=None
 
   def instantiateLearningConfig(self,batchSize):
     self.batchSize=batchSize
@@ -23,47 +24,8 @@ class TrainingEpisode:
     self.iterationsPerCrossValSample=iterationsPerCrossValSample
 
 
-  #takes a setup CNN
-  def importNetwork(self,CNN):
-    self.CNN=CNN
-    #setup layerMakeup list for recrods
-    self.layerMakeup=[] 
-    for i,layer in enumerate(CNN.layers):
-      layerType=CNN.layerKey[i]
-      if(layerType=="CONVOLUTE"):
-        tad=layerType
-        tad+="-"+str(layer.numberOfKernels)
-        tad+="-"+str(layer.kernelSize)
-        tad+="-"+str(layer.strideSize)
-      elif(layerType=="TRANSPOSECONVOLUTE"):
-        tad=layerType
-        tad+="-"+str(layer.numberOfKernels)
-        tad+="-"+str(layer.kernelSize)
-        tad+="-"+str(layer.strideSize)
-      elif(layerType=="POOL"):
-        tad=layerType
-        tad+="-"+str(layer.size)
-        tad+="-"+str(layer.stride)
-      elif(layer=="FLATTEN"):
-        tad=layerType
-      elif(layer=="DENSE"):
-        tad=layerType
-        tad+="-"+str(layer.size)
-        tad+="-"+layer.activationKey
-      elif(layer=="INSTANCENORMALIZATION"):
-        tad=layerType
-        tad+="-"+str(layer.mean)
-        tad+="-"+str(layer.stddeve)
-      elif(layer=="ADAIN"):
-        #adaptive instance normilization
-        #TODO
-        pass
-      elif(layer=="RESHAPE"):
-        #TODO
-        pass
-      self.layerMakeup.append(tad)
- 
-    self.totalTrainableVariables=CNN.totalTrainableVariables
+  def importNetwork(self,network):
+    self.network=network 
 
   #takes a dict: {files,extract}
   #extract is a function returning x,y given a list of files
@@ -146,6 +108,7 @@ class TrainingEpisode:
       print(e)
       return None
 
+  #TODO move into it's own class
   #crossValMeasurement must be float
   def crossValRegression(self):
     try:
@@ -213,7 +176,7 @@ class TrainingEpisode:
   #iterationCallback - iteration number, training error,iteration time
   #crossValCallback - iteration number, crossVal error
   #crossValRegression Callback - iterationNumber, crossValRegressionError, crossValregressionVariables
-  def train(self,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None,wandbCallback=None):
+  def train(self,trainingProtocol,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None,wandbCallback=None):
     #getBatch
     start=self.batchSize*self.iterationCounter
     start%=self.trainingDataSize
@@ -226,7 +189,7 @@ class TrainingEpisode:
 
     #start training
     startTime=time.time()
-    trainingError=float(self.CNN.train(x,y,self.learningRate,0))
+    trainingError=float(self.network.train(x,trainingProtocol,[y]))
     #end training
     iterationTime=time.time()-startTime
     if(iterationCallback!=None):
@@ -241,7 +204,7 @@ class TrainingEpisode:
 
     if(self.iterationCounter%self.iterationsPerCrossValSample==0):
       #cross validate
-      crossValError=float(self.CNN.validate(self.dataset["crossValx"],self.dataset["crossValy"]))
+      crossValError=float(self.network.getError(self.dataset["crossValx"],trainingProtocol,[self.dataset["crossValy"]]))
       #store sample
       self.crossValErrorHistory.append({
         "iteration":self.iterationCounter,
@@ -251,20 +214,7 @@ class TrainingEpisode:
         wandbCallback(self.getDataForUpload(trainingError,iterationTime,crossValError))
 
       if crossValCallback!=None:
-        crossValCallback(self.iterationCounter,crossValError)
-
-    if(self.iterationCounter%self.iterationsPerCrossValRegress==0):
-      for i in range(self.crossValRegressionIterationCount):
-        crossValRegressionError = self.crossValRegression()
-        tad={
-          "iteration":self.iterationCounter,
-          "error":crossValRegressionError}
-        for key in self.crossValRegressionVariables.keys():
-          tad[key]=self.crossValRegressionVariables[key]
-        self.crossValRegressionHistory.append(tad)
-        if crossValRegressCallback!=None:
-          crossValRegressCallback(self.iterationCounter,crossValRegressionError,self.crossValRegressionVariables)
-
+        crossValCallback(self.iterationCounter,crossValError) 
 
     self.iterationCounter+=1
 

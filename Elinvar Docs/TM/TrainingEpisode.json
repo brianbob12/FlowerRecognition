@@ -53,6 +53,11 @@
       "Name":"dataset",
       "Type":"Dict<str><any>",
       "Description":"Dataset for the training. Has four components: trainingFiles, crossValx, crossValy, extract. Extract is a function that produces an x,y for a given file."
+    },
+    {
+      "Name":"network",
+      "Type":"NetworK",
+      "Description":"The network to be trained."
     }
   ],
   "Functions":[
@@ -104,12 +109,26 @@
       "Description":"Sets up monitoring of the training process."
     },
     {
+      "Name":"setupNetwork",
+      "MandatoryArgs":[
+        {
+          "Name":"network",
+          "Type":"Network",
+          "Description":"The network to be trained."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up the network property."
+    },
+    {
       "Name":"setDataSet",
       "MandatoryArgs":[
         {
           "Name":"dataset",
           "Type":"Dict<str><any>",
-          "Description":"{flies,extract} : files is a list of files, extract is file->x,y"
+          "Description":"{flies,extract} : files is a list of files, extract is file->x,y where x is a dict mapping input node IDs to values."
         },
         {
           "Name":"datasetShuffleSeed",
@@ -134,7 +153,13 @@
     },
     {
       "Name":"train",
-      "MandatoryArgs":[],
+      "MandatoryArgs":[
+        {
+          "Name":"trainingProtocol",
+          "Type":"TrainingProtocol",
+          "Description":"The training protocol used."
+        }
+      ],
       "OptionalArgs":[
         {
           "Name":"iterationCallback",

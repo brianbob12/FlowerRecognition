@@ -67,7 +67,13 @@ class TrainingEpisode:
 
   #takes a dict: {files,extract}
   #extract is a function returning x,y given a list of files
-  def setDataSet(self,dataset,datasetShuffleSeed,crossValSetSize,crossValSetSelectionSeed):
+  def setDataSet(
+    self,
+    dataset,
+    datasetShuffleSeed,
+    crossValSetSize,
+    crossValSetSelectionSeed
+    ):
     self.trainingDataSize=len(dataset["files"])-crossValSetSize
     self.crossValSize=crossValSetSize
     self.crossValSelectionSeed=crossValSetSelectionSeed

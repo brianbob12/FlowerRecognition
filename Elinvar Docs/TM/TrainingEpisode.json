@@ -48,7 +48,7 @@
       "Name":"crossValSelectionSeed",
       "Type":"int",
       "Description":"Random seed used for the selection of the cross validation set. "
-    }
+    },
     {
       "Name":"dataset",
       "Type":"Dict<str><any>",
@@ -114,10 +114,39 @@
         {
           "Name":"datasetShuffleSeed",
           "Type":"int",
-          "Description":""
+          "Description":"A seed for the random shuffling of the dataset."
+        },
+        {
+          "Name":"crossValSetSize",
+          "Type":"int",
+          "Description":"The number of training examples to be removed frm the training set for cross validation."
+        },
+        {
+          "Name":"crossValSelectionSeed",
+          "Type":"int",
+          "Description":"A seed for the random selection of the cross validation set."
         }
       ],
       "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up internal properties for training."
+    },
+    {
+      "Name":"train",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"iterationCallback",
+          "Type":"int -> tf.Tensor -> float -> any",
+          "Description":"Callback that takes in iterationCounter, trainingError, iteration time. After training."
+        },
+        {
+          "Name":"crossValCallback",
+          "Type":"int -> tf.Tensor -> any",
+          "Description":"Callback that takes in iterationCounter, crossValError. "
+        }
+      ],
       "Returns":[],
       "Throws":[],
       "Description":""

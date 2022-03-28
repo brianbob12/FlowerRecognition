@@ -73,6 +73,8 @@ class DenseLayer(BuildableNode):
   #function that returns a shape [2] list of trainable variables
   #because these are tf varialbe it is returning a list of pointers
   def getTrainableVariables(self):
+    #does error checking
+    super().getTrainableVariables()
     #the set of weights and the biases are each a single multi-dimensional variable
     return([self.biases,self.weights])
 

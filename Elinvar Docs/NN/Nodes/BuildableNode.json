@@ -69,9 +69,24 @@
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[
-        "Elinvar.NN.operationWithUnbuiltNode(operation)"
+        "Elinvar.NN.operationWithUnbuiltNode(nodeID,operation)"
       ],
       "Description":"Produces an output based on input connection values."
+    },
+    {
+      "Name":"getTrainableVariables",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"List",
+          "Description":"By default, empty list. This is overridden by children."
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.operationWithUnbuiltNode(operation)"
+      ],
+      "Description":"Returns trainable tf.Variables as a list."
     }
   ],
   "Notes":""

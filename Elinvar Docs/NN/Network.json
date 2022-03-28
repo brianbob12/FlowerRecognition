@@ -134,7 +134,9 @@
           "Description":"error"
         }
       ],
-      "Throws":[],
+      "Throws":[
+
+      ],
       "Description":"Updates the trainable perimeters of the network to minimize error."
     },
     {
@@ -193,14 +195,6 @@
       "Returns":[],
       "Throws":[],
       "Description":"Runs protectedClear on all nodes except specified exceptions."
-    },
-    {
-      "Name":"train",
-      "MandatoryArgs":[
-        {
-          "Name":""
-        }
-      ]
     },
     {
       "Name":"exportNetwork ",

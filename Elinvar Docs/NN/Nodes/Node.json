@@ -99,7 +99,7 @@
           "Name":"inputs",
           "Type":"List",
           "Description":"Input has shape=[len(inputConnections)]."
-        }
+        } 
       ],
       "OptionalArgs":[],
       "Returns":[],

@@ -6,6 +6,12 @@ class BuildableNode(Node):
     super().__init__(name=name,protected=protected)
     self.built=False
 
+  def getTrainableVariables(self):
+    if not self.built:
+      raise(operationWithUnbuiltNode(self.ID,"getTrainableVariables"))
+    else:
+      return super().getTrainableVariables()
+
   #made to be overwritten
   def build(self):
     self.built=True

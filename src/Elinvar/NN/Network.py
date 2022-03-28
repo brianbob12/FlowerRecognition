@@ -2,13 +2,19 @@ from random import randint
 from .Nodes import *
 from tensorflow import GradientTape
 
+from .Exceptions import *
+
 class Network:
   
   def __init__(self):
+    #public
     self.nodes={}
     self.inputNodes=[]
     self.outputNodes=[]
     self.built=False
+
+    #private
+
 
   def addNodes(self,nodes):
     for node in nodes:
@@ -82,7 +88,16 @@ class Network:
     myTrainableVariables=[]
     for ID,node in self.nodes.items():
       if node.hasTrainableVariables:
-        myTrainableVariables+=node.getTrainableVariables()
+        try:
+          nodeTrainableVariables=node.getTrainableVariables()
+          myTrainableVariables+=nodeTrainableVariables
+        except operationWithUnbuiltNode as e:
+          if e.operation=="getTrainableVariables":
+            pass
+          else:
+            raise(e)
+        except Exception as e:
+          raise(e)
 
     with GradientTape() as g:
       g.watch(myTrainableVariables)
@@ -92,10 +107,15 @@ class Network:
     #TODO move this to TrainingProtocol.py
     optimizer=trainingProtocol.optimizer(trainingProtocol.learningRate)
 
-    for i,v in enumerate(grads):
-      if v is None:
-        #TODO figure this out
-        pass
+    #check for nonexsistant gradients
+    c=0
+    while c<len(grads):
+      if grads[c]==None:
+        #remove this trainable variable
+        del grads[c]
+        del myTrainableVariables[c]
+      else:
+        c+=1
 
     optimizer.apply_gradients(zip(grads,myTrainableVariables))
 

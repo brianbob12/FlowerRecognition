@@ -81,6 +81,8 @@ class ConvolutionLayer(BuildableNode):
 
   #return a list of the trainable variables
   def getTrainableVariables(self):
+    #does error checking
+    super().getTrainableVariables()
     return [self.filter]
 
   def exportLayer(self,superdir,subdir):

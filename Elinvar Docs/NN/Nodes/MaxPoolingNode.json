@@ -40,9 +40,8 @@
       "Returns":[],
       "Description":"Creates a new node instead of importing a node."
     },
-    
     {
-      "name":"exportLayer",
+      "Name":"exportNode",
       "MandatoryArgs":[
         {
           "Name":"path",
@@ -56,20 +55,24 @@
         }
       ],
       "OptionalArgs":[],
-      "Returns":[],
-      "Throws":[
-        "Elinvar.NN.invalidPath(path)",
-        "Elinvar.NN.operationWithUnbuiltNode(operation)"
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        }
       ],
-      "Description":"Saves this layer to a specified folder. This will  not work if layer is not built."
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)"
+      ],
+      "Description":"Exports ID, and connections. Checks directory existence and validity."
     },
     {
-      "Name":"importLayer",
+      "Name":"importNode",
       "MandatoryArgs":[
         {
-          "Name":"path",
+          "Name":"myPath",
           "Type":"str",
-          "Description":"Path the network is being saved to."
+          "Description":"Path the network is being saved to. Has to be called myPath to avoid a collision."
         },
         {
           "Name":"subdir",
@@ -78,13 +81,22 @@
         }
       ],
       "OptionalArgs":[],
-      "Returns":[],
-      "Throws":[
-        "Elinvar.NN.invalidPath(path)",
-        "Elinvar.NN.missingFileForImport(path,fileName)",
-        "Elinvar.NN.missingDirectoryForImport(path)"
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        },
+        {
+          "Type":"List<int>",
+          "Description":"A list of node IDs to connect to this node. This is because the connections can only be resolved when all nodes have been imported."
+        }
       ],
-      "Description":"Loads this layer from a specified folder. This does not build the node."
+      "Throws":[
+        "Elinvar.NN.missingDirectoryForImport(path)",
+        "Elinvar.NN.invalidDataInFile(filePath)",
+        "Elinvar.NN.missingFileForImport(filePath)"
+      ],
+      "Description":"Imports ID and connections."
     },
     {
       "Name":"connect",

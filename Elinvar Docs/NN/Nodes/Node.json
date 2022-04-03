@@ -5,9 +5,8 @@
     "BuildableNode",
     "AdaIN",
     "InstanceNormalization",
-    "PoolingLayer",
     "MaxPoolingNode",
-    "Flatten",
+    "FlattenNode",
     "UpscalingLayer",
     "InputNode"
   ],

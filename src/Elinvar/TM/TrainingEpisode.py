@@ -24,7 +24,7 @@ class TrainingEpisode:
     self.iterationsPerCrossValSample=iterationsPerCrossValSample
 
 
-  def importNetwork(self,network):
+  def setNetwork(self,network):
     self.network=network 
 
   #takes a dict: {files,extract}
@@ -188,10 +188,10 @@ class TrainingEpisode:
       x,y=self.dataset["extract"](self.dataset["trainingFiles"][start:end])
 
     #start training
-    startTime=time.time()
+    startTime=time.perf_counter()
     trainingError=float(self.network.train(x,trainingProtocol,[y]))
     #end training
-    iterationTime=time.time()-startTime
+    iterationTime=time.perf_counter()-startTime
     if(iterationCallback!=None):
       iterationCallback(self.iterationCounter,trainingError,iterationTime)
 
@@ -240,7 +240,7 @@ class TrainingEpisode:
     except Exception as e:
       print(e)
       raise()
-    self.CNN.exportNetwork(myPath)
+    self.Network.exportNetwork(myPath)
 
   #exports data
   def exportData(self,directory):

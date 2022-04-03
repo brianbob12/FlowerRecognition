@@ -83,7 +83,7 @@ myTrainingEpisode=Elinvar.TM.TrainingEpisode("test1")
 myTrainingEpisode.instantiateLearningConfig(100)
 myTrainingEpisode.instantiateMonitoringConfig(10)
 
-myTrainingEpisode.importNetwork(myNet)
+myTrainingEpisode.setNetwork(myNet)
 #%%
 def extract(files):
   x,y=getBatch(files)
@@ -94,7 +94,7 @@ myDataset={
   "extract":extract
 }
 
-myTrainingEpisode.setDataSet(myDataset,1234,400,4321)
+myTrainingEpisode.setDataSet(myDataset,1234,100,4321)
 #%%
 for i in range(50):
   myTrainingEpisode.train(myTrainingProtocol)

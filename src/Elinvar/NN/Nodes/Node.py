@@ -2,7 +2,10 @@
 #class that holds nodes in the network
 #these nodes may be junctions, layers, inputs or outputs
 #each node has input connections to other nodes each connection has a shape
+from multiprocessing.sharedctypes import Value
 from os import access
+
+from debugpy import connect
 from ..Exceptions import *
 #each node has a stored value per execution
 #the node can be cleared to clear this value thorugh the function clear
@@ -61,7 +64,7 @@ class Node:
 
   def exportNode(self,path,subdir):
     from os import mkdir 
-    from struct import pack 
+    import struct
 
     accessPath=path+"\\"+subdir
 
@@ -86,7 +89,7 @@ class Node:
         
   def importNode(self,myPath,subdir):
     from os import path
-    from struct import unpack
+    import struct
 
     accessPath=path+"\\"+subdir
 
@@ -94,6 +97,27 @@ class Node:
     if not path.exists(accessPath):
       raise(missingDirectoryForImport(accessPath))
 
-    return(accessPath)
+    #read from id from 
+    with open(accessPath+"\\Node.dat","rb") as f:
+      raw=f.read()
+
+      try:
+        inp=struct.unpack("i",raw)
+      except struct.error as e:
+        raise(invalidByteFile(accessPath+"//Node.dat"))
+    self.ID=raw
+
+    #read from connections.txt
+    connectionsToResolve=[]
+    with open(accessPath+"\\connections.txt") as f:
+      inp=f.radlines()
+      for line in inp:
+        try:
+          x=int(line)
+          connectionsToResolve.append(x)
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\connections.txt","connections",x))
+
+    return(accessPath,connectionsToResolve)
 
     

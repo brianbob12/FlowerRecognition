@@ -196,9 +196,17 @@
         {
           "Type":"str",
           "Description":"The access path used. This is used for overloading."
+        },
+        {
+          "Type":"List<int>",
+          "Description":"A list of node IDs to connect to this node. This is because the connections can only be resolved when all nodes have been imported."
         }
       ],
-      "Throws":[],
+      "Throws":[
+        "Elinvar.NN.missingDirectoryForImport(path)",
+        "Elinvar.NN.invalidDataInFile(filePath)",
+        "Elinvar.NN.missingFileForImport(filePath)"
+      ],
       "Description":"Imports ID and connections."
     }
   ],

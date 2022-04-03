@@ -229,8 +229,7 @@
         "Elinvar.NN.missingFileForImport(filePath)"
       ],
       "Description":"Imports a network from a specified directory. This will create and connect the nodes as they were when the network was exported."
-    }
-    
+    } 
   ],
   "Notes":""
 }

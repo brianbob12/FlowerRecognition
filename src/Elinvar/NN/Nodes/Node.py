@@ -78,12 +78,18 @@ class Node:
 
     #save ID.dat
     with open(accessPath+"\\Node.dat","wb") as f:
-      f.write(bytearray(pack("i",self.ID)))
+      f.write(bytearray(struct.pack("i",self.ID)))
 
     #save connections.txt
     with open(accessPath+"\\connections.txt","w") as f:
       for connection in self.inputConnections:
         f.write(str(connection.ID)+"\n")
+
+    #save type
+    #NOTE this will be overwritten by children
+    #therefore this saves the lowest class of the node
+    with open(accessPath+"\\type.txt","w") as f:
+      f.write("Node")
 
     return(accessPath)
         

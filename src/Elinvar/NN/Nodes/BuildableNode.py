@@ -1,3 +1,4 @@
+from os import access
 from Elinvar.NN.Exceptions import operationWithUnbuiltNode
 from .Node import Node 
 
@@ -27,3 +28,24 @@ class BuildableNode(Node):
       raise(operationWithUnbuiltNode(self.ID,"getValue"))
     else:
       return super().getValue()
+
+  def exportNode(self, path, subdir):
+    if not self.built:
+      raise(operationWithUnbuiltNode(self.ID,"exportNode"))
+    
+    accessPath= super().exportNode(path, subdir)
+
+    #save type
+    #NOTE this will be overwritten by children
+    #therefore this saves the lowest class of the node
+    with open(accessPath+"\\type.txt","w") as f:
+      f.write("Node")
+
+    return accessPath
+  
+  def importNode(self, myPath, subdir):
+    accessPath,connections= super().importNode(myPath, subdir) 
+
+    self.built=False
+
+    return accessPath,connections

@@ -71,48 +71,35 @@ class InstanceNormalizationNode(Node):
     self.outputShape=self.inputShape#NOTE: same memory adress
     super().connect(connections)
   
+  def exportNode(self, path, subdir):
+      accessPath= super().exportNode(path, subdir)
+      
+      #save hyper.txt
+      #has data:size,stride
+      with open(accessPath+"\\hyper.txt","w") as f:
+        f.write(str(self.mean)+"\n")
+        f.write(str(self.stddev)+"\n")
 
-  def exportLayer(self,superdir,subdir):
-    from os import mkdir
+      return accessPath
 
-    accessPath=superdir+"\\"+subdir
+  def importNode(self, myPath, subdir):
+      accessPath,connections= super().importNode(myPath, subdir)
 
-    #create directory
-    try:
-      mkdir(accessPath)
-    except FileExistsError:
-      pass
-    except Exception as e:
-      raise(invalidPath(accessPath))
+      #import from hyper.txt
+      try:
+        with open(accessPath+"\\hyper.txt","r") as f:
+          fileLines=f.readlines()
+          #strip line breaks
+          fileLines=[i[:-1] for i in fileLines]
+          try:
+            self.mean=int(fileLines[0])
+          except ValueError as e:
+            raise(invalidDataInFile(accessPath+"\\hyper.txt","mean",fileLines[0]))
+          try:
+            self.stddev=int(fileLines[1])
+          except ValueError as e:
+            raise(invalidDataInFile(accessPath+"\\hyper.txt","stddev",fileLines[1]))
+      except IOError:
+        raise(missingFileForImport(accessPath+"\\hyper.txt"))
 
-    #save hyper.txt
-    #has data:size,stride
-    with open(accessPath+"\\hyper.txt","w") as f:
-      f.write(str(self.mean)+"\n")
-      f.write(str(self.stddev)+"\n")
-
-  def importLayer(self,superdir,subdir):
-    from os import path
-
-    accessPath=superdir+"\\"+subdir
-    #check if directory exists
-    if not path.exists(accessPath):
-      raise(missingDirectoryForImport(accessPath))
-
-    #import from hyper.txt
-    try:
-      with open(accessPath+"\\hyper.txt","r") as f:
-        fileLines=f.readlines()
-        #strip line breaks
-        fileLines=[i[:-1] for i in fileLines]
-        try:
-          self.mean=int(fileLines[0])
-        except ValueError as e:
-          raise(invalidDataInFile(accessPath+"\\hyper.txt","mean",fileLines[0]))
-        try:
-          self.stddev=int(fileLines[1])
-        except ValueError as e:
-          raise(invalidDataInFile(accessPath+"\\hyper.txt","stddev",fileLines[1]))
-    except IOError:
-      raise(missingFileForImport(accessPath+"\\hyper.txt"))
- 
+      return accessPath,connections 

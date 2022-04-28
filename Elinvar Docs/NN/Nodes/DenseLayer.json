@@ -101,7 +101,7 @@
       "Description":"Returns a list of the trainable tf.Variables in the layer."
     },
     {
-      "name":"exportLayer",
+      "name":"exportNode",
       "MandatoryArgs":[
         {
           "Name":"path",
@@ -115,7 +115,12 @@
         }
       ],
       "OptionalArgs":[],
-      "Returns":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        }
+      ],
       "Throws":[
         "Elinvar.NN.invalidPath(path)",
         "Elinvar.NN.operationWithUnbuiltNode(operation)"
@@ -123,10 +128,10 @@
       "Description":"Saves this layer to a specified folder. Saves three files: [path]/[subdir]/mat.weights, [path]/[subdir]:mat.biases, [path]/[subdir]/hyper.txt. This will  not work if layer is not built."
     },
     {
-      "Name":"importLayer",
+      "Name":"importNode",
       "MandatoryArgs":[
         {
-          "Name":"path",
+          "Name":"myPath",
           "Type":"str",
           "Description":"Path the network is being saved to."
         },
@@ -136,7 +141,18 @@
           "Description":"Subdirectory within path where this layer is being saved to."
         }
       ],
-      "OptionalArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"myPath",
+          "Type":"str",
+          "Description":"Path the network is being saved to. Has to be called myPath to avoid a collision."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
       "Returns":[],
       "Throws":[
         "Elinvar.NN.invalidPath(path)",

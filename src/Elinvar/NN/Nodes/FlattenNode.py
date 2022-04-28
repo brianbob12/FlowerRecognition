@@ -26,3 +26,14 @@ class FlattenNode(Node):
     batchSize=myInput.shape[0]
 
     return reshape(myInput,shape=[batchSize,self.outputShape[0]])
+
+  def exportNode(self, path:str, subdir:str):
+      accessPath= super().exportNode(path, subdir)
+      #save type
+      #NOTE this will be overwritten by children
+      #therefore this saves the lowest class of the node
+      with open(accessPath+"\\type.txt","w") as f:
+        f.write("FlattenNode")
+
+
+      return accessPath

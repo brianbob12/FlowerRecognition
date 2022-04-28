@@ -91,22 +91,10 @@ class DenseLayer(BuildableNode):
   # [path]/[subdir]/mat.weights (byteformat)
   # [path]/[subdir]/mat.biases (byteformat)
   # [path]/[subdir]/hyper.txt
-  def exportLayer(self,path,subdir):
-    if not self.built:
-      raise(operationWithUnbuiltNode("exportLayer"))
-
+  def exportNode(self,path,subdir):
     import struct
-    from os import mkdir 
 
-    accessPath=path+"\\"+subdir
-
-    #first step is to create a directory for the network if one does not already exist
-    try:
-      mkdir(accessPath)
-    except FileExistsError:
-      pass
-    except Exception as e:
-      raise(invalidPath(accessPath))
+    accessPath=super().exportNode(path,subdir)
 
     #save hyper.txt
     #contins: inputSize, layerSize, activation 
@@ -132,19 +120,23 @@ class DenseLayer(BuildableNode):
         biasFloats.append(float(self.biases[i]))
       f.write(bytearray(struct.pack(str(len(biasFloats))+"f",*biasFloats)))
 
+    return accessPath
+
 
   #function that loads a layer from files and stores perameters on stack
   #gets from to [path]/[subdir]
-  def importLayer(self,superdir,subdir):
+  def importNode(self,myPath,subdir):
     
 
     from os import path
 
-    accessPath=superdir+"\\"+subdir
+    accessPath,connections=super().importNode(myPath,subdir)
     
-    #check if directory exists
-    if not path.exists(accessPath):
-      raise(missingDirectoryForImport(accessPath))
+    #save type
+    #NOTE this will be overwritten by children
+    #therefore this saves the lowest class of the node
+    with open(accessPath+"\\type.txt","w") as f:
+      f.write("DeneseLayer")
 
     #import from hyper.txt
     try:
@@ -206,5 +198,7 @@ class DenseLayer(BuildableNode):
       raise(missingFileForImport(accessPath,"mat.biases"))
 
     self.built=True
+
+    return accessPath,connections
 
      

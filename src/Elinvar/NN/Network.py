@@ -40,26 +40,24 @@ class Network:
     self.addNodes(nodes)
     self.outputNodes+=nodes
 
-  #private
-  def buildNode(self,node,seed):
-    #first build connections
-    for i,inputNode in enumerate(node.inputConnections):
-      self.buildNode(inputNode,seed=seed+3*i)
-
-    #then if buildable, build
-    if isinstance(node,BuildableNode):
-      if node.built:
-        return
-      else:
-        node.build(seed=seed)
-    
-    
-
   def build(self,seed=None):
+    #recursive function
+    def buildNode(node,seed):
+        #first build connections
+        for i,inputNode in enumerate(node.inputConnections):
+          buildNode(inputNode,seed=seed+3*i)
+
+        #then if buildable, build
+        if isinstance(node,BuildableNode):
+          if node.built:
+            return
+          else:
+            node.build(seed=seed)
+
     if seed==None:
       seed=randint(0,2**31)
     for i,outputNode in enumerate(self.outputNodes):
-      self.buildNode(outputNode,seed+i*2)
+      buildNode(outputNode,seed+i*2)
     self.built=True
     return seed
 
@@ -135,3 +133,21 @@ class Network:
         continue
       else:
         self.nodes[nodeID].protectedClear()
+ 
+
+  def exportNetwork(self,networkPath:str):
+    exported=[]#a list of IDs of nodes already exported
+    #recursive function
+    def exportFromNode(networkPath:str,node:Node,exported):
+      if node.ID in exported:
+        return
+      #else
+      exported.append(node.ID)
+      node.exportNode(networkPath,f"NODE{node.ID}")
+      #export connections
+      for connectedNode in node.inputConnections:
+        exportFromNode(networkPath,connectedNode,exported)
+
+    #recursive call starting from outputs
+    for node in self.outputNodes:
+      exportFromNode(networkPath,node,exported)

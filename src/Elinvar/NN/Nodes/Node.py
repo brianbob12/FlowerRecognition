@@ -2,10 +2,7 @@
 #class that holds nodes in the network
 #these nodes may be junctions, layers, inputs or outputs
 #each node has input connections to other nodes each connection has a shape
-from multiprocessing.sharedctypes import Value
-from os import access
 
-from debugpy import connect
 from ..Exceptions import *
 #each node has a stored value per execution
 #the node can be cleared to clear this value thorugh the function clear

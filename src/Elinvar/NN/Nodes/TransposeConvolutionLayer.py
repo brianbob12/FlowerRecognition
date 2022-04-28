@@ -24,3 +24,14 @@ class TransposeConvolutionLayer(ConvolutionLayer):
       int(self.inputShape[1]+((self.kernelSize//2)*2)/self.stride),
       self.numberOfKernels
     ]
+  
+  def exportNode(self,path,subdir):
+    accessPath=super().exportNode(path,subdir)
+
+    #save type
+    #NOTE this will be overwritten by children
+    #therefore this saves the lowest class of the node
+    with open(accessPath+"\\type.txt","w") as f:
+      f.write("TransposeConvolutionLayer")
+
+    return accessPath

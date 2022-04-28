@@ -17,3 +17,14 @@ class InputNode(Node):
       raise(nodeNotSetup("execute"))
     else:
       return self.onExecute() 
+
+  def exportNode(self, path:str, subdir:str):
+    accessPath= super().exportNode(path, subdir)
+    #save type
+    #NOTE this will be overwritten by children
+    #therefore this saves the lowest class of the node
+    with open(accessPath+"\\type.txt","w") as f:
+      f.write("InputNode")
+
+
+    return accessPath

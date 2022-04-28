@@ -73,7 +73,13 @@ class InstanceNormalizationNode(Node):
   
   def exportNode(self, path, subdir):
       accessPath= super().exportNode(path, subdir)
-      
+
+     #save type
+      #NOTE this will be overwritten by children
+      #therefore this saves the lowest class of the node
+      with open(accessPath+"\\type.txt","w") as f:
+        f.write("InstanceNormalizationNode") 
+
       #save hyper.txt
       #has data:size,stride
       with open(accessPath+"\\hyper.txt","w") as f:

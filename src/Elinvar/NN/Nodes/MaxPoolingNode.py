@@ -65,7 +65,7 @@ class MaxPoolingNode(Node):
       #NOTE this will be overwritten by children
       #therefore this saves the lowest class of the node
       with open(accessPath+"\\type.txt","w") as f:
-        f.write("Node")
+        f.write("MaxPoolingNode")
 
       #save hyper.txt
       #has data:size,stride

@@ -31,6 +31,32 @@
         "Elinvar.NN.nodeNotSetup(attemptedOperation)"
       ],
       "Description":""
+    },
+    {
+      "Name":"exportNode",
+      "MandatoryArgs":[
+        {
+          "Name":"path",
+          "Type":"str",
+          "Description":"Path the network is being saved to."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)"
+      ],
+      "Description":"Exports ID, and connections. Checks directory existence and validity."
     }
   ],
   "Notes":""

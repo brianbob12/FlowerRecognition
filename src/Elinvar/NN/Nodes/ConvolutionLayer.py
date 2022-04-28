@@ -1,3 +1,4 @@
+from multiprocessing import connection
 import numpy as np
 from tensorflow import Variable,concat
 from tensorflow.nn import conv2d
@@ -85,22 +86,19 @@ class ConvolutionLayer(BuildableNode):
     super().getTrainableVariables()
     return [self.filter]
 
-  def exportLayer(self,superdir,subdir):
-    if not self.built:
-      raise(operationWithUnbuiltNode("exportLayer"))
+  def exportNode(self,path,subdir):
 
     import struct
-    from os import mkdir
     
-    accessPath=superdir+"\\"+subdir
+    accessPath=super().exportNode(path,subdir)
 
-    #first step is to create a directory for the network if one does not already exist
-    try:
-      mkdir(accessPath)
-    except FileExistsError:
-      pass
-    except Exception as e:
-      raise(invalidPath(accessPath))    
+    #save type
+    #NOTE this will be overwritten by children
+    #therefore this saves the lowest class of the node
+    with open(accessPath+"\\type.txt","w") as f:
+      f.write("ConvolutionLayer")
+
+ 
 
     #save hyper.txt
     #contains: fliterSize, strides 
@@ -119,15 +117,12 @@ class ConvolutionLayer(BuildableNode):
             for l in range(self.numberOfKernels):
               kernelFloats.append(float(self.filter[i][j][k][l]))
       f.write(bytearray(struct.pack(str(len(kernelFloats))+"f",*kernelFloats)))
+    return accessPath
 
-  def importLayer(self,superdir,subdir):
-    from os import path
+  def importNode(self,myPath,subdir):
 
-    accessPath=superdir+"\\"+subdir
+    accessPath,connections=super().importNode(myPath,subdir)
   
-    #check if directory exists
-    if not path.exists(accessPath):
-      raise(missingDirectoryForImport(accessPath))
 
     #import from hyper.txt
     try:
@@ -185,3 +180,5 @@ class ConvolutionLayer(BuildableNode):
     except IOError:
       raise(missingFileForImport(accessPath,"mat.filter"))
     self.imported=True
+
+    return accessPath,connections

@@ -1,0 +1,47 @@
+{
+  "Name":"NodeNameLookup",
+  "Superclasses":[],
+  "Subclasses":[],
+  "Description":"Converts between Node types and strings for import and export.",
+  "Properties":[],
+  "Functions":[
+    {
+      "Name":"getNodeFromName",
+      "MandatoryArgs":[
+        {
+          "Name":"name",
+          "Type":"str",
+          "Description":"The name corresponding to a node."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"class<Node>",
+          "Description":"Corresponding Node or None."
+        }
+      ],
+      "Throws":[],
+      "Description":"Produces a Node class from a name of a node."
+    },
+    {
+      "Name":"getNameFromNode",
+      "MandatoryArgs":[
+        {
+          "Name":"node",
+          "Type":"Node",
+          "Description":"Instance of node."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"Corresponding Name or None."
+        }
+      ],
+      "Throws":[],
+      "Description":"Produces a name from a node instance."
+    }
+  ]
+}

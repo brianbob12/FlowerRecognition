@@ -1,11 +1,12 @@
+from re import L
 from .Node import Node
-from Elinvar.NN.Exceptions import nodeNotSetup
+from Elinvar.NN.Exceptions import nodeNotSetup,missingFileForImport,invalidDataInFile
 
 
 class InputNode(Node):
-  def __init__(self, name=None, protected=False):
+  def __init__(self, name=None, protected=False,ID=None):
     self.onExecute=None
-    super().__init__(name, protected)
+    super().__init__(name=name, protected=protected,ID=ID)
 
   def setup(self,function,outputShape):
     self.onExecute=function
@@ -18,7 +19,7 @@ class InputNode(Node):
     else:
       return self.onExecute() 
 
-  def exportNode(self, path:str, subdir:str):
+  def exportNode(self, path:str, subdir:str) -> str:
     accessPath= super().exportNode(path, subdir)
     #save type
     #NOTE this will be overwritten by children
@@ -26,5 +27,9 @@ class InputNode(Node):
     with open(accessPath+"\\type.txt","w") as f:
       f.write("InputNode")
 
-
     return accessPath
+
+  def inputNode(self,myPath:str,subdir:str) -> tuple[str,list]:
+    accessPath,connections = super().importNode(myPath,subdir)
+
+    return accessPath,connections

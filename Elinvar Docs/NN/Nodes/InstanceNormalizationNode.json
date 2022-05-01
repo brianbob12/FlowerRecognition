@@ -17,6 +17,30 @@
   ],
   "Functions":[
     {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"name",
+          "Type":"str",
+          "Description":"Sets name property."
+        },
+        {
+          "Name":"protected",
+          "Type":"bool",
+          "Description":"option to block clear function"
+        },
+        {
+          "Name":"ID",
+          "Type":"int",
+          "Description":"Sets ID property."
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"init function sets up key variables."
+    },
+    {
       "Name":"newLayer",
       "MandatoryArgs":[
         {

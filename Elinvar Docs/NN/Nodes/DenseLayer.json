@@ -44,6 +44,11 @@
           "Name":"protected",
           "Type":"bool",
           "Description":"option to block clear function"
+        },
+        {
+          "Name":"ID",
+          "Type":"int",
+          "Description":"Sets ID property."
         }
       ],
       "Returns":[],

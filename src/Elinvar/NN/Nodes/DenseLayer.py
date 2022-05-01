@@ -21,8 +21,8 @@ from tensorflow.math import tanh
 from ..Exceptions import *
 
 class DenseLayer(BuildableNode):
-  def __init__(self,name=None,protected=False):
-    super().__init__(name=name,protected=protected)
+  def __init__(self,name=None,protected=False,ID=None):
+    super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=True 
     self.activationLookup={"relu":relu,"linear":self.linear,"sigmoid":sigmoid,"tanh":tanh}
   
@@ -96,6 +96,12 @@ class DenseLayer(BuildableNode):
 
     accessPath=super().exportNode(path,subdir)
 
+    #save type
+    #NOTE this will be overwritten by children
+    #therefore this saves the lowest class of the node
+    with open(accessPath+"\\type.txt","w") as f:
+      f.write("DenseLayer")
+
     #save hyper.txt
     #contins: inputSize, layerSize, activation 
     with open(accessPath+"\\hyper.txt","w") as f:
@@ -131,12 +137,6 @@ class DenseLayer(BuildableNode):
     from os import path
 
     accessPath,connections=super().importNode(myPath,subdir)
-    
-    #save type
-    #NOTE this will be overwritten by children
-    #therefore this saves the lowest class of the node
-    with open(accessPath+"\\type.txt","w") as f:
-      f.write("DeneseLayer")
 
     #import from hyper.txt
     try:

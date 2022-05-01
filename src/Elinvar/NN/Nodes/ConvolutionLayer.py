@@ -9,8 +9,8 @@ from ..Exceptions import *
 
 class ConvolutionLayer(BuildableNode):
   
-  def __init__(self,name=None,protected=False):
-    super().__init__(name=name,protected=protected)
+  def __init__(self,name=None,protected=False,ID=None):
+    super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=True
     #tracks if network has been imported
     self.imported=False
@@ -155,12 +155,12 @@ class ConvolutionLayer(BuildableNode):
     import struct
 
     try:
-      with open(accessPath+"//mat.filter","rb") as f:
+      with open(accessPath+"\\mat.filter","rb") as f:
         raw=f.read()#type of bytes  
         try:
-          inp=struct.unpack(str(self.kernelSize*self.kernelSize*3*3)+"f",raw)#list of float32s
+          inp=struct.unpack(str(self.kernelSize*self.kernelSize*self.inputChannels*self.numberOfKernels)+"f",raw)#list of float32s
         except struct.error as e:
-          raise(invalidByteFile(accessPath+"//mat.filter"))
+          raise(invalidByteFile(accessPath+"\\mat.filter"))
       
         kernel=[] 
         try:
@@ -171,7 +171,9 @@ class ConvolutionLayer(BuildableNode):
               for k in range(self.inputChannels):
                 kernel[i][j].append([])
                 for l in range(self.numberOfKernels):
-                  kernel[i][j][k].append(inp[i*self.kernelSize*3*3+j*3*3+k*3+l])
+                  #TODO check this is correct
+                  kernel[i][j][k].append(
+                    inp[i*self.kernelSize*self.inputChannels*self.numberOfKernels+j*self.inputChannels*self.numberOfKernels+k*self.numberOfKernels+l])
         except Exception as e:
           raise(invalidByteFile(accessPath+"//mat.filer"))
 
@@ -180,5 +182,6 @@ class ConvolutionLayer(BuildableNode):
     except IOError:
       raise(missingFileForImport(accessPath,"mat.filter"))
     self.imported=True
+    self.built=True
 
     return accessPath,connections

@@ -11,8 +11,8 @@ from .Node import Node
 
 class InstanceNormalizationNode(Node):
 
-  def __init__(self,name=None,protected=None):
-    super().__init__(name=name,protected=protected)
+  def __init__(self,name=None,protected=None,ID=None):
+    super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=False
 
   def newLayer(self,mean,stddev):

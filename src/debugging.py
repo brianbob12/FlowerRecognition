@@ -51,6 +51,12 @@ for i in range(e):
 random.shuffle(files)
 #%%
 myNet=Elinvar.NN.Network()
+
+#myNet.importNetwork("testNet")
+
+#input1=myNet.nodes[1234945864]
+#output1=myNet.nodes[1653659712]
+
 input1=Elinvar.NN.Nodes.InputNode()
 input1.setup(lambda :getBatch(files[:10]),[256,256,3])
 conv1=Elinvar.NN.Nodes.ConvolutionLayer()
@@ -65,11 +71,8 @@ dense1=Elinvar.NN.Nodes.DenseLayer()
 dense1.newLayer(5,"linear")
 dense1.connect([flatten1])
 
-dense2=Elinvar.NN.Nodes.DenseLayer()
-dense2.newLayer(5,"linear")
-
 myNet.addInputNodes([input1])
-myNet.addNodes([conv1,pool1,flatten1,dense2])
+myNet.addNodes([conv1,pool1,flatten1])
 myNet.addOutputNodes([dense1])
 #%%
 myNet.build(seed=2212)
@@ -95,10 +98,12 @@ myDataset={
 }
 
 myTrainingEpisode.setDataSet(myDataset,1234,100,4321)
+
 #%%
-for i in range(50):
-  myTrainingEpisode.train(myTrainingProtocol)
+crossValError=float(myNet.getError(myTrainingEpisode.dataset["crossValx"],myTrainingProtocol,[myTrainingEpisode.dataset["crossValy"]]))
+print(crossValError)
 #%%
-print(myTrainingEpisode.crossValErrorHistory)
-print(myTrainingEpisode.trainingErrorHistory)
+#for i in range(10):
+#  myTrainingEpisode.train(myTrainingProtocol)
 # %%
+myNet.exportNetwork("testNet")

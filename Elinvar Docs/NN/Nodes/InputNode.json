@@ -12,6 +12,30 @@
   ],
   "Functions":[
     {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"name",
+          "Type":"str",
+          "Description":"Sets name property."
+        },
+        {
+          "Name":"protected",
+          "Type":"bool",
+          "Description":"option to block clear function"
+        },
+        {
+          "Name":"ID",
+          "Type":"int",
+          "Description":"Sets ID property."
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"init function sets up key variables."
+    },
+    {
       "Name":"setup",
       "MandatoryArgs":[
         {
@@ -57,6 +81,38 @@
         "Elinvar.NN.invalidPath(path)"
       ],
       "Description":"Exports ID, and connections. Checks directory existence and validity."
+    },
+    {
+      "Name":"importNode",
+      "MandatoryArgs":[
+        {
+          "Name":"myPath",
+          "Type":"str",
+          "Description":"Path the network is being saved to. Has to be called myPath to avoid a collision."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        },
+        {
+          "Type":"List<int>",
+          "Description":"A list of node IDs to connect to this node. This is because the connections can only be resolved when all nodes have been imported."
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.missingDirectoryForImport(path)",
+        "Elinvar.NN.invalidDataInFile(filePath)",
+        "Elinvar.NN.missingFileForImport(filePath)"
+      ],
+      "Description":"Imports ID and connections."
     }
   ],
   "Notes":""

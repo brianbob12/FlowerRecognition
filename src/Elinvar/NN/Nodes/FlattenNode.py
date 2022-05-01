@@ -9,7 +9,7 @@ from tensorflow import reshape
 class FlattenNode(Node):
 
   def __init__(self, name=None, protected=False, ID=None):
-      super().__init__(name, protected, ID)
+      super().__init__(name, protected=protected, ID=ID)
       self.outputShape=[0]
 
   #TODO count output shape

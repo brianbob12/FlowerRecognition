@@ -3,8 +3,8 @@ from Elinvar.NN.Exceptions import operationWithUnbuiltNode
 from .Node import Node 
 
 class BuildableNode(Node):
-  def __init__(self,name=None,protected=False):
-    super().__init__(name=name,protected=protected)
+  def __init__(self,name=None,protected=False,ID=None):
+    super().__init__(name=name,protected=protected,ID=ID)
     self.built=False
 
   def getTrainableVariables(self):
@@ -46,6 +46,6 @@ class BuildableNode(Node):
   def importNode(self, myPath, subdir):
     accessPath,connections= super().importNode(myPath, subdir) 
 
-    self.built=False
+    self.built=True
 
     return accessPath,connections

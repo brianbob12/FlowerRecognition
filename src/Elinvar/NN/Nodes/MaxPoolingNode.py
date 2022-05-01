@@ -12,8 +12,8 @@ from ..Exceptions import invalidDataInFile, invalidNodeConnection, invalidPath, 
 #non-trainable layer#
 #maxpooling
 class MaxPoolingNode(Node):
-  def __init__(self,name=None,protected=False):
-    super().__init__(name=name,protected=protected)
+  def __init__(self,name=None,protected=False,ID=None):
+    super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=False
     self.inputShape=None
 

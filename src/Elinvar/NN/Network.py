@@ -1,4 +1,7 @@
+from multiprocessing.sharedctypes import Value
 from random import randint
+
+from Elinvar.NN.Nodes.NodeNameLookup import NodeNameLookup
 from .Nodes import *
 from tensorflow import GradientTape
 
@@ -136,6 +139,23 @@ class Network:
  
 
   def exportNetwork(self,networkPath:str):
+    from os import mkdir
+    #make path
+    try:
+      mkdir(networkPath)
+    except FileExistsError:
+      pass
+    except Exception as e:
+      raise(invalidPath(networkPath))
+
+    #write list of output nodes
+    outNodeIDs=""
+    for node in self.outputNodes:
+      outNodeIDs+=str(node.ID)+"\n"
+    outNodeIDs=outNodeIDs[:-1]#remove last \n
+    with open(networkPath+"\\outputNodes.txt","w") as f:
+      f.write(outNodeIDs)
+
     exported=[]#a list of IDs of nodes already exported
     #recursive function
     def exportFromNode(networkPath:str,node:Node,exported):
@@ -151,3 +171,76 @@ class Network:
     #recursive call starting from outputs
     for node in self.outputNodes:
       exportFromNode(networkPath,node,exported)
+ 
+  #made to be run on an empty network
+  def importNetwork(self,networkPath:str):
+    #clear stuff
+    self.inputNodes=[]
+    self.outputNodes=[]
+    self.nodes={}
+
+    from os import path
+
+    #check if directory exists
+    if not path.exists(networkPath):
+      raise(missingDirectoryForImport(networkPath))
+
+    #get list of output nodes
+    outputNodeIDs=[]
+    try:
+      with open(networkPath+"\\outputNodes.txt","r") as f:
+        rawLines=f.readlines()
+        for line in rawLines:
+          try:
+            outputNodeIDs.append(int(line))
+          except ValueError as e:
+            raise(invalidDataInFile(networkPath+"\\outputNodes.txt","nodeID",line))
+    except FileNotFoundError as e:
+      raise(missingFileForImport(networkPath,"outputNodes.txt"))
+     
+    importedIDs=[]
+    allNodes=[]
+    #recursive function
+    def importFromNode(networkPath:str,nodeID:int,importedIDs,allNodes) -> Node:
+      if nodeID in importedIDs:
+        return
+      else:
+        importedIDs.append(nodeID)
+
+      accessPath=networkPath+"\\NODE"+str(nodeID)
+      #get node type
+      try:
+        with open(accessPath+"\\type.txt","r") as f:
+          name=f.readlines()[0]
+      except FileNotFoundError as e:
+        raise(missingFileForImport(accessPath,"type.txt"))
+      
+      nodeClass=NodeNameLookup.getNodeFromName(name)
+      if nodeClass==None:
+        #wrong name
+        raise(invalidDataInFile(accessPath+"\\type.txt","name",name))
+      print(nodeClass)
+      myNode=nodeClass(ID=nodeID)
+      print(myNode.outputShape)
+      allNodes.append(myNode)
+
+      drop,connections=myNode.importNode(networkPath,f"NODE{nodeID}")
+      nodesToConnect=[]
+      for connection in connections:
+        connectedNode=importFromNode(networkPath,connection,importedIDs,allNodes)
+        nodesToConnect.append(connectedNode) 
+
+      myNode.connect(nodesToConnect)
+
+      return myNode
+    
+    #run the recursive function for all output nodes
+    for nodeID in outputNodeIDs:
+      self.outputNodes.append(importFromNode(networkPath,nodeID,importedIDs,allNodes))
+
+    for node in allNodes:
+      self.nodes[node.ID]=node
+      if isinstance(node,InputNode):
+        self.inputNodes.append(node)
+    
+    self.built=True

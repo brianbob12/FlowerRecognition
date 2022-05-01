@@ -18,7 +18,7 @@ class Node:
     self.protected=protected
     self.value=None
     self.hasTrainableVariables=False
-    if id!=None:
+    if ID!=None:
       self.ID=ID
     else:
       from random import randint
@@ -59,7 +59,7 @@ class Node:
     self.inputConnections=connections
     return
 
-  def exportNode(self,path,subdir):
+  def exportNode(self,path:str,subdir:str) -> str:
     from os import mkdir 
     import struct
 
@@ -88,13 +88,22 @@ class Node:
     with open(accessPath+"\\type.txt","w") as f:
       f.write("Node")
 
+    #write outputShape
+    shapeToWrite=""
+    for i in self.outputShape:
+      shapeToWrite+=str(i)+"\n"
+    shapeToWrite=shapeToWrite[:-1]#remove last \n
+
+    with open(accessPath+"\\shape.txt","w") as f:
+      f.write(shapeToWrite)
+
     return(accessPath)
         
-  def importNode(self,myPath,subdir):
+  def importNode(self,myPath: str,subdir:str) -> tuple[str,list]:
     from os import path
     import struct
 
-    accessPath=path+"\\"+subdir
+    accessPath=myPath+"\\"+subdir
 
     #check if directory exists
     if not path.exists(accessPath):
@@ -113,13 +122,26 @@ class Node:
     #read from connections.txt
     connectionsToResolve=[]
     with open(accessPath+"\\connections.txt") as f:
-      inp=f.radlines()
+      inp=f.readlines()
       for line in inp:
         try:
           x=int(line)
           connectionsToResolve.append(x)
         except ValueError as e:
           raise(invalidDataInFile(accessPath+"\\connections.txt","connections",x))
+
+    try:
+      with open(accessPath+"\\shape.txt","r") as f:
+        raw=f.readlines()
+    except FileNotFoundError as e:
+      raise(missingFileForImport(accessPath,"shape.txt"))
+    
+    try:
+      shape=[int(i) for i in raw]
+    except ValueError as e:
+      #because python is interperated i should contian the last used value of the index
+      raise(invalidDataInFile(accessPath+"\\shape.txt",f"shape{i}",raw[i]))
+    self.outputShape=shape
 
     return(accessPath,connectionsToResolve)
 

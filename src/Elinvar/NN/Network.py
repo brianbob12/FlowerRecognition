@@ -138,7 +138,7 @@ class Network:
         self.nodes[nodeID].protectedClear()
  
 
-  def exportNetwork(self,networkPath:str):
+  def exportNetwork(self,networkPath:str,debug=True):
     from os import mkdir
     #make path
     try:
@@ -158,19 +158,21 @@ class Network:
 
     exported=[]#a list of IDs of nodes already exported
     #recursive function
-    def exportFromNode(networkPath:str,node:Node,exported):
+    def exportFromNode(networkPath:str,node:Node,exported,debug):
       if node.ID in exported:
         return
       #else
       exported.append(node.ID)
+      if debug:
+        print(f"Exproting NODE{node.ID} ")
       node.exportNode(networkPath,f"NODE{node.ID}")
       #export connections
       for connectedNode in node.inputConnections:
-        exportFromNode(networkPath,connectedNode,exported)
+        exportFromNode(networkPath,connectedNode,exported,debug)
 
     #recursive call starting from outputs
     for node in self.outputNodes:
-      exportFromNode(networkPath,node,exported)
+      exportFromNode(networkPath,node,exported,debug)
  
   #made to be run on an empty network
   def importNetwork(self,networkPath:str):
@@ -219,9 +221,7 @@ class Network:
       if nodeClass==None:
         #wrong name
         raise(invalidDataInFile(accessPath+"\\type.txt","name",name))
-      print(nodeClass)
       myNode=nodeClass(ID=nodeID)
-      print(myNode.outputShape)
       allNodes.append(myNode)
 
       drop,connections=myNode.importNode(networkPath,f"NODE{nodeID}")

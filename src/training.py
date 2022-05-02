@@ -5,7 +5,7 @@
 #E  984   tulip
 
 #%%
-from NN.NeuralNetwork import CNN as CNN
+import Elinvar
 from PIL import Image
 import tensorflow as tf
 import numpy as np
@@ -28,7 +28,10 @@ runName="B6"
 
 upload=True
 #%%
-myCNN=CNN(256,3,debug=False)
+myNet=Elinvar.NN.Network(256,3,debug=False)
+
+input1 = Elinvar.NN.Nodes.InputNode()
+
 
 myCNN.addConvolutionLayer(48,11,3)
 layerMakeup.append("CONV-48-11-3")

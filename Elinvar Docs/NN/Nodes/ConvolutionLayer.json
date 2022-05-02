@@ -35,6 +35,11 @@
       "Name":"inputShape",
       "Type":"List<int>",
       "Description":"The functioning input shape of the node. This is created from connections."
+    },
+    {
+      "Name":"padding",
+      "Type":"int",
+      "Description":"Padding applied to the convolution algorithm."
     }
   ],
   "Functions":[

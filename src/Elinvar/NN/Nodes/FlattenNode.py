@@ -1,5 +1,7 @@
 
 from numpy import prod
+
+from Elinvar.NN.Exceptions import invalidNodeConnection
 from .Node import Node
 from tensorflow import concat
 from tensorflow import reshape
@@ -11,13 +13,19 @@ class FlattenNode(Node):
   def __init__(self, name=None, protected=False, ID=None):
       super().__init__(name, protected=protected, ID=ID)
       self.outputShape=[0]
+      self.imported=False
 
   #TODO count output shape
   def connect(self, connections):
     tad=0
     for node in connections:
       tad+=prod(node.outputShape)
-    self.outputShape[0]+=tad
+
+    if self.imported:
+      if(self.outputShape[0]!=tad):
+        raise(invalidNodeConnection([tad],self.outputShape))
+    else:
+      self.outputShape[0]+=tad
     return super().connect(connections)
   
   #returns numpy
@@ -27,6 +35,10 @@ class FlattenNode(Node):
 
     return reshape(myInput,shape=[batchSize,self.outputShape[0]])
 
+  def importNode(self, myPath: str, subdir: str):
+    self.imported=True
+    return super().importNode(myPath, subdir)
+
   def exportNode(self, path:str, subdir:str):
       accessPath= super().exportNode(path, subdir)
       #save type
@@ -34,6 +46,5 @@ class FlattenNode(Node):
       #therefore this saves the lowest class of the node
       with open(accessPath+"\\type.txt","w") as f:
         f.write("FlattenNode")
-
 
       return accessPath

@@ -29,7 +29,7 @@ class InputNode(Node):
 
     return accessPath
 
-  def inputNode(self,myPath:str,subdir:str) -> tuple[str,list]:
+  def inputNode(self,myPath:str,subdir:str):
     accessPath,connections = super().importNode(myPath,subdir)
 
     return accessPath,connections

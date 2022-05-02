@@ -72,6 +72,7 @@ class MaxPoolingNode(Node):
       with open(accessPath+"\\hyper.txt","w") as f:
         f.write(str(self.size)+"\n")
         f.write(str(self.stride)+"\n")
+        f.write(str(self.padding)+"\n")
 
       return accessPath
 
@@ -92,8 +93,14 @@ class MaxPoolingNode(Node):
             self.stride=int(fileLines[1])
           except ValueError as e:
             raise(invalidDataInFile(accessPath+"\\hyper.txt","stride",fileLines[1]))
+          try:
+            self.padding=int(fileLines[2])
+          except ValueError as e:
+            raise(invalidDataInFile(accessPath+"\\hyper.txt","padding",fileLines[2]))
       except IOError:
         raise(missingFileForImport(accessPath+"\\hyper.txt"))
+
+      self.inputChannels=0
 
       return accessPath,connections
     

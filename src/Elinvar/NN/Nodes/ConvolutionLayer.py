@@ -107,6 +107,7 @@ class ConvolutionLayer(BuildableNode):
       f.write(str(self.strideSize)+"\n") 
       f.write(str(self.numberOfKernels)+"\n")
       f.write(str(self.inputChannels)+"\n")
+      f.write(str(self.padding)+"\n")
     
     #save mat.kernel
     kernelFloats=[]
@@ -147,6 +148,10 @@ class ConvolutionLayer(BuildableNode):
           self.inputChannels=int(fileLines[3]) 
         except ValueError as e:
           raise(invalidDataInFile(accessPath+"\\hyper.txt","size",fileLines[3])) 
+        try:
+          self.padding=int(fileLines[4]) 
+        except ValueError as e:
+          raise(invalidDataInFile(accessPath+"\\hyper.txt","padding",fileLines[4])) 
     except IOError:
       raise(missingFileForImport(accessPath+"\\hyper.txt"))
 

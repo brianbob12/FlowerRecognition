@@ -3,7 +3,6 @@ import Elinvar
 from PIL import Image
 import tensorflow as tf
 import numpy as np
-import random
 #%%
 #outputs x and y arrays
 def getBatch(fileNames):
@@ -48,34 +47,33 @@ for i in range(d):
 for i in range(e):
   files.append("E"+str(i)+".jpg") 
 
-random.shuffle(files)
 #%%
 myNet=Elinvar.NN.Network()
 
-#myNet.importNetwork("testNet")
+myNet.importNetwork("testNet")
 
-#input1=myNet.nodes[1234945864]
-#output1=myNet.nodes[1653659712]
+input1=myNet.nodes[1360037502]
+dense1=myNet.nodes[813618258]
 
-input1=Elinvar.NN.Nodes.InputNode()
-input1.setup(lambda :getBatch(files[:10]),[256,256,3])
-conv1=Elinvar.NN.Nodes.ConvolutionLayer()
-conv1.newLayer(5,4,1,0)
-conv1.connect([input1])
-pool1=Elinvar.NN.Nodes.MaxPoolingNode()
-pool1.newLayer(3,1)
-pool1.connect([conv1])
-flatten1=Elinvar.NN.Nodes.FlattenNode()
-flatten1.connect([pool1])
-dense1=Elinvar.NN.Nodes.DenseLayer()
-dense1.newLayer(5,"linear")
-dense1.connect([flatten1])
+#input1=Elinvar.NN.Nodes.InputNode()
+#input1.setup(lambda :getBatch(files[:10]),[256,256,3])
+#conv1=Elinvar.NN.Nodes.ConvolutionLayer()
+#conv1.newLayer(5,4,1,0)
+#conv1.connect([input1])
+#pool1=Elinvar.NN.Nodes.MaxPoolingNode()
+#pool1.newLayer(3,1)
+#pool1.connect([conv1])
+#flatten1=Elinvar.NN.Nodes.FlattenNode()
+#flatten1.connect([pool1])
+#dense1=Elinvar.NN.Nodes.DenseLayer()
+#dense1.newLayer(5,"linear")
+#dense1.connect([flatten1])
 
-myNet.addInputNodes([input1])
-myNet.addNodes([conv1,pool1,flatten1])
-myNet.addOutputNodes([dense1])
+#myNet.addInputNodes([input1])
+#myNet.addNodes([conv1,pool1,flatten1])
+#myNet.addOutputNodes([dense1])
 #%%
-myNet.build(seed=2212)
+#myNet.build(seed=2212)
 #%%
 lr=1e-7
 optimizer=tf.keras.optimizers.Adam
@@ -100,10 +98,11 @@ myDataset={
 myTrainingEpisode.setDataSet(myDataset,1234,100,4321)
 
 #%%
+
 crossValError=float(myNet.getError(myTrainingEpisode.dataset["crossValx"],myTrainingProtocol,[myTrainingEpisode.dataset["crossValy"]]))
 print(crossValError)
 #%%
 #for i in range(10):
 #  myTrainingEpisode.train(myTrainingProtocol)
 # %%
-myNet.exportNetwork("testNet")
+#myNet.exportNetwork("testNet",debug=True)

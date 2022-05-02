@@ -99,7 +99,7 @@ class Node:
 
     return(accessPath)
         
-  def importNode(self,myPath: str,subdir:str) -> tuple[str,list]:
+  def importNode(self,myPath: str,subdir:str):
     from os import path
     import struct
 
@@ -117,7 +117,7 @@ class Node:
         inp=struct.unpack("i",raw)
       except struct.error as e:
         raise(invalidByteFile(accessPath+"//Node.dat"))
-    self.ID=raw
+    self.ID=inp[0]
 
     #read from connections.txt
     connectionsToResolve=[]

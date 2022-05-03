@@ -97,13 +97,13 @@ class TrainingEpisode:
 
   #training functions
 
-  def crossValEstimation(self,iterationCounter):
+  def OLDcrossValEstimation(self,iterationCounter):
     value=self.crossValRegressionVariables["A"]*math.exp(self.crossValRegressionVariables["B"]*iterationCounter)
     value+=self.crossValRegressionVariables["C"]*iterationCounter
     value+=self.crossValRegressionVariables["D"]
     return value
 
-  def crossValDerivativeEstimation(self,iterationCounter):
+  def OLDcrossValDerivativeEstimation(self,iterationCounter):
     try:
       dvdi=self.crossValRegressionVariables["A"]*self.crossValRegressionVariables["B"]*math.exp(self.crossValRegressionVariables["B"]*iterationCounter)
       dvdi+=self.crossValRegressionVariables["C"]
@@ -114,7 +114,7 @@ class TrainingEpisode:
 
   #TODO move into it's own class
   #crossValMeasurement must be float
-  def crossValRegression(self):
+  def OLDcrossValRegression(self):
     try:
       deda=0
       dedb=0
@@ -283,6 +283,8 @@ class TrainingEpisode:
     #clear some data to save memory
     del errorData
     
+    #the rest is redundant for now
+    return
     #save crossval regression data
     crossValRegressionData=[["iteration","crossValRegressionError"]+[i for i in self.crossValRegressionVariables.keys()]]
     for record in self.crossValRegressionHistory:

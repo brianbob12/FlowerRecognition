@@ -98,12 +98,8 @@ class TrainingManager:
         episodeCallback(self.currentTrainingEpisode)
 
   def crossValCallback(self,iteration,crossValError):
-    print("\t"+format(crossValError,".2f"),end="")
+    print("\t\t"+format(crossValError,".4f"),end="")
     self.lastCrossVal=crossValError
-
-  def crossValRegressionCallback(self,iteration,crossValRegressionError,crossValRegressionVariables):
-    #log data
-    self.crossValRegressionData.append([iteration,crossValRegressionError,crossValRegressionVariables])
 
   def runEpisode(self):
     print("Running episode",self.currentTrainingEpisode.name)
@@ -116,7 +112,7 @@ class TrainingManager:
 
     running=True
     #setupCallbacks
-    iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+format(trainingError,".4f")+"\t"+format(iterationTime,".4f"),end="")
+    iterationCallback=lambda iteration,trainingError,iterationTime: print("\r"+str(iteration)+"\t\t"+format(trainingError,".4f")+"\t\t"+format(iterationTime,".4f")+"\t\t"+format(self.lastCrossVal,".4f"),end="\r")
     while running:
       self.currentTrainingEpisode.train(
         iterationCallback=iterationCallback,

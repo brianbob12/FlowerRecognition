@@ -58,6 +58,11 @@
       "Name":"network",
       "Type":"NetworK",
       "Description":"The network to be trained."
+    },
+    {
+      "Name":"trainingProtocol",
+      "Type":"TrainingProtocol",
+      "Description":"The protocol used to update the weights in the network."
     }
   ],
   "Functions":[
@@ -153,13 +158,7 @@
     },
     {
       "Name":"train",
-      "MandatoryArgs":[
-        {
-          "Name":"trainingProtocol",
-          "Type":"TrainingProtocol",
-          "Description":"The training protocol used."
-        }
-      ],
+      "MandatoryArgs":[],
       "OptionalArgs":[
         {
           "Name":"iterationCallback",
@@ -173,7 +172,9 @@
         }
       ],
       "Returns":[],
-      "Throws":[],
+      "Throws":[
+        "Elinvar.TM.missingTrainingProtocol"
+      ],
       "Description":""
     }
   ],

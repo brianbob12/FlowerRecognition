@@ -66,6 +66,8 @@ def seriesX(name,learningRate):
   #otherwise each training episode will continue with the same CNN
   #(unless that's what you want)
   myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits()
+  myTrainingProtocol=Elinvar.NN.XYTraining(learningRate,tf.keras.Adam,[dense3],myErrorFunction)
+  te.trainingProtocol=myTrainingProtocol
 
   myNet=Elinvar.NN.Network()
 

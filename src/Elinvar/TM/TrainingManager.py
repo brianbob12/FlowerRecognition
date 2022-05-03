@@ -128,20 +128,13 @@ class TrainingManager:
     self.lastCrossValDerivativeEstimation=-1
     self.lastCrossVal=-1
 
-    #wandbstuff
-    wandbCallback=None
-    if self.useWandB and self.listenWandB:
-      wandbCallback=self.uploadToWandB
-
     running=True
     #setupCallbacks
     iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+str(trainingError)+"\t"+str(iterationTime),end="")
     while running:
       self.currentTrainingEpisode.train(
-        iterationCallback,
-        self.crossValCallback,
-        self.crossValRegressionCallback,
-        wandbCallback
+        interationCallback=iterationCallback,
+        crossvalCallback=self.crossValCallback,
         )
       print()
       #check exit requirements

@@ -3,6 +3,9 @@ import random
 import time
 import Elinvar
 import wandb
+from .Exceptions import missingTrainingProtocol
+
+from Elinvar.NN.TrainingProtocols.TrainingProtocol import TrainingProtocol
 
 #a class to manage one training run
 
@@ -15,6 +18,7 @@ class TrainingEpisode:
     self.crossValRegressionHistory=[]
     self.iterationCounter=0
     self.network=None
+    self.trainingProtocol=None
 
   def instantiateLearningConfig(self,batchSize):
     self.batchSize=batchSize
@@ -176,7 +180,10 @@ class TrainingEpisode:
   #iterationCallback - iteration number, training error,iteration time
   #crossValCallback - iteration number, crossVal error
   #crossValRegression Callback - iterationNumber, crossValRegressionError, crossValregressionVariables
-  def train(self,trainingProtocol,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None,wandbCallback=None):
+  def train(self,iterationCallback=None,crossValCallback=None,crossValRegressCallback=None,wandbCallback=None):
+    if self.trainingProtocol==None:
+      raise(missingTrainingProtocol())
+
     #getBatch
     start=self.batchSize*self.iterationCounter
     start%=self.trainingDataSize
@@ -189,7 +196,7 @@ class TrainingEpisode:
 
     #start training
     startTime=time.perf_counter()
-    trainingError=float(self.network.train(x,trainingProtocol,[y]))
+    trainingError=float(self.network.train(x,self.trainingProtocol,[y]))
     #end training
     iterationTime=time.perf_counter()-startTime
     if(iterationCallback!=None):
@@ -204,7 +211,7 @@ class TrainingEpisode:
 
     if(self.iterationCounter%self.iterationsPerCrossValSample==0):
       #cross validate
-      crossValError=float(self.network.getError(self.dataset["crossValx"],trainingProtocol,[self.dataset["crossValy"]]))
+      crossValError=float(self.network.getError(self.dataset["crossValx"],self.trainingProtocol,[self.dataset["crossValy"]]))
       #store sample
       self.crossValErrorHistory.append({
         "iteration":self.iterationCounter,

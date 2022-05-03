@@ -77,7 +77,7 @@ dense1=myNet.nodes[813618258]
 #%%
 lr=1e-7
 optimizer=tf.keras.optimizers.Adam
-myTrainingProtocol=Elinvar.NN.TrainingProtocols.XYTraining(1e-9,optimizer,[dense1],Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits())
+myTrainingProtocol=Elinvar.NN.XYTraining(1e-9,optimizer,[dense1],Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits())
 
 #%%
 myTrainingEpisode=Elinvar.TM.TrainingEpisode("test1")

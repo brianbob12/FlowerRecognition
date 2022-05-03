@@ -112,7 +112,7 @@ class TrainingManager:
 
     running=True
     #setupCallbacks
-    iterationCallback=lambda iteration,trainingError,iterationTime: print("\r"+str(iteration)+"\t\t"+format(trainingError,".4f")+"\t\t"+format(iterationTime,".4f")+"\t\t"+format(self.lastCrossVal,".4f"),end="\r")
+    iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t\t"+format(trainingError,".4f")+"\t\t"+format(iterationTime,".4f")+"\t\t"+format(self.lastCrossVal,".4f"))
     while running:
       self.currentTrainingEpisode.train(
         iterationCallback=iterationCallback,

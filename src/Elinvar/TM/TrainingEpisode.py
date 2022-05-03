@@ -247,7 +247,7 @@ class TrainingEpisode:
     except Exception as e:
       print(e)
       raise()
-    self.Network.exportNetwork(myPath)
+    self.network.exportNetwork(myPath)
 
   #exports data
   def exportData(self,directory):

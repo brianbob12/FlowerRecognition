@@ -134,7 +134,7 @@ class TrainingManager:
     while running:
       self.currentTrainingEpisode.train(
         iterationCallback=iterationCallback,
-        crossvalCallback=self.crossValCallback,
+        crossValCallback=self.crossValCallback,
         )
       print()
       #check exit requirements

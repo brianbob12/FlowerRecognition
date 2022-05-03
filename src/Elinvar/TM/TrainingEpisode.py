@@ -20,7 +20,7 @@ class TrainingEpisode:
     self.batchSize=batchSize
 
   def instantiateMonitoringConfig(self,
-  iterationsPerCrossValSample,):
+  iterationsPerCrossValSample):
     self.iterationsPerCrossValSample=iterationsPerCrossValSample
 
 

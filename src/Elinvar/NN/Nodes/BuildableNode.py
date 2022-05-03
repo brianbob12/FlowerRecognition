@@ -14,8 +14,10 @@ class BuildableNode(Node):
       return super().getTrainableVariables()
 
   #made to be overwritten
-  def build(self):
+  def build(self) -> int:
     self.built=True
+    self.totalTrainableVariables=0
+    return 0
 
   def execute(self, inputs):
     if not self.built:

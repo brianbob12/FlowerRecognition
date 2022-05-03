@@ -18,6 +18,7 @@ class Node:
     self.protected=protected
     self.value=None
     self.hasTrainableVariables=False
+    self.totalTrainableVariables=0
     if ID!=None:
       self.ID=ID
     else:

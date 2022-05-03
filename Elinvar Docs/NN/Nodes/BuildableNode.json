@@ -43,7 +43,12 @@
       "Name":"build",
       "MandatoryArgs":[],
       "OptionalArgs":[],
-      "Returns":[],
+      "Returns":[
+        {
+          "Type":"int",
+          "Description":"The number of trainable floats int he network."
+        }
+      ],
       "Throws":[],
       "Description":"Made to be overridden, does different thing for each subclass."
     },

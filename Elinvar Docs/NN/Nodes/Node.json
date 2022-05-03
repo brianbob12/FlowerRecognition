@@ -51,6 +51,11 @@
       "Name":"ID",
       "Type":"int",
       "Description":"A unique identifier of the node used for export and import"
+    },
+    {
+      "Name":"totalTrainableVariables",
+      "Type":"int",
+      "Description":"Total number of trainable floats."
     }
   ],
   "Functions":[

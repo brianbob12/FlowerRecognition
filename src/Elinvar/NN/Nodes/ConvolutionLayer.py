@@ -28,7 +28,7 @@ class ConvolutionLayer(BuildableNode):
     self.strides=[1,stride,stride,1]
     self.inputShape=None
   
-  def build(self,seed=None):
+  def build(self,seed=None) -> int:
     if self.built: return
 
     if len(self.inputConnections)<1:
@@ -37,7 +37,8 @@ class ConvolutionLayer(BuildableNode):
 
     self.filter=Variable(normal(shape=[self.kernelSize,self.kernelSize,self.inputChannels,self.numberOfKernels],seed=seed))
     self.built=True
-
+    self.totalTrainableVariables=self.kernelSize*self.kernelSize*self.inputChannels*self.numberOfKernels
+    return self.totalTrainableVariables
      
 
   def connect(self,connections):

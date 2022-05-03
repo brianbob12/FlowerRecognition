@@ -6,7 +6,7 @@
   "Properties":[
     {
       "Name":"onExecute",
-      "Type":"None=>tf.Tensor",
+      "Type":"None->tf.Tensor",
       "Description":"Callback set for provision of the value of the network. Runs in the execute function."
     }
   ],
@@ -38,11 +38,6 @@
     {
       "Name":"setup",
       "MandatoryArgs":[
-        {
-          "Name":"onExecute",
-          "Type":"None=>tf.Tensor",
-          "Description":"Sets the onExecute property."
-        },
         {
           "Name":"outputShape",
           "Type":"List<int>",
@@ -113,6 +108,21 @@
         "Elinvar.NN.missingFileForImport(filePath)"
       ],
       "Description":"Imports ID and connections."
+    },
+    {
+      "Name":"execute",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tf.Tensor",
+          "Description":"Node output based on self.onExecute()"
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.nodeNotSetup(attemptedOperation)"
+      ],
+      "Description":"Produces an output based on assigned onExecute function."
     }
   ],
   "Notes":""

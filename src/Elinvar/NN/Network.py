@@ -64,6 +64,13 @@ class Network:
     self.built=True
     return seed
 
+  def getTotalTrainableVarialbes(self)->int:
+    out=0
+    for node in self.nodes.values():
+      if(node.totalTrainableVariables!=None):
+        out+=node.totalTrainableVariables
+    return out
+
   def execute(self,inputs,requestedOutputs):
     #clear
     self.clear()

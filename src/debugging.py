@@ -56,7 +56,7 @@ input1=myNet.nodes[1360037502]
 dense1=myNet.nodes[813618258]
 
 #input1=Elinvar.NN.Nodes.InputNode()
-#input1.setup(lambda :getBatch(files[:10]),[256,256,3])
+#input1.setup([256,256,3])
 #conv1=Elinvar.NN.Nodes.ConvolutionLayer()
 #conv1.newLayer(5,4,1,0)
 #conv1.connect([input1])

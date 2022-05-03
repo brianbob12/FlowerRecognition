@@ -1,14 +1,97 @@
+#A  769   daisy
+#B  1052  dandylion
+#C  784   rose
+#D  734   sunflower
+#E  984   tulip
+
 #%%
 import Elinvar
+from PIL import Image
 import tensorflow as tf
 import numpy as np
-from PIL import Image
+import random
+import time
 #%%
-#STEP 1
-#setup learning manager and dataset
-tm=Elinvar.TM.TrainingManager()
-tm.setEpisodeEndRequirements(maxIterations=5000)
+learningRate=1e-8
 
+trainingIterations=15000
+batchSize=200
+
+shuffleSeed=4739375
+
+crossValSetSize=200
+crossValSetSeed=48964
+interationsPerCrossVal=1
+
+layerMakeup=[]
+runName="B6"
+
+upload=True
+#%%
+myNet=Elinvar.NN.Network(256,3,debug=False)
+
+input1 = Elinvar.NN.Nodes.InputNode()
+input1.setup([256,256,3])
+
+conv1= Elinvar.NN.ConvolutionLayer()
+conv1.newLayer(11,48,3,0)
+conv1.connect([input1])
+
+pool1=Elinvar.NN.Nodes.MaxPoolingNode()
+pool1.newLayer(5,2)
+pool1.connect([conv1])
+
+conv2=Elinvar.NN.ConvolutionLayer()
+conv2.newLayer(11,48,3,0)
+conv2.connect([pool1])
+
+pool2 = Elinvar.NN.MaxPoolingNode()
+pool2.newLayer(3,1)
+pool2.connect([conv2])
+
+flatten1=Elinvar.NN.Nodes.FlattenNode()
+flatten1.connect([pool2])
+
+dense1=Elinvar.NN.Nodes.DenseLayer()
+dense1.newLayer(128,"relu")
+dense1.connect([flatten1])
+
+dense2=Elinvar.NN.Nodes.DenseLayer()
+dense2.newLayer(64,"relu")
+dense2.connect([dense1])
+
+dense3=Elinvar.NN.Nodes.DenseLayer()
+dense3.newLayer(5,"sigmiod")
+
+myNet.addInputNodes([input1])
+myNet.addNodes([conv1,pool1,conv2,pool2,flatten1,dense1,dense2])
+myNet.addOutputNodes([dense3])
+
+myNet.build()
+
+totalTrainableVariables=myNet.getTotalTrainableVariables()
+ttvText=str(totalTrainableVariables)
+for i in range(len(ttvText)):
+  print(ttvText[i],end="")
+  if((len(ttvText)-i-1)%3==0 and i!=len(ttvText)-1):
+    print(",",end="")
+print(" trainable variables")
+#%%
+#w and b here
+if upload:
+  import wandb
+  wandb.init(config={
+    "learning rate":learningRate,
+    "number of layers":len(layerMakeup),
+    "layer makeup":str(layerMakeup),
+    "total trainable variables":totalTrainableVariables,
+    "batchSize":batchSize,
+    "crossValSetSize":crossValSetSize,
+    "crossValSetSeed":crossValSetSeed
+    },
+  project="flowerRecognition",
+  entity='japaneserhino')
+#%%
 #outputs x and y arrays
 def getBatch(fileNames):
   x=[]
@@ -29,7 +112,7 @@ def getBatch(fileNames):
     x.append(np.asarray(im))
   #endfor
   return tf.constant(np.asarray(x),dtype=tf.float32),np.asarray(y)
-
+#%%
 #get the data
 a=769
 b=1052
@@ -50,53 +133,66 @@ for i in range(d):
   files.append("D"+str(i)+".jpg") 
 for i in range(e):
   files.append("E"+str(i)+".jpg") 
-
-tm.addDataSet("FlowerDataset",files,getBatch)
 #%%
-#STEP 2
-#DEFINE training episodes
+#deterministically get crossvalset
+preShuffledFiles=[i for i in files]
+crossValSet=[]
+random.seed(crossValSetSeed)
+for i in range(crossValSetSize):
+  x=random.randint(0,len(preShuffledFiles)-1 )
+  crossValSet.append(preShuffledFiles[x])
+  del preShuffledFiles[x]
 
-def seriesX(name,learningRate):
-  te=Elinvar.TM.TrainingEpisode(name)
-  te.instantiateLearningConfig(learningRate,100)
-  te.instantiateMonitoringConfig(1,5,False,1e-5,crossValRegressionIterationCount=1000)
-  te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
-  
-  #NOTE: it is important to create a new CNN for each series
-  #otherwise each training episode will continue with the same CNN
-  #(unless that's what you want)
-  myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits()
-
-  myNet=Elinvar.NN.SequentialNeuralNetwork(256,3,myErrorFunction)
-  myNet.addConvolutionLayer(48,11,3)
-  myNet.addInstanceNormalizationLayer(1,1)
-  myNet.addPoolingLayer(5,2)
-  myNet.addConvolutionLayer(24,3,1)
-  myNet.addInstanceNormalizationLayer(1,1)
-  myNet.addPoolingLayer(3,1)
-  myNet.addConvolutionLayer(12,3,1)
-  myNet.addInstanceNormalizationLayer(1,1)
-  myNet.addPoolingLayer(3,1)
-  myNet.addFlattenLayer()
-  myNet.addDenseLayer(128,"relu")
-  myNet.addDenseLayer(64,"relu")
-  myNet.addDenseLayer(5,"sigmoid")
-
-  te.importNetwork(myNet)
-
-  #must be done after network imported
-  #te.setUpWandB("flowerRecognition","japaneserhino")
-  return te
-
-
-def trainingEpisodeGenerator():
-  for i in range(20):
-    yield lambda : (seriesX("r"+str(i),1e-9*(i+1)))
-
-tm.trainingQue=[lambda: seriesX("testA",1e-9)]
+crossValX,crossValY=getBatch(crossValSet)
 #%%
-#STEP 3
-#start training
-tm.runQue()
+#determanistic shuffle
+shuffledFiles=[]
+random.seed(shuffleSeed)
+while len(preShuffledFiles)!=0:
+  x=random.randint(0,len(preShuffledFiles)-1)
+  shuffledFiles.append(preShuffledFiles[x])
+  del preShuffledFiles[x]
+
+dataSize=len(shuffledFiles)
+print("Data Size:",dataSize)
+#%%
+batchNumber=0
+
+for i in range(trainingIterations): 
+  startTime=time.time()
+  #getBatch
+  start=batchSize*batchNumber
+  start%=dataSize
+  end=start+batchSize
+  if(end>=dataSize):
+    end%=dataSize
+    x,y=getBatch(shuffledFiles[start:]+shuffledFiles[:end])
+  else:
+    x,y=getBatch(shuffledFiles[start:end])
+  batchNumber+=1
+
+  #train
+  trainingError= myCNN.train(x,y,learningRate,0)
+  crossValError=myCNN.validate(crossValX,crossValY)
+  iterationTime=time.time()-startTime
+  startTime=time.time()
+  #todo holdout error
+  if upload:
+    wandb.log({
+      "index":i,
+      "training error":trainingError,
+      "cross validation error":crossValError,
+      "iterationTime:":iterationTime})
+  print(str(i)+"\ttraining error\t"+str(float(trainingError)),end="")
+  print("\tcrossval error\t"+str(float(crossValError)),end="")
+  print("\titerationtime\t"+str(iterationTime),end="")
+  print()
+print("FINAL CROSS VAL ERROR\t"+str(float(crossValError)))
+if upload:
+  wandb.log({"finalTrainingError":crossValError})
+
 
 # %%
+#export the net
+print("Exporting...")
+myCNN.exportNetwork("./"+runName)

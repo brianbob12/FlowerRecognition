@@ -83,6 +83,19 @@
       "Description":"Builds all nodes in the network starting from input nodes working down. If any nodes are not connected they will not be built."
     },
     {
+      "Name":"getTotalTrainableVariables",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"int",
+          "Description":"Number of trainable floats in the network"
+        }
+      ],
+      "Throws":[],
+      "Description":"Loops through nodes to find the total number of trainable floats in the network."
+    },
+    {
       "Name":"execute",
       "MandatoryArgs":[
         {

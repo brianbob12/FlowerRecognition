@@ -42,7 +42,7 @@ class DenseLayer(BuildableNode):
 
 
   #TODO make it throw an error if inputShape not [None]
-  def build(self,seed=None):
+  def build(self,seed=None) -> int:
     if self.built:return
 
     if len(self.inputConnections)<1:
@@ -59,6 +59,9 @@ class DenseLayer(BuildableNode):
     self.weights=Variable(normal([self.inputSize,self.size],stddev=weightInitSTDDEV,mean=0,seed=seed))
 
     self.built=True
+
+    self.totalTrainableVariables=self.inputSize*self.size
+    return self.totalTrainableVariables
 
  
   #function that executes the layer for a list of inputs

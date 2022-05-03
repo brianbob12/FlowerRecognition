@@ -7,14 +7,15 @@ class InputNode(Node):
   def __init__(self, name=None, protected=False,ID=None):
     self.onExecute=None
     super().__init__(name=name, protected=protected,ID=ID)
+    self.totalTrainableVariables=0
 
-  def setup(self,function,outputShape):
-    self.onExecute=function
+  def setup(self,outputShape):
     self.outputShape=outputShape
 
 
-  def execute(self, inputs):
+  def execute(self):
     if self.onExecute==None:
+      #the onExecute function must be defined before executing node
       raise(nodeNotSetup("execute"))
     else:
       return self.onExecute() 

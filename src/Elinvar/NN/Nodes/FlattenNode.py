@@ -14,6 +14,7 @@ class FlattenNode(Node):
       super().__init__(name, protected=protected, ID=ID)
       self.outputShape=[0]
       self.imported=False
+      self.totalTrainableVariables=0
 
   #TODO count output shape
   def connect(self, connections):

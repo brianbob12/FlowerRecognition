@@ -117,8 +117,6 @@ def seriesX(name,learningRate):
 
   myNet.build()
 
-  myNet.addDenseLayer(5,"sigmoid")
-
   te.importNetwork(myNet)
 
   #must be done after network imported

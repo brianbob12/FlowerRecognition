@@ -109,9 +109,10 @@ def seriesX(name,learningRate):
 
   dense3=Elinvar.NN.Nodes.DenseLayer()
   dense3.newLayer(5,"sigmoid")
+  dense3.connect([dense2])
 
   myNet.addInputNodes([input1])
-  myNet.addNodes([conv1,pool1,conv2,pool2,flatten1,dense1,dense2])
+  myNet.addNodes([conv1,inst1,pool1,conv2,inst2,pool2,flatten1,dense1,dense2])
   myNet.addOutputNodes([dense3])
 
   myNet.build()

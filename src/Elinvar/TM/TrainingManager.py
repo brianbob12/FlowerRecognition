@@ -65,10 +65,6 @@ class TrainingManager:
       self.currentTrainingEpisode=function()
       finalCrossValError = self.runEpisode()
 
-      #TEMP 
-      print(self.currentTrainingEpisode.crossValRegressionHistory[-1])
-      print(self.currentTrainingEpisode.crossValRegressionVariables)
-
       bestTrainingEpisode=False
 
       try:
@@ -115,7 +111,7 @@ class TrainingManager:
     print("Running episode",self.currentTrainingEpisode.name)
     print()
     print("I\ttrainingError\titerationTime",end="")
-    print("\tcrossValError\tcrossValDerivativeEstimation",end="")
+    print("\tcrossValError",end="")
     print()
     #training variables
     self.lastCrossValDerivativeEstimation=-1
@@ -123,7 +119,7 @@ class TrainingManager:
 
     running=True
     #setupCallbacks
-    iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+str(trainingError)+"\t"+str(iterationTime),end="")
+    iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+format(trainingError,".4f")+"\t"+format(iterationTime,".4f"),end="")
     while running:
       self.currentTrainingEpisode.train(
         iterationCallback=iterationCallback,

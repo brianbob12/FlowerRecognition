@@ -111,7 +111,13 @@
     },
     {
       "Name":"execute",
-      "MandatoryArgs":[],
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"None",
+          "Description":"Not used for this class"
+        }
+      ],
       "OptionalArgs":[],
       "Returns":[
         {

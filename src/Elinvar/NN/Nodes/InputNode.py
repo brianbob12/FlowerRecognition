@@ -13,7 +13,7 @@ class InputNode(Node):
     self.outputShape=outputShape
 
 
-  def execute(self):
+  def execute(self,inputs):
     if self.onExecute==None:
       #the onExecute function must be defined before executing node
       raise(nodeNotSetup("execute"))

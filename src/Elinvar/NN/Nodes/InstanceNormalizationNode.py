@@ -27,9 +27,9 @@ class InstanceNormalizationNode(Node):
   #WARNING: the following is complicated and not memory efficient
   def execute(self,inputs):
     myInputs=concat(inputs,-1)
-    inputShape=inputs.shape
-    means=reduce_mean(inputs,[-2,-3])
-    standardDeviations=reduce_std(inputs,[-2,-3])
+    inputShape=myInputs.shape
+    means=reduce_mean(myInputs,[-2,-3])
+    standardDeviations=reduce_std(myInputs,[-2,-3])
     #NOTE: the following madness creates new memory addresses full of stuff
     #this should be updated at somepoint to make it much more vRAM efficient
 
@@ -43,7 +43,7 @@ class InstanceNormalizationNode(Node):
       broadcast_to(standardDeviations,[inputShape[1],inputShape[2],inputShape[0],inputShape[3]]),
       perm=[2,0,1,3])
 
-    out=((inputs-formattedMeans)/formattedStddev)*self.stddev + self.mean
+    out=((myInputs-formattedMeans)/formattedStddev)*self.stddev + self.mean
     return out
 
   def connect(self,connections):

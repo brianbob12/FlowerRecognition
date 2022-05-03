@@ -15,6 +15,7 @@ class InstanceNormalizationNode(Node):
     super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=False
     self.totalTrainableVariables=0
+    self.imported=False
 
   def newLayer(self,mean,stddev):
     self.stddev=stddev
@@ -108,5 +109,5 @@ class InstanceNormalizationNode(Node):
             raise(invalidDataInFile(accessPath+"\\hyper.txt","stddev",fileLines[1]))
       except IOError:
         raise(missingFileForImport(accessPath+"\\hyper.txt"))
-
+      self.imported=True
       return accessPath,connections 

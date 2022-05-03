@@ -13,6 +13,11 @@
       "Name":"stddev",
       "Type":"Float",
       "Description":"Standard deviation of the normalized outputs. Default 1."
+    },
+    {
+      "Name":"imported",
+      "Type":"bool",
+      "Description":"Whether this node has been imported or not. "
     }
   ],
   "Functions":[

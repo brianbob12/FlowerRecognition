@@ -51,19 +51,14 @@ for i in range(d):
 for i in range(e):
   files.append("E"+str(i)+".jpg") 
 
-tm.addDataSet("FlowerDataset",files,getBatch)
 #%%
 #STEP 2
 #DEFINE training episodes
 
-def seriesX(name,learningRate):
-  te=Elinvar.TM.TrainingEpisode(name)
-  te.instantiateLearningConfig(100)
-  te.instantiateMonitoringConfig(1)
-  te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
+def seriesX(name,learningRate): 
   
-  #NOTE: it is important to create a new CNN for each series
-  #otherwise each training episode will continue with the same CNN
+  #NOTE: it is important to create a new netowrk for each series
+  #otherwise each training episode will continue with the same Network
   #(unless that's what you want)
 
   myNet=Elinvar.NN.Network()
@@ -115,6 +110,20 @@ def seriesX(name,learningRate):
   myNet.addOutputNodes([dense3])
 
   myNet.build()
+
+  te=Elinvar.TM.TrainingEpisode(name)
+  te.instantiateLearningConfig(100)
+  te.instantiateMonitoringConfig(1)
+
+  #deal with dataset
+  def extract(files):
+    x,y=getBatch(files)
+    return {input1.ID:x},y
+  myDataset={
+    "files":files,
+    "extract":extract
+  }
+  te.setDataSet(myDataset,4452,200,48964)
 
   te.setNetwork(myNet)
   myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits()

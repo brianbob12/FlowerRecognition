@@ -8,7 +8,6 @@ from os import mkdir
 
 class TrainingManager: 
   def __init__(self):
-    self.datasets={}
     self.useWandB=False
     self.listenWandB=False#weather the TM is currently monitering data for WandB
     self.trainingQue=[]#list of lambda functions to create trainng episodes OR a generator
@@ -58,12 +57,6 @@ class TrainingManager:
     if( (not self.minErrorDerivativeConstraint) and ( not self.maxIterationsConstraint)):
       #TODO write this error
       raise()
-
-  def addDataSet(self,datasetName,files,extractionFunction):
-    self.datasets[datasetName]={
-      "files":files,
-      "extract":extractionFunction
-    }
 
   #episodeCallback has args: TrainingEpisode
   def runQue(self,saveDirectory=".\\runs",episodeCallback=None):

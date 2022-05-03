@@ -133,7 +133,7 @@ class TrainingManager:
     iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+str(trainingError)+"\t"+str(iterationTime),end="")
     while running:
       self.currentTrainingEpisode.train(
-        interationCallback=iterationCallback,
+        iterationCallback=iterationCallback,
         crossvalCallback=self.crossValCallback,
         )
       print()

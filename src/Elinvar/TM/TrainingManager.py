@@ -98,10 +98,8 @@ class TrainingManager:
         episodeCallback(self.currentTrainingEpisode)
 
   def crossValCallback(self,iteration,crossValError):
-    print("\t"+str(crossValError),end="")
+    print("\t"+format(crossValError,".2f"),end="")
     self.lastCrossVal=crossValError
-    self.lastCrossValDerivativeEstimation=self.currentTrainingEpisode.crossValDerivativeEstimation(iteration)
-    print("\t"+str(self.lastCrossValDerivativeEstimation),end="") 
 
   def crossValRegressionCallback(self,iteration,crossValRegressionError,crossValRegressionVariables):
     #log data
@@ -114,7 +112,6 @@ class TrainingManager:
     print("\tcrossValError",end="")
     print()
     #training variables
-    self.lastCrossValDerivativeEstimation=-1
     self.lastCrossVal=-1
 
     running=True

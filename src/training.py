@@ -7,7 +7,7 @@ from PIL import Image
 #STEP 1
 #setup learning manager and dataset
 tm=Elinvar.TM.TrainingManager()
-tm.setEpisodeEndRequirements(maxIterations=5)
+tm.setEpisodeEndRequirements(maxIterations=10)
 
 #outputs x and y arrays
 def getBatch(fileNames):

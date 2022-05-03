@@ -1,7 +1,7 @@
 import math
 import random
 import time
-
+import Elinvar
 import wandb
 
 #a class to manage one training run
@@ -24,7 +24,7 @@ class TrainingEpisode:
     self.iterationsPerCrossValSample=iterationsPerCrossValSample
 
 
-  def setNetwork(self,network):
+  def setNetwork(self,network:Elinvar.NN.Network):
     self.network=network 
 
   #takes a dict: {files,extract}

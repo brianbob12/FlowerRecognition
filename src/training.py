@@ -117,7 +117,7 @@ def seriesX(name,learningRate):
 
   myNet.build()
 
-  te.importNetwork(myNet)
+  te.setNetwork(myNet)
 
   #must be done after network imported
   #te.setUpWandB("flowerRecognition","japaneserhino")

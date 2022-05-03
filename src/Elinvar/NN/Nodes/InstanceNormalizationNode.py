@@ -48,7 +48,7 @@ class InstanceNormalizationNode(Node):
     if len(connections)==0:
       return
     #checks
-    if len(self.connections)>0:
+    if len(self.inputConnections)>0:
       shape0=self.inputShape[0]
       shape1=self.inputShape[1]      
     else:

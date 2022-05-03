@@ -59,7 +59,7 @@ tm.addDataSet("FlowerDataset",files,getBatch)
 def seriesX(name,learningRate):
   te=Elinvar.TM.TrainingEpisode(name)
   te.instantiateLearningConfig(100)
-  te.instantiateMonitoringConfig(1,50,False,1e-5)
+  te.instantiateMonitoringConfig(1)
   te.setDataSet(tm.datasets["FlowerDataset"],4452,200,48964)
   
   #NOTE: it is important to create a new CNN for each series
@@ -116,7 +116,7 @@ def seriesX(name,learningRate):
 
   myNet.build()
 
-  yNet.addDenseLayer(5,"sigmoid")
+  myNet.addDenseLayer(5,"sigmoid")
 
   te.importNetwork(myNet)
 

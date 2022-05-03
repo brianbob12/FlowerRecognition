@@ -18,6 +18,11 @@
       "Name":"imported",
       "Type":"bool",
       "Description":"Whether this node has been imported or not. "
+    },
+    {
+      "Name":"inputChannels",
+      "Type":"int",
+      "Description":"Number of channels of 2 dimensional images per input."
     }
   ],
   "Functions":[

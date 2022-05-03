@@ -16,6 +16,7 @@ class InstanceNormalizationNode(Node):
     self.hasTrainableVariables=False
     self.totalTrainableVariables=0
     self.imported=False
+    self.inputChannels=0
 
   def newLayer(self,mean,stddev):
     self.stddev=stddev

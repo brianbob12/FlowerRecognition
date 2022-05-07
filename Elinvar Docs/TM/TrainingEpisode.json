@@ -1,6 +1,6 @@
 {
   "Name":"TrainingEpisode",
-  "Superclass":"None",
+  "Superclasses":[],
   "Subclasses":[],
   "Description":"A container for a training exercise involving the same network and the same dataset.",
   "Properties":[

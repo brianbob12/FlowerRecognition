@@ -1,0 +1,112 @@
+{
+  "Name":"TrainingManager",
+  "Superclasses":[],
+  "Subclasses":[],
+  "Description":"A container for managing multiple training episodes with in-built redundancy.",
+  "Properties":[
+    {
+      "Name":"trainingQue",
+      "Type":"List<None->TrainingEpisode>",
+      "Description":"List of functions to create training episodes."
+    },
+    {
+      "Name":"currentTrainingEpisode",
+      "Type":"TrainingEpisode",
+      "Description":"The TrainingEpisode currently being executed. Only one is executed at a time."
+    },
+    {
+      "Name":"exportOn",
+      "Type":"str",
+      "Description":"Setting for when to export models. Choice of 'ALL', 'BEST' or, 'NONE'"
+    },
+    {
+      "Name":"bestCrossValError",
+      "Type":"float",
+      "Description":"The lowest recorded crossValidation Error."
+    },
+    {
+      "Name":"bestTrainingEpisode",
+      "Type":"int",
+      "Description":"Index of trainingEpisode with lowest crossValError."
+    },
+    {
+      "Name":"maxIterations",
+      "Type":"int",
+      "Description":"The number of iterations before ending an episode."
+    },
+    {
+      "Name":"maxIterationsConstraint",
+      "Type":"bool",
+      "Description":"Weather an iteration constraint on TrainingEpisodes is present."
+    },
+    {
+      "Name":"minCrossVal",
+      "Type":"float",
+      "Description":"The crossValError under which a TrainingEpisode should end."
+    },
+    {
+      "Name":"minErrorConstraint",
+      "Type":"bool",
+      "Description":"Weather a crossValError constraint on trainingEpisodes is present."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties"
+    },
+    {
+      "Name":"setEpisodeEndRequirements",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"maxIterations",
+          "Type":"int",
+          "Description":"The number of iterations before ending an episode."
+        },
+        {
+          "Name":"minCrossVal",
+          "Type":"float",
+          "Description":"The crossValError at which TrainingEpisodes should stop."
+        }
+      ],
+      "Returns":[],
+      "Throws":[
+        "Exception"
+      ],
+      "Description":"Sets the conditions under which a TrainingEpisode should end. If multiple conditions are given, performs OR."
+    },
+    {
+      "Name":"runQue",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"saveDirectory",
+          "Type":"str",
+          "Description":"The path in which the model and trainingData should be saved."
+        },
+        {
+          "Name":"episodeCallback",
+          "Type":"TrainingEpisode -> None",
+          "Description":"A callback function that runs at the end of each TrainingEpisode. Passed the currentTrainingEpisode."
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Runs each TrainingEpisode in the sequence in which they were given in the trainingQue property."
+    },
+    {
+      "Name":"runEpisode",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Runs current TrainingEpisode until end conditions are met. If no end requirements are set this function will run forever. "
+    }
+  ],
+  "Notes":""
+}

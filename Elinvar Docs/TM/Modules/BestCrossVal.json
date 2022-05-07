@@ -1,0 +1,73 @@
+{
+  "Name":"BestCrossVal",
+  "Superclasses":[
+    "Module"
+  ],
+  "Subclasses":[],
+  "Description":"Module for saving the TrainingEpisode with the lowest cross validation error. Saves the instance and index of the episode",
+  "Properties":[
+    {
+      "Name":"bestCrossVal",
+      "Type":"float",
+      "Description":"The lowest cross validation error recorded."
+    },
+    {
+      "Name":"bestIndex",
+      "Type":"int",
+      "Description":"Index of the best performing TrainingEpisode"
+    },
+    {
+      "Name":"bestTrainingEpisode",
+      "Type":"TrainingEpisode",
+      "Description":"Pointer to the best performing TrainingEpisode."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties."
+    },
+    {
+      "Name":"startOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"episodeIndex",
+          "Type":"int",
+          "Description":"Index of the episode. Used for referring to TrainingEpisode generation parameters."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of each TrainingEpisode run."
+    },
+    {
+      "Name":"endOfCrossVal",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"crossValError",
+          "Type":"float",
+          "Description":"The cross validation error."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at end of cross validation. Cross val compared to min crossVal."
+    }
+  ]
+}

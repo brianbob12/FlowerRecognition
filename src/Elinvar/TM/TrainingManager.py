@@ -8,15 +8,16 @@ from os import mkdir
 
 class TrainingManager: 
   def __init__(self):
-    self.useWandB=False
-    self.listenWandB=False#weather the TM is currently monitering data for WandB
     self.trainingQue=[]#list of lambda functions to create trainng episodes OR a generator
     self.currentTrainingEpisode=None
+
+    #TODO replace this with module
     self.exportOn="ALL"#settings for when to export training episdoes
+    #TODO replace this with module
     self.bestCrossValError=None
+    #TODO replace with module
     self.bestTrainingEpisode=-1#index for best training episode
     #settings: BEST(all that beat the best final crossval error)  ALL
-    self.crossValRegressionData=[]
 
   def setUpWandB(self,project,entity):
     self.WandBProject=project
@@ -41,20 +42,20 @@ class TrainingManager:
 
   #can use one or both
   #TODO set minimIterations
-  def setEpisodeEndRequirements(self,maxIterations=None,minErrorDerivative=None):
+  def setEpisodeEndRequirements(self,maxIterations:int=None ,minCrossVal:float=None):
     self.maxIterations=maxIterations
-    self.minErrorDerivative=minErrorDerivative
+    self.minCrossVal=minCrossVal
 
     if(maxIterations==None):
       self.maxIterationsConstraint=False
     else:
       self.maxIterationsConstraint=True
-    if(minErrorDerivative==None):
-      self.minErrorDerivativeConstraint=False
+    if(minCrossVal==None):
+      self.minErrorConstraint=False
     else:
-      self.minErrorDerivativeConstraint=True
+      self.minErrorConstraint=True
 
-    if( (not self.minErrorDerivativeConstraint) and ( not self.maxIterationsConstraint)):
+    if( (not self.minErrorConstraint) and ( not self.maxIterationsConstraint)):
       #TODO write this error
       raise()
 
@@ -97,11 +98,13 @@ class TrainingManager:
       if(episodeCallback!=None):
         episodeCallback(self.currentTrainingEpisode)
 
-  def crossValCallback(self,iteration,crossValError):
-    print("\t\t"+format(crossValError,".4f"),end="")
-    self.lastCrossVal=crossValError
+  
 
   def runEpisode(self):
+    def crossValCallback(self,iteration,crossValError):
+      print("\t\t"+format(crossValError,".4f"),end="")
+      self.lastCrossVal=crossValError
+
     print("Running episode",self.currentTrainingEpisode.name)
     print()
     print("I\ttrainingError\titerationTime",end="")
@@ -112,7 +115,7 @@ class TrainingManager:
 
     running=True
     #setupCallbacks
-    iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t\t"+format(trainingError,".4f")+"\t\t"+format(iterationTime,".4f")+"\t\t"+format(self.lastCrossVal,".4f"))
+    iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+format(trainingError,".8f")+"\t"+format(iterationTime,".8f")+"\t"+format(self.lastCrossVal,".8f"))
     while running:
       self.currentTrainingEpisode.train(
         iterationCallback=iterationCallback,

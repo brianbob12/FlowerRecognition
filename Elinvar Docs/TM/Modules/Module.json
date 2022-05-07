@@ -1,0 +1,121 @@
+{
+  "Name":"Module",
+  "Superclasses":[],
+  "Subclasses":[
+    "BestCrossVal",
+    "CrossValRegression",
+    "Export",
+    "WandB"
+  ],
+  "Description":"An attachment to TrainingManager, this class holds 6 callbacks run in the training process. These callbacks are overwritten by subclasses",
+  "Properties":[],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
+    },
+    {
+      "Name":"startOfQue",
+      "MandatoryArgs":[
+        {
+          "Name":"saveDirectory",
+          "Type":"str",
+          "Description":"The directory where stuff should be saved."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of the training que"
+    },
+    {
+      "Name":"startOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"episodeIndex",
+          "Type":"int",
+          "Description":"Index of the episode. Used for referring to TrainingEpisode generation parameters."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of each TrainingEpisode run."
+    },
+    {
+      "Name":"endOfIteration",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"trainingError",
+          "Type":"float",
+          "Description":"The error on the training batch."
+        },
+        {
+          "Name":"iterationTime",
+          "Type":"float",
+          "Description":"The time taken for the training."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the end of each training iteration."
+    },
+    {
+      "Name":"endOfCrossVal",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"crossValError",
+          "Type":"float",
+          "Description":"The cross validation error."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at end of cross validation."
+    },
+    {
+      "Name":"endOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run"
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the end of the que."
+    },
+    {
+      "Name":"endOfQue",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the end of the training que."
+    }
+  ],
+  "Notes":""
+}

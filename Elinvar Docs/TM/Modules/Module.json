@@ -30,7 +30,7 @@
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[],
-      "Description":"Is called at the beginning of the training que"
+      "Description":"Is called at the beginning of the training que."
     },
     {
       "Name":"startOfEpisode",
@@ -106,7 +106,7 @@
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[],
-      "Description":"Is called at the end of the que."
+      "Description":"Is called at the end of each TrainingEpisode run."
     },
     {
       "Name":"endOfQue",
@@ -117,5 +117,5 @@
       "Description":"Is called at the end of the training que."
     }
   ],
-  "Notes":""
+  "Notes":"Each function is called at different stages of the training by the TrainingManager. The functions can be overwritten to create different functionality."
 }

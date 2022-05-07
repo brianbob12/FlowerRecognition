@@ -1,0 +1,99 @@
+{
+  "Name":"Export",
+  "Superclasses":[
+    "Module"
+  ],
+  "Subclasses":[],
+  "Description":"Module that exports models under specified conditions",
+  "Properties":[
+    {
+      "Name":"exportAll",
+      "Type":"bool",
+      "Description":"If all the models for all TrainingEpisodes should be exported."
+    },
+    {
+      "Name":"minCrossVal",
+      "Type":"float",
+      "Description":"Only export model if cross val error is below this value."
+    },
+    {
+      "Name":"lastCrossVal",
+      "Type":"float",
+      "Description":"The last recorded cross validation error for the current TrainingEpisode."
+    },
+    {
+      "Name":"saveDirectory",
+      "Type":"str",
+      "Description":"The directory where stuff should be saved."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"exportAll",
+          "Type":"bool",
+          "Description":"Sets exportAll property."
+        },
+        {
+          "Name":"minCrossVal",
+          "Type":"float",
+          "Description":"Sets minCrossVal property."
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties."
+    },
+    {
+      "Name":"startOfQue",
+      "MandatoryArgs":[
+        {
+          "Name":"saveDirectory",
+          "Type":"str",
+          "Description":"The directory where stuff should be saved."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of the training que. Used to store a copy of the saveDirectory."
+    },
+    {
+      "Name":"endOfCrossVal",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"crossValError",
+          "Type":"float",
+          "Description":"The cross validation error."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at end of cross validation. Used to update lastCrossVal."
+    },
+    {
+      "Name":"endOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run"
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the end of TrainingEpisode run. Used to export model if necessary."
+    }
+  ],
+  "Notes":""
+}

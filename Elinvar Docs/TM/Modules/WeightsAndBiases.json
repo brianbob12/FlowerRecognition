@@ -1,0 +1,11 @@
+{
+  "Name":"WeightsAndBiases",
+  "Superclasses":[
+    "Module"
+  ],
+  "Subclasses":[],
+  "Description":"Module that uploads data to Weights and Biases",
+  "Properties":[],
+  "Functions":[],
+  "Notes":""
+}

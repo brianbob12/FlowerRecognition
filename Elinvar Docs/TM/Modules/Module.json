@@ -5,7 +5,7 @@
     "BestCrossVal",
     "CrossValRegression",
     "Export",
-    "WandB"
+    "WeightsAndBiases"
   ],
   "Description":"An attachment to TrainingManager, this class holds 6 callbacks run in the training process. These callbacks are overwritten by subclasses",
   "Properties":[],
@@ -60,6 +60,11 @@
           "Description":"The TrainingEpisode being run."
         },
         {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
+        },
+        {
           "Name":"trainingError",
           "Type":"float",
           "Description":"The error on the training batch."
@@ -82,6 +87,11 @@
           "Name":"trainingEpisode",
           "Type":"TrainingEpisode",
           "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
         },
         {
           "Name":"crossValError",

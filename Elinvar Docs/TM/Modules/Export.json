@@ -70,6 +70,11 @@
           "Description":"The TrainingEpisode being run."
         },
         {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
+        },
+        {
           "Name":"crossValError",
           "Type":"float",
           "Description":"The cross validation error."

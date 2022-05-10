@@ -5,7 +5,129 @@
   ],
   "Subclasses":[],
   "Description":"Module that uploads data to Weights and Biases",
-  "Properties":[],
-  "Functions":[],
+  "Properties":[
+    {
+      "Name":"project",
+      "Type":"str",
+      "Description":"Weights and Biases project."
+    },
+    {
+      "Name":"entity",
+      "Type":"str",
+      "Description":"Weights and Biases entity."
+    },
+    {
+      "Name":"currentRun",
+      "Type":"wandb.Run",
+      "Description":"Current run. Holds functions and data corresponding to the current episode."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[
+        {
+          "Name":"project",
+          "Type":"str",
+          "Description":"Weights and Biases project."
+        },
+        {
+          "Name":"entity",
+          "Type":"str",
+          "Description":"Weights and Biases entity."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
+    },
+    {
+      "Name":"startOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"episodeIndex",
+          "Type":"int",
+          "Description":"Index of the episode. Used for referring to TrainingEpisode generation parameters."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of each TrainingEpisode run. Used to start new WandB run."
+    },
+    {
+      "Name":"endOfIteration",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
+        },
+        {
+          "Name":"trainingError",
+          "Type":"float",
+          "Description":"The error on the training batch."
+        },
+        {
+          "Name":"iterationTime",
+          "Type":"float",
+          "Description":"The time taken for the training."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the end of each training iteration. Used to upload training data to WandB."
+    },
+    {
+      "Name":"endOfCrossVal",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
+        },
+        {
+          "Name":"crossValError",
+          "Type":"float",
+          "Description":"The cross validation error."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at end of cross validation. Used to upload cross val error progress to WandB."
+    },
+    {
+      "Name":"endOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run"
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the end of each TrainingEpisode run. Is used to close WandB run."
+    }
+  ],
   "Notes":""
 }

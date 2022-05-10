@@ -12,7 +12,7 @@ class Export(Module):
   def startOfQue(self, saveDirectory: str):
     self.saveDirecotry=saveDirectory
 
-  def endOfCrossVal(self, trainingEpisode: TrainingEpisode, crossValError: float):
+  def endOfCrossVal(self, trainingEpisode: TrainingEpisode,index:int, crossValError: float):
     self.lastCrossVal=crossValError
 
   def endOfEpisode(self, trainingEpisode: TrainingEpisode):

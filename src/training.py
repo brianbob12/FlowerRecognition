@@ -143,7 +143,7 @@ def trainingEpisodeGenerator():
   for i in range(20):
     yield lambda : (seriesX("r"+str(i),1e-9*(i+1)))
 
-tm.trainingQue=[lambda: seriesX("testA",1e-9)]
+tm.trainingQue=[lambda: seriesX("testA",1e-7)]
 #%%
 #STEP 3
 #start training

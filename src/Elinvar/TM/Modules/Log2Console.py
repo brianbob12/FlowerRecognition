@@ -32,6 +32,7 @@ class Log2Console(Module):
   #this always runs after endOfIteration but does not run every time after
   def endOfCrossVal(self,trainingEpisode:TrainingEpisode,index:int,crossValError:float):
     cv=format(crossValError,".4f")
+    self.crossValidated=True
     print("\r"+self.rowFormat.format(index,self.lastTrainingErrorStr,cv,self.lastIterationTimeStr))
 
   def endOfEpisode(self,trainingEpisode:TrainingEpisode,lastCrossValError:float):

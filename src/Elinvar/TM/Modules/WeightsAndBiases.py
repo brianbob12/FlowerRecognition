@@ -1,6 +1,7 @@
-from random import triangular
 from Elinvar.TM import TrainingEpisode
+from Elinvar.NN.Nodes import NodeNameLookup
 from .Module import Module
+
 
 #User may not have dependency
 import wandb
@@ -12,12 +13,17 @@ class WeightsAndBiases(Module):
     self.currentRun:wandb.Run=None
 
   def startOfEpisode(self, trainingEpisode: TrainingEpisode, episodeIndex: int):
+    #produce layer makeup string
+    layerMakeup=""
+    for node in trainingEpisode.network.nodes.values():
+      layerMakeup+=NodeNameLookup.getNameFromNode(node)+f"[{node.totalTrainableVarialbes}],"
+    layerMakeup=layerMakeup[:-1]#remove last comma
     self.currentRun=wandb.init(
       config={
         "batchSize":trainingEpisode.batchSize,
         "crossValSetSeed":trainingEpisode.crossValSelectionSeed,
         "crossValSetSize":trainingEpisode.crossValSize,
-        "layerMakeup":"",
+        "layerMakeup":layerMakeup,
         "learningRate":trainingEpisode.trainingProtocol.learningRate,
         "numberOfNodes":trainingEpisode.network.nodes.__len__(),
         "totalTrainableVariables":trainingEpisode.network.getTotalTrainableVarialbes()
@@ -30,12 +36,16 @@ class WeightsAndBiases(Module):
   def endOfIteration(self, trainingEpisode: TrainingEpisode, index:int, trainingError: float, iterationTime: float):
     wandb.log({
       "index":index,
-      "trainingError":trainingError,
-      "iterationTime":iterationTime
+      "trainingerror":trainingError,
+      "iterationtime":iterationTime
     })
 
   def endOfCrossVal(self, trainingEpisode: TrainingEpisode,index:int, crossValError: float):
-    return
+    wandb.log({
+      "index":index,
+      "crossValError":crossValError
+    })
 
   def endOfEpisode(self, trainingEpisode: TrainingEpisode,lastCrossValError:float):
+    self.currentRun.summary["lastCrossValError"]=lastCrossValError
     self.currentRun.finish()

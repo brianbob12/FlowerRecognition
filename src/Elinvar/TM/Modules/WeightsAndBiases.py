@@ -30,7 +30,8 @@ class WeightsAndBiases(Module):
       },
       project=self.project,
       entity=self.entity,
-      reinit=True
+      reinit=True,
+      name=trainingEpisode.name
     )
 
   def endOfIteration(self, trainingEpisode: TrainingEpisode, index:int, trainingError: float, iterationTime: float):

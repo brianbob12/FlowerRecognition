@@ -3,11 +3,15 @@ import Elinvar
 import tensorflow as tf
 import numpy as np
 from PIL import Image
+
 #%%
 #STEP 1
 #setup learning manager and dataset
 tm=Elinvar.TM.TrainingManager()
 tm.setEpisodeEndRequirements(maxIterations=10)
+tm.modules+=[
+  Elinvar.TM.Modules.Log2Console()
+]
 
 #outputs x and y arrays
 def getBatch(fileNames):

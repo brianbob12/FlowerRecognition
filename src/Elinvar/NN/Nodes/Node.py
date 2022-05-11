@@ -9,21 +9,32 @@ from ..Exceptions import *
 #a node can be perserved which disables the clear function
 
 class Node:
+  __slots__=(
+    "name",
+    "inputConditions",
+    "outputShape",
+    "value",
+    "executed",
+    "protected",
+    "hasTrainableVariables",
+    "ID",
+    "totalTrainableVariables"
+  )
+
   def __init__(self,name=None,protected=False,ID=None):
-    self.name=name
-    self.inputConnections=[]#list of nodes
-    self.outputShape=None#outputshape
-    self.executionValue=None
-    self.executed=False
-    self.protected=protected
-    self.value=None
-    self.hasTrainableVariables=False
-    self.totalTrainableVariables=0
+    self.name:str=name
+    self.inputConnections:list[Node]=[]#list of nodes
+    self.outputShape:list[int]=None#outputshape
+    self.executed:bool=False
+    self.protected:bool=protected
+    self.value:any=None
+    self.hasTrainableVariables:bool=False
+    self.totalTrainableVariables:int=0
     if ID!=None:
-      self.ID=ID
+      self.ID:int=ID
     else:
       from random import randint
-      self.ID=randint(0,2**31)
+      self.ID:int=randint(0,2**31)
 
   #private
   #this is made to be overwritten

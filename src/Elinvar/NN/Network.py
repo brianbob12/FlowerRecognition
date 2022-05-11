@@ -7,7 +7,7 @@ from tensorflow import GradientTape
 
 from .Exceptions import *
 
-class Network:
+class Network: 
   
   def __init__(self):
     #public

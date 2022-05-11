@@ -15,21 +15,6 @@
       "Description":"The TrainingEpisode currently being executed. Only one is executed at a time."
     },
     {
-      "Name":"exportOn",
-      "Type":"str",
-      "Description":"Setting for when to export models. Choice of 'ALL', 'BEST' or, 'NONE'"
-    },
-    {
-      "Name":"bestCrossValError",
-      "Type":"float",
-      "Description":"The lowest recorded crossValidation Error."
-    },
-    {
-      "Name":"bestTrainingEpisode",
-      "Type":"int",
-      "Description":"Index of trainingEpisode with lowest crossValError."
-    },
-    {
       "Name":"maxIterations",
       "Type":"int",
       "Description":"The number of iterations before ending an episode."
@@ -48,6 +33,11 @@
       "Name":"minErrorConstraint",
       "Type":"bool",
       "Description":"Weather a crossValError constraint on trainingEpisodes is present."
+    },
+    {
+      "Name":"modules",
+      "Type":"List<Module>",
+      "Description":"List of modules. These have various uses. Modules are run at six points during the training cycle."
     }
   ],
   "Functions":[
@@ -88,11 +78,6 @@
           "Name":"saveDirectory",
           "Type":"str",
           "Description":"The path in which the model and trainingData should be saved."
-        },
-        {
-          "Name":"episodeCallback",
-          "Type":"TrainingEpisode -> None",
-          "Description":"A callback function that runs at the end of each TrainingEpisode. Passed the currentTrainingEpisode."
         }
       ],
       "Returns":[],

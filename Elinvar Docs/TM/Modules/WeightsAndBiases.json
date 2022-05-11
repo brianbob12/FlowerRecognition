@@ -121,6 +121,11 @@
           "Name":"trainingEpisode",
           "Type":"TrainingEpisode",
           "Description":"The TrainingEpisode being run"
+        },
+        {
+          "Name":"lastCrossValError",
+          "Type":"float",
+          "Description":"Last recorded cross validation error."
         }
       ],
       "OptionalArgs":[],

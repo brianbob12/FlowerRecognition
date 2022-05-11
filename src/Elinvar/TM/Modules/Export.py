@@ -6,16 +6,12 @@ class Export(Module):
   def __init__(self,exportAll:bool=None,minCrossVal:float=None):
     self.exportAll:bool=exportAll
     self.minCrossVal:float=minCrossVal
-    self.lastCrossVal:float=None
     self.saveDirecotry:str=None
 
   def startOfQue(self, saveDirectory: str):
     self.saveDirecotry=saveDirectory
 
-  def endOfCrossVal(self, trainingEpisode: TrainingEpisode,index:int, crossValError: float):
-    self.lastCrossVal=crossValError
-
-  def endOfEpisode(self, trainingEpisode: TrainingEpisode):
+  def endOfEpisode(self, trainingEpisode: TrainingEpisode,lastCrossValError:float):
     def save():
       print(f"Saving network from episode {trainingEpisode.name} to {self.saveDirecotry}...")
       trainingEpisode.exportNetwork(self.saveDirecotry)

@@ -20,14 +20,14 @@ class WeightsAndBiases(Module):
         "layerMakeup":"",
         "learningRate":trainingEpisode.trainingProtocol.learningRate,
         "numberOfNodes":trainingEpisode.network.nodes.__len__(),
-        "totalTrainableVariables":""
+        "totalTrainableVariables":trainingEpisode.network.getTotalTrainableVarialbes()
       },
       project=self.project,
       entity=self.entity,
       reinit=True
     )
 
-  def endOfIteration(self, trainingEpisode: TrainingEpisode, index:int, trainingError: float, iterationTime: foat):
+  def endOfIteration(self, trainingEpisode: TrainingEpisode, index:int, trainingError: float, iterationTime: float):
     wandb.log({
       "index":index,
       "trainingError":trainingError,
@@ -37,5 +37,5 @@ class WeightsAndBiases(Module):
   def endOfCrossVal(self, trainingEpisode: TrainingEpisode,index:int, crossValError: float):
     return
 
-  def endOfEpisode(self, trainingEpisode: TrainingEpisode):
+  def endOfEpisode(self, trainingEpisode: TrainingEpisode,lastCrossValError:float):
     self.currentRun.finish()

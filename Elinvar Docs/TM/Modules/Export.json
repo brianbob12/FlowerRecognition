@@ -17,11 +17,6 @@
       "Description":"Only export model if cross val error is below this value."
     },
     {
-      "Name":"lastCrossVal",
-      "Type":"float",
-      "Description":"The last recorded cross validation error for the current TrainingEpisode."
-    },
-    {
       "Name":"saveDirectory",
       "Type":"str",
       "Description":"The directory where stuff should be saved."
@@ -62,36 +57,17 @@
       "Description":"Is called at the beginning of the training que. Used to store a copy of the saveDirectory."
     },
     {
-      "Name":"endOfCrossVal",
-      "MandatoryArgs":[
-        {
-          "Name":"trainingEpisode",
-          "Type":"TrainingEpisode",
-          "Description":"The TrainingEpisode being run."
-        },
-        {
-          "Name":"index",
-          "Type":"int",
-          "Description":"The index of the iteration."
-        },
-        {
-          "Name":"crossValError",
-          "Type":"float",
-          "Description":"The cross validation error."
-        }
-      ],
-      "OptionalArgs":[],
-      "Returns":[],
-      "Throws":[],
-      "Description":"Is called at end of cross validation. Used to update lastCrossVal."
-    },
-    {
       "Name":"endOfEpisode",
       "MandatoryArgs":[
         {
           "Name":"trainingEpisode",
           "Type":"TrainingEpisode",
           "Description":"The TrainingEpisode being run"
+        },
+        {
+          "Name":"lastCrossValError",
+          "Type":"float",
+          "Description":"Last recorded cross validation error."
         }
       ],
       "OptionalArgs":[],

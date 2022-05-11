@@ -1,5 +1,6 @@
 #try to make this selective
-import wandb
+
+from Elinvar.TM.Modules.Module import Module
 
 from .TrainingEpisode import TrainingEpisode
 
@@ -11,34 +12,7 @@ class TrainingManager:
     self.trainingQue=[]#list of lambda functions to create trainng episodes OR a generator
     self.currentTrainingEpisode=None
 
-    #TODO replace this with module
-    self.exportOn="ALL"#settings for when to export training episdoes
-    #TODO replace this with module
-    self.bestCrossValError=None
-    #TODO replace with module
-    self.bestTrainingEpisode=-1#index for best training episode
-    #settings: BEST(all that beat the best final crossval error)  ALL
-
-  def setUpWandB(self,project,entity):
-    self.WandBProject=project
-    self.WandBEntity=entity
-    self.currentRun=None
- 
-  #get config from TraingingEpisode
-  def startNewWandBRun(self,config):
-    self.currentRun=wandb.init(
-      config=config,
-      project=self.WandBProject,
-      entity=self.WandBEntity,
-      reinit=True
-    )
-
-  def uploadToWandB(self,data):
-    wandb.log(data)
-
-  def endWandBRun(self):
-    if self.currentRun!=None:
-      self.currentRun.finish()
+    self.modules:list[Module]=[]
 
   #can use one or both
   #TODO set minimIterations
@@ -60,13 +34,16 @@ class TrainingManager:
       raise()
 
   #episodeCallback has args: TrainingEpisode
-  def runQue(self,saveDirectory=".\\runs",episodeCallback=None):
-    for function in self.trainingQue:
+  def runQue(self,saveDirectory=".\\runs"):
+    #run modules
+    for module in self.modules:
+      module.startOfQue(saveDirectory)
+    
+    for episodeIndex,function in enumerate(self.trainingQue):
       #Garbage collector should be deleteing these once we're done with them
       self.currentTrainingEpisode=function()
+      self.currentTrainingEpisodeIndex=episodeIndex
       finalCrossValError = self.runEpisode()
-
-      bestTrainingEpisode=False
 
       try:
         mkdir(saveDirectory)
@@ -75,53 +52,39 @@ class TrainingManager:
       except Exception as e:
         print(e)
 
-      if self.bestCrossValError!=None:
-        if finalCrossValError<self.bestCrossValError:
-          self.bestCrossValError=finalCrossValError
-          bestTrainingEpisode=True
-      else:
-        self.bestCrossValError=finalCrossValError
-        bestTrainingEpisode=True
-
-      if self.exportOn=="BEST":
-        if bestTrainingEpisode:
-          print("saving network to:",saveDirectory)
-          self.currentTrainingEpisode.exportNetwork(saveDirectory)
-      elif self.exportOn=="ALL":
-        print("saving network to:",saveDirectory)
-        self.currentTrainingEpisode.exportNetwork(saveDirectory)
       #export data
       
       self.currentTrainingEpisode.exportData(saveDirectory)
 
-      #deal with callback
-      if(episodeCallback!=None):
-        episodeCallback(self.currentTrainingEpisode)
-
+    #run modules
+    for module in self.modules:
+      module.endOfQue()
   
 
   def runEpisode(self):
-    def crossValCallback(self,iteration,crossValError):
-      print("\t\t"+format(crossValError,".4f"),end="")
-      self.lastCrossVal=crossValError
+    #run modules
+    for module in self.modules:
+      module.startOfEpisode(self.currentTrainingEpisode,self.currentTrainingEpisodeIndex)
 
-    print("Running episode",self.currentTrainingEpisode.name)
-    print()
-    print("I\ttrainingError\titerationTime",end="")
-    print("\tcrossValError",end="")
-    print()
+    def crossValCallback(index:int,crossValError:float):
+      self.lastCrossVal=crossValError
+      for module in self.modules:
+        module.endOfCrossVal(self.currentTrainingEpisode,index,crossValError)
+
+    def iterationCallback(index:int,trainingError:float,iterationTime:float):
+      for module in self.modules:
+        module.endOfIteration(self.currentTrainingEpisode,index,trainingError,iterationTime)
+
     #training variables
     self.lastCrossVal=-1
 
     running=True
-    #setupCallbacks
-    iterationCallback=lambda iteration,trainingError,iterationTime: print(str(iteration)+"\t"+format(trainingError,".8f")+"\t"+format(iterationTime,".8f")+"\t"+format(self.lastCrossVal,".8f"))
+
     while running:
       self.currentTrainingEpisode.train(
         iterationCallback=iterationCallback,
-        crossValCallback=self.crossValCallback,
+        crossValCallback=crossValCallback,
         )
-      print()
       #check exit requirements
       if self.maxIterationsConstraint:
         if self.currentTrainingEpisode.iterationCounter>=self.maxIterations:
@@ -131,4 +94,7 @@ class TrainingManager:
         if self.lastCrossValDerivativeEstimation!=-1 and self.lastCrossValDerivativeEstimation<self.minErrorDerivative:
           print("MIN error derrivate hit, exiting")
           running=False
+
+    for module in self.modules:
+      module.endOfEpisode(self.currentTrainingEpisode,self.lastCrossVal)
     return self.lastCrossVal

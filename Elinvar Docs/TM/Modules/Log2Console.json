@@ -1,15 +1,32 @@
 {
-  "Name":"Module",
-  "Superclasses":[],
-  "Subclasses":[
-    "BestCrossVal",
-    "CrossValRegression",
-    "Export",
-    "WeightsAndBiases",
-    "Log2Console"
+  "Name":"Log2Console",
+  "Superclasses":[
+    "Module"
   ],
-  "Description":"An attachment to TrainingManager, this class holds 6 callbacks run in the training process. These callbacks are overwritten by subclasses",
-  "Properties":[],
+  "Subclasses":[],
+  "Description":"Logs training data to the console as it comes in.",
+  "Properties":[
+    {
+      "Name":"tableHeadings",
+      "Type":"str",
+      "Description":"List of headings for the iteration table."
+    },
+    {
+      "Name":"lastTrainingErrorStr",
+      "Type":"str",
+      "Description":"The last training error in a formatted version."
+    },
+    {
+      "Name":"lastIterationTimeStr",
+      "Type":"str",
+      "Description":"The last iterationTime in a formatted version."
+    },
+    {
+      "Name":"rowFormat",
+      "Type":"str",
+      "Description":"Format of each row in the iteration table."
+    }
+  ],
   "Functions":[
     {
       "Name":"__init__",
@@ -133,5 +150,5 @@
       "Description":"Is called at the end of the training que."
     }
   ],
-  "Notes":"Each function is called at different stages of the training by the TrainingManager. The functions can be overwritten to create different functionality."
+  "Notes":""
 }

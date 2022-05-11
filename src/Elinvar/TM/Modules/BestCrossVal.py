@@ -11,15 +11,15 @@ class BestCrossVal(Module):
   def startOfEpisode(self, trainingEpisode: TrainingEpisode, episodeIndex: int):
     self.currentIndex=episodeIndex
 
-  def endOfCrossVal(self, trainingEpisode: TrainingEpisode,index:int, crossValError: float):
+  def endOfEpisode(self, trainingEpisode: TrainingEpisode, lastCrossValError:float):
     if self.bestTrainingEpisode==trainingEpisode:
       return
 
     if self.bestCrossVal==None:
-      self.bestCrossVal=crossValError
+      self.bestCrossVal=lastCrossValError
       self.bestTrainingEpisode=trainingEpisode
       self.bestIndex=self.currentIndex
-    elif crossValError<self.bestCrossVal:
-      self.bestCrossVal=crossValError
+    elif lastCrossValError<self.bestCrossVal:
+      self.bestCrossVal=lastCrossValError
       self.bestTrainingEpisode=trainingEpisode
       self.bestIndex=self.currentIndex

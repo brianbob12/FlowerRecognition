@@ -18,8 +18,7 @@ class WeightsAndBiases(Module):
     for node in trainingEpisode.network.nodes.values():
       layerMakeup+=NodeNameLookup.getNameFromNode(node)
       if node.hasTrainableVariables:
-        layerMakeup+=f"[{node.totalTrainableVarialbes}]"
-      layerMakeup+=","
+        layerMakeup+=f"[{node.totalTrainableVariales}],"
     layerMakeup=layerMakeup[:-1]#remove last comma
     self.currentRun=wandb.init(
       config={

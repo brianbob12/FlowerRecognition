@@ -8,7 +8,7 @@ from PIL import Image
 #STEP 1
 #setup learning manager and dataset
 tm=Elinvar.TM.TrainingManager()
-tm.setEpisodeEndRequirements(maxIterations=10)
+tm.setEpisodeEndRequirements(maxIterations=30000)
 tm.modules+=[
   Elinvar.TM.Modules.Log2Console(),
   Elinvar.TM.Modules.WeightsAndBiases("flowerRecognition","japaneserhino")
@@ -60,9 +60,13 @@ for i in range(e):
 #STEP 2
 #DEFINE training episodes
 
-def seriesX(name,learningRate): 
-  
-  #NOTE: it is important to create a new netowrk for each series
+def seriesX(index): 
+  name=f"C{index}"
+  learningRate=1e-8
+  convMove=-5#number of convolution filters chnages by this
+  denseMove=10#number of dense neurons changes by this
+
+  #NOTE: it is important to create a new network for each series
   #otherwise each training episode will continue with the same Network
   #(unless that's what you want)
 
@@ -72,7 +76,7 @@ def seriesX(name,learningRate):
   input1.setup([256,256,3])
 
   conv1= Elinvar.NN.ConvolutionLayer()
-  conv1.newLayer(11,48,3,0)
+  conv1.newLayer(11,48+convMove*index,3,0)
   conv1.connect([input1])
 
   inst1=Elinvar.NN.InstanceNormalizationNode()
@@ -84,7 +88,7 @@ def seriesX(name,learningRate):
   pool1.connect([inst1])
 
   conv2=Elinvar.NN.ConvolutionLayer()
-  conv2.newLayer(11,48,3,0)
+  conv2.newLayer(11,48+convMove*index,3,0)
   conv2.connect([pool1])
 
   inst2=Elinvar.NN.InstanceNormalizationNode()
@@ -99,11 +103,11 @@ def seriesX(name,learningRate):
   flatten1.connect([pool2])
 
   dense1=Elinvar.NN.Nodes.DenseLayer()
-  dense1.newLayer(128,"relu")
+  dense1.newLayer(128+denseMove*index,"relu")
   dense1.connect([flatten1])
 
   dense2=Elinvar.NN.Nodes.DenseLayer()
-  dense2.newLayer(64,"relu")
+  dense2.newLayer(64+denseMove*index,"relu")
   dense2.connect([dense1])
 
   dense3=Elinvar.NN.Nodes.DenseLayer()
@@ -117,8 +121,8 @@ def seriesX(name,learningRate):
   myNet.build()
 
   te=Elinvar.TM.TrainingEpisode(name)
-  te.instantiateLearningConfig(100)
-  te.instantiateMonitoringConfig(1)
+  te.instantiateLearningConfig(200)
+  te.instantiateMonitoringConfig(5)
 
   #deal with dataset
   def extract(files):
@@ -138,11 +142,11 @@ def seriesX(name,learningRate):
   return te
 
 
-def trainingEpisodeGenerator():
-  for i in range(20):
-    yield lambda : (seriesX("r"+str(i),1e-9*(i+1)))
+trainingQue=[]
+for i in range(6):
+  trainingQue.append(lambda v:(lambda: seriesX(v))(i))
 
-tm.trainingQue=[lambda: seriesX("testA",1e-5)]
+tm.trainingQue=trainingQue
 #%%
 #STEP 3
 #start training

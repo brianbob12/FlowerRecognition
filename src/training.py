@@ -145,7 +145,7 @@ def seriesX(index):
 
 trainingQue=[]
 for i in range(6):
-  trainingQue.append(lambda v:(lambda: seriesX(v))(i))
+  trainingQue.append((lambda v:(lambda : seriesX(v)))(i))
 
 tm.trainingQue=trainingQue
 #%%

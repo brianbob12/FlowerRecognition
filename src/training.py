@@ -63,7 +63,7 @@ for i in range(e):
 
 def seriesX(index): 
   name=f"C{index}"
-  learningRate=1e-8
+  learningRate=1e-6
   convMove=-5#number of convolution filters chnages by this
   denseMove=10#number of dense neurons changes by this
 

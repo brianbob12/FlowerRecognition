@@ -11,7 +11,8 @@ tm=Elinvar.TM.TrainingManager()
 tm.setEpisodeEndRequirements(maxIterations=30000)
 tm.modules+=[
   Elinvar.TM.Modules.Log2Console(),
-  Elinvar.TM.Modules.WeightsAndBiases("flowerRecognition","japaneserhino")
+  Elinvar.TM.Modules.WeightsAndBiases("flowerRecognition","japaneserhino"),
+  Elinvar.TM.Modules.Export(exportAll=True)
 ]
 
 #outputs x and y arrays

@@ -6,14 +6,10 @@
   "Properties":[
     {
       "Name":"trainingQue",
-      "Type":"List<None->TrainingEpisode>",
+      "Type":"List[Callable[[],TrainingEpisode]]",
       "Description":"List of functions to create training episodes."
     },
-    {
-      "Name":"currentTrainingEpisode",
-      "Type":"TrainingEpisode",
-      "Description":"The TrainingEpisode currently being executed. Only one is executed at a time."
-    },
+    
     {
       "Name":"maxIterations",
       "Type":"int",
@@ -86,7 +82,18 @@
     },
     {
       "Name":"runEpisode",
-      "MandatoryArgs":[],
+      "MandatoryArgs":[
+        {
+          "Name":"currentTrainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode to be trained."
+        },     
+        {
+          "Name":"currentTrainingEpisodeIndex",
+          "Type":"int",
+          "Description":"The index of the current training episode in the trainingQue."
+        }
+      ],
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[],

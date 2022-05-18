@@ -1,6 +1,9 @@
+from abc import ABC, abstractmethod
+
 from Elinvar.TM import TrainingEpisode
 
-class Module:
+class Module(ABC):
+
   def __init__(self):
     pass
 

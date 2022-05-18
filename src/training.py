@@ -8,7 +8,7 @@ from PIL import Image
 #STEP 1
 #setup learning manager and dataset
 tm=Elinvar.TM.TrainingManager()
-tm.setEpisodeEndRequirements(maxIterations=30000)
+tm.setEpisodeEndRequirements(maxIterations=90000)
 tm.modules+=[
   Elinvar.TM.Modules.Log2Console(),
   Elinvar.TM.Modules.WeightsAndBiases("flowerRecognition","japaneserhino"),
@@ -62,8 +62,8 @@ for i in range(e):
 #DEFINE training episodes
 
 def seriesX(index): 
-  name=f"C{index}"
-  learningRate=1e-6
+  name=f"D{index}"
+  learningRate=3e-6
   convMove=-5#number of convolution filters chnages by this
   denseMove=10#number of dense neurons changes by this
 
@@ -121,7 +121,12 @@ def seriesX(index):
 
   myNet.build()
 
-  te=Elinvar.TM.TrainingEpisode(name)
+
+
+  myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits()
+  myTrainingProtocol=Elinvar.NN.XYTraining(learningRate,tf.keras.optimizers.Adam,[dense3],myErrorFunction)
+
+  te=Elinvar.TM.TrainingEpisode(name,myNet,myTrainingProtocol)
   te.instantiateLearningConfig(200)
   te.instantiateMonitoringConfig(5)
 
@@ -134,11 +139,6 @@ def seriesX(index):
     "extract":extract
   }
   te.setDataSet(myDataset,4452,200,48964)
-
-  te.setNetwork(myNet)
-  myErrorFunction=Elinvar.NN.ErrorFunctions.SoftmaxCrossEntropyWithLogits()
-  myTrainingProtocol=Elinvar.NN.XYTraining(learningRate,tf.keras.optimizers.Adam,[dense3],myErrorFunction)
-  te.trainingProtocol=myTrainingProtocol
 
   return te
 

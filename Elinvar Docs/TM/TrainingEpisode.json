@@ -10,21 +10,6 @@
       "Description":"The name of the trainingEpisode. This is used for exporting and therefor should be unique."
     },
     {
-      "Name":"useWandB",
-      "Type":"bool",
-      "Description":"Indicates wether weights and biases logging will be used."
-    },
-    {
-      "Name":"crossValErrorHistory",
-      "Type":"List<Dict<str><any>>",
-      "Description":"History of the cross validation error. Consists of dicts containing iteration and error."
-    },
-    {
-      "Name":"trainingErrorHistory",
-      "Type":"List<Dict<str><any>>",
-      "Description":"History of the training error. Consists of dicts containing interaction, error, and time."
-    }, 
-    {
       "Name":"iterationCounter",
       "Type":"int",
       "Description":"The number of iterations that have occurred."
@@ -63,6 +48,11 @@
       "Name":"trainingProtocol",
       "Type":"TrainingProtocol",
       "Description":"The protocol used to update the weights in the network."
+    },
+    {
+      "Name":"iterationsPerCrossValRegress",
+      "Type":"int",
+      "Description":"Number of iterations between cross validation tests."
     }
   ],
   "Functions":[
@@ -73,6 +63,16 @@
           "Name":"name",
           "Type":"str",
           "Description":"Sets the name property."
+        },
+        {
+          "Name":"network",
+          "Type":"Elinvar.NN.Network",
+          "Description":"Sets network property."
+        },
+        {
+          "Name":"trainingProtocol",
+          "Type":"Elinvar.NN.TrainingProtocols.TrainingProtocol",
+          "Description":"Sets trainingProtocol property"
         }
       ],
       "OptionalArgs":[],
@@ -114,20 +114,6 @@
       "Description":"Sets up monitoring of the training process."
     },
     {
-      "Name":"setNetwork",
-      "MandatoryArgs":[
-        {
-          "Name":"network",
-          "Type":"Network",
-          "Description":"The network to be trained."
-        }
-      ],
-      "OptionalArgs":[],
-      "Returns":[],
-      "Throws":[],
-      "Description":"Sets up the network property."
-    },
-    {
       "Name":"setDataSet",
       "MandatoryArgs":[
         {
@@ -162,12 +148,12 @@
       "OptionalArgs":[
         {
           "Name":"iterationCallback",
-          "Type":"int -> tf.Tensor -> float -> any",
+          "Type":"Optional[Callable[[int,float,float],Any]",
           "Description":"Callback that takes in iterationCounter, trainingError, iteration time. After training."
         },
         {
           "Name":"crossValCallback",
-          "Type":"int -> tf.Tensor -> any",
+          "Type":"Optional[Callable[[int,float],Any]",
           "Description":"Callback that takes in iterationCounter, crossValError. "
         }
       ],

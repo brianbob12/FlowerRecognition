@@ -1,6 +1,8 @@
 {
   "Name":"TrainingProtocol",
-  "Superclass":"None",
+  "Superclasses":[
+    "ABC"
+  ],
   "Subclasses":[
     "XYTraining"
   ],
@@ -18,7 +20,7 @@
     },
     {
       "Name":"optimizer",
-      "Type":"tf.keras.optimizers.Optimizer",
+      "Type":"tensorflow.keras.optimizers.Optimizer",
       "Description":"Optimizer used for changing perameters to reduce error."
     }
   ],

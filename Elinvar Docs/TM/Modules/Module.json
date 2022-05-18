@@ -1,12 +1,15 @@
 {
   "Name":"Module",
-  "Superclasses":[],
+  "Superclasses":[
+    "ABC"
+  ],
   "Subclasses":[
     "BestCrossVal",
     "CrossValRegression",
     "Export",
     "WeightsAndBiases",
-    "Log2Console"
+    "Log2Console",
+    "Condition"
   ],
   "Description":"An attachment to TrainingManager, this class holds 6 callbacks run in the training process. These callbacks are overwritten by subclasses",
   "Properties":[],

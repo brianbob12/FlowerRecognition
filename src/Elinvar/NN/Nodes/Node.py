@@ -2,16 +2,18 @@
 #class that holds nodes in the network
 #these nodes may be junctions, layers, inputs or outputs
 #each node has input connections to other nodes each connection has a shape
-
+from abc import ABC, abstractmethod
+from tensorflow import Variable
+from typing import Any, List, Tuple
 from ..Exceptions import *
 #each node has a stored value per execution
 #the node can be cleared to clear this value thorugh the function clear
 #a node can be perserved which disables the clear function
 
-class Node:
+class Node(ABC):
   __slots__=(
     "name",
-    "inputConditions",
+    "inputConnections",
     "outputShape",
     "value",
     "executed",
@@ -24,10 +26,10 @@ class Node:
   def __init__(self,name=None,protected=False,ID=None):
     self.name:str=name
     self.inputConnections:list[Node]=[]#list of nodes
-    self.outputShape:list[int]=None#outputshape
+    self.outputShape:list[int]=[]#outputshape
     self.executed:bool=False
     self.protected:bool=protected
-    self.value:any=None
+    self.value:Any=None
     self.hasTrainableVariables:bool=False
     self.totalTrainableVariables:int=0
     if ID!=None:
@@ -38,10 +40,11 @@ class Node:
 
   #private
   #this is made to be overwritten
-  def execute(self,inputs):
+  @abstractmethod
+  def execute(self,inputs)->Any:
     return None
 
-  def getValue(self):
+  def getValue(self)->Any:
     if self.executed:
       return self.value
     #else
@@ -62,15 +65,17 @@ class Node:
 
   def protectedClear(self):
     self.value=None
-    self.executed=None
+    self.executed=False
 
-  def getTrainableVariables(self):
+  def getTrainableVariables(self)->List[Variable]:
     return []
     
   def connect(self,connections):
     self.inputConnections=connections
     return
 
+  #this has to be abstract because the type of the node has to be saved correctly
+  @abstractmethod
   def exportNode(self,path:str,subdir:str) -> str:
     from os import mkdir 
     import struct
@@ -111,7 +116,7 @@ class Node:
 
     return(accessPath)
         
-  def importNode(self,myPath: str,subdir:str):
+  def importNode(self,myPath: str,subdir:str)->Tuple[str,List[int]]:
     from os import path
     import struct
 
@@ -132,7 +137,7 @@ class Node:
     self.ID=inp[0]
 
     #read from connections.txt
-    connectionsToResolve=[]
+    connectionsToResolve:List[int]=[]
     with open(accessPath+"\\connections.txt") as f:
       inp=f.readlines()
       for line in inp:
@@ -140,7 +145,7 @@ class Node:
           x=int(line)
           connectionsToResolve.append(x)
         except ValueError as e:
-          raise(invalidDataInFile(accessPath+"\\connections.txt","connections",x))
+          raise(invalidDataInFile(accessPath+"\\connections.txt","connections",line))
 
     try:
       with open(accessPath+"\\shape.txt","r") as f:
@@ -148,11 +153,13 @@ class Node:
     except FileNotFoundError as e:
       raise(missingFileForImport(accessPath,"shape.txt"))
     
-    try:
-      shape=[int(i) for i in raw]
-    except ValueError as e:
-      #because python is interperated i should contian the last used value of the index
-      raise(invalidDataInFile(accessPath+"\\shape.txt",f"shape{i}",raw[i]))
+    shape=[]
+    for i,v in enumerate(raw):
+      try:
+        shape.append(int(i)) 
+      except ValueError as e:
+        #because python is interpreted i should contain the last used value of the index
+        raise(invalidDataInFile(accessPath+"\\shape.txt",f"shape[{i}]",v))
     self.outputShape=shape
 
     return(accessPath,connectionsToResolve)

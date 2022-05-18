@@ -1,6 +1,8 @@
 {
   "Name":"Node",
-  "Superclass":"None",
+  "Superclasses":[
+    "ABC"
+  ],
   "Subclasses":[
     "BuildableNode",
     "AdaIN",
@@ -19,12 +21,12 @@
     },
     {
       "Name":"inputConnections",
-      "Type":"List<Node>",
+      "Type":"List[Node]",
       "Description":"List of nodes that contain inputs."
     },
     {
       "Name":"outputShape",
-      "Type":"List<Int>",
+      "Type":"List[int]",
       "Description":"Shape of node output."
     },
     {
@@ -144,7 +146,7 @@
       "MandatoryArgs":[
         {
           "Name":"connections",
-          "Type":"List<Node>",
+          "Type":"List[Node]",
           "Description":"A list of nodes to connect to. Order may be important. Updates inputConnections."
         }
       ],
@@ -202,7 +204,7 @@
           "Description":"The access path used. This is used for overloading."
         },
         {
-          "Type":"List<int>",
+          "Type":"List[int]",
           "Description":"A list of node IDs to connect to this node. This is because the connections can only be resolved when all nodes have been imported."
         }
       ],

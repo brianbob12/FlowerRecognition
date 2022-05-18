@@ -1,8 +1,6 @@
 {
   "Name":"Module",
-  "Superclasses":[
-    "ABC"
-  ],
+  "Superclasses":[],
   "Subclasses":[
     "BestCrossVal",
     "CrossValRegression",

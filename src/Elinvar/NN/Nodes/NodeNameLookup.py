@@ -1,10 +1,11 @@
 #used to lookup nodes
+from typing import Optional
 from . import *
 
 #static
 class NodeNameLookup:
-  #static
-  def getNodeFromName(name:str):
+  @staticmethod 
+  def getNodeFromName(name:str)->Optional[type]:
     if name=="AdaIN":
       return(AdaIN)
     if name=="Buildablenode":
@@ -27,7 +28,7 @@ class NodeNameLookup:
       return(TransposeConvolutionLayer)
     return(None)
   
-  #static
+  @staticmethod
   def getNameFromNode(node:Node):
     #must check from the bottom of the hierarchy
     if isinstance(node,TransposeConvolutionLayer):

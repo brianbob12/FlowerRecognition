@@ -17,8 +17,8 @@
       "OptionalArgs":[],
       "Returns":[
         {
-          "Type":"class<Node>",
-          "Description":"Corresponding Node or None."
+          "Type":"Optional[type]",
+          "Description":"Corresponding Node class or None."
         }
       ],
       "Throws":[],

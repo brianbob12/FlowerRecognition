@@ -1,0 +1,23 @@
+{
+  "Name":"OR",
+  "Superclasses":["Condition"],
+  "Subclasses":[],
+  "Description":"Produces the OR of n inputted conditions. Reactive to changes in dependencies.",
+  "Properties":[],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[
+        {
+          "Name":"*args",
+          "Type":"Condition",
+          "Description":"Conditions that must all be True to make met True."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets relevant properties and callbacks."
+    }
+  ]
+}

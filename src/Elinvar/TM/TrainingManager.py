@@ -2,6 +2,7 @@
 
 from typing import Callable, List, Optional
 from Elinvar.TM.Modules.Module import Module
+from Elinvar.TM.Modules.Conditions import Condition
 
 from .TrainingEpisode import TrainingEpisode
 
@@ -15,24 +16,21 @@ class TrainingManager:
 
     self.modules:List[Module]=[]
 
-  #can use one or both
-  #TODO set minimIterations
-  def setEpisodeEndRequirements(self,maxIterations:int=None ,minCrossVal:float=None):
-    self.maxIterations=maxIterations
-    self.minCrossVal=minCrossVal
+    #set default exit condition to avoid exceptions
+    #This should be overwritten to something useful
+    self.exitCondition:Condition=Condition()
+    self.exitCondition.met=True
 
-    if(maxIterations==None):
-      self.maxIterationsConstraint=False
-    else:
-      self.maxIterationsConstraint=True
-    if(minCrossVal==None):
-      self.minErrorConstraint=False
-    else:
-      self.minErrorConstraint=True
+  def setEpisodeExitCondition(self,condition:Condition):
+    #recursive function to add conditions to self.modules
+    def addCondition(c:Condition):
+      if not c in self.modules:
+        self.modules.append(c)
+      for dependency in c.dependencies:
+        addCondition(dependency)
 
-    if( (not self.minErrorConstraint) and ( not self.maxIterationsConstraint)):
-      #TODO write this error
-      raise()
+    self.exitCondition:Condition=condition
+    addCondition(condition)
 
   #episodeCallback has args: TrainingEpisode
   def runQue(self,saveDirectory=".\\runs"):
@@ -84,10 +82,8 @@ class TrainingManager:
         crossValCallback=crossValCallback,
         )
       #check exit requirements
-      if self.maxIterationsConstraint:
-        if currentTrainingEpisode.iterationCounter>=self.maxIterations:
-          print("MAX iterations hit, exiting")
-          running=False
+      if self.exitCondition.met:
+        running=False
 
     for module in self.modules:
       module.endOfEpisode(currentTrainingEpisode,self.lastCrossVal)

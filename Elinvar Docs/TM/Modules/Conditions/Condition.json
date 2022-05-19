@@ -1,0 +1,53 @@
+{
+  "Name":"Condition",
+  "Superclasses":["Module"],
+  "Subclasses":[
+    "AND",
+    "OR",
+    "NOT",
+    "CrossValBelow",
+    "ReachedIteration"
+  ],
+  "Description":"A module that checks if a certain condition or set of conditions are met. Uses callbacks in the training loop to do this. Resets for each new TrainingEpisode.",
+  "Properties":[
+    {
+      "Name":"met",
+      "Type":"bool",
+      "Description":"If the condition is met."
+    },
+    {
+      "Name":"onChange",
+      "Type":"List[Callable[[bool],None]]",
+      "Description":"A list of callbacks that are run after the bool changes to a different value."
+    },
+    {
+      "Name":"dependencies",
+      "Type":"List[Condition]",
+      "Description":"A list of conditions that met depends on."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties"
+    },
+    {
+      "Name":"SetValue",
+      "MandatoryArgs":[
+        {
+          "Name":"value",
+          "Type":"bool",
+          "Description":"New value for met."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Changes value of met, calling callbacks if necessary."
+    }
+  ]
+}

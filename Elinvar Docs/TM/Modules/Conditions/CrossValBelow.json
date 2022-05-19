@@ -1,0 +1,72 @@
+{
+  "Name":"CrossValBelow",
+  "Superclasses":["Condition"],
+  "Subclasses":[],
+  "Description":"A condition that is met when the TrainingEpisode cross validation error is below the target.",
+  "Properties":[
+    {
+      "Name":"target",
+      "Type":"float",
+      "Description":"The cross validation error the TrainingEpisode must be below for the condition to be met."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[
+        {
+          "Name":"target",
+          "Type":"float",
+          "Description":"The cross validation error the TrainingEpisode must be below for the condition to be met."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties"
+    },
+    {
+      "Name":"startOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"episodeIndex",
+          "Type":"int",
+          "Description":"Index of the episode. Used for referring to TrainingEpisode generation parameters."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of each TrainingEpisode run. Used to reset condition"
+    },
+    {
+      "Name":"endOfCrossVal",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
+        },
+        {
+          "Name":"crossValError",
+          "Type":"float",
+          "Description":"The cross validation error."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at end of cross validation. Used to verify condition."
+    }
+  ]
+}

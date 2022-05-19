@@ -1,0 +1,77 @@
+{
+  "Name":"ReachedIteration",
+  "Superclasses":["Condition"],
+  "Subclasses":"",
+  "Description":"A condition that is met when the TrainingEpisode iteration is equal to or above a specified value.",
+  "Properties":[
+    {
+      "Name":"target",
+      "Type":"int",
+      "Description":"The number of iterations a TrainingEpisode must meet or surpass before condition is met."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[
+        {
+          "Name":"target",
+          "Type":"int",
+          "Description":"The number of iterations a TrainingEpisode must meet or surpass before condition is met."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties"
+    },
+    {
+      "Name":"startOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"episodeIndex",
+          "Type":"int",
+          "Description":"Index of the episode. Used for referring to TrainingEpisode generation parameters."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of each TrainingEpisode run. Used to reset condition"
+    },
+    {
+      "Name":"endOfIteration",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
+        },
+        {
+          "Name":"trainingError",
+          "Type":"float",
+          "Description":"The error on the training batch."
+        },
+        {
+          "Name":"iterationTime",
+          "Type":"float",
+          "Description":"The time taken for the training."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the end of each training iteration. Used to test condition"
+    }
+  ]
+}

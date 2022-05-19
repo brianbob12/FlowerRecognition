@@ -7,8 +7,9 @@ from PIL import Image
 #%%
 #STEP 1
 #setup learning manager and dataset
+from Elinvar.TM.Modules import Conditions
 tm=Elinvar.TM.TrainingManager()
-tm.setEpisodeEndRequirements(maxIterations=90000)
+tm.setEpisodeExitCondition(Conditions.ReachedIteration(90000))
 tm.modules+=[
   Elinvar.TM.Modules.Log2Console(),
   Elinvar.TM.Modules.WeightsAndBiases("flowerRecognition","japaneserhino"),

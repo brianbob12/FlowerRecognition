@@ -1,0 +1,24 @@
+{
+  "Name":"NOT",
+  "Superclasses":[
+    "Condition"
+  ],
+  "Subclasses":[],
+  "Properties":[],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[
+        {
+          "Name":"condition",
+          "Type":"Condition",
+          "Description":"The condition to be inverted."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties and callbacks."
+    }
+  ]
+}

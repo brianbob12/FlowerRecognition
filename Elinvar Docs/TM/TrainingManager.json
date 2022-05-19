@@ -46,25 +46,18 @@
       "Description":"Sets up properties"
     },
     {
-      "Name":"setEpisodeEndRequirements",
-      "MandatoryArgs":[],
-      "OptionalArgs":[
+      "Name":"setEpisodeExitCondition",
+      "MandatoryArgs":[
         {
-          "Name":"maxIterations",
-          "Type":"int",
-          "Description":"The number of iterations before ending an episode."
-        },
-        {
-          "Name":"minCrossVal",
-          "Type":"float",
-          "Description":"The crossValError at which TrainingEpisodes should stop."
+          "Name":"condition",
+          "Type":"Elinvar.TM.Modules.Conditions.Condition",
+          "Description":"A TrainingEpisode will exit when this condition is met."
         }
       ],
+      "OptionalArgs":[],
       "Returns":[],
-      "Throws":[
-        "Exception"
-      ],
-      "Description":"Sets the conditions under which a TrainingEpisode should end. If multiple conditions are given, performs OR."
+      "Throws":[],
+      "Description":"Sets the conditions under which a TrainingEpisode should end."
     },
     {
       "Name":"runQue",

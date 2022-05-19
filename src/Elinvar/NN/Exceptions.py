@@ -8,6 +8,7 @@
 #Network.Exceptions
 #
 #This class holds custom Exceptions used for error handeling 
+from typing import Optional
 from numpy import require
 
 
@@ -23,9 +24,9 @@ class invalidPath(Exception):
         self.badPath=badPath
 
 class missingFileForImport(Exception):
-    def __init__(self,path,fileName):
-        self.path=path
-        self.fileName=fileName
+    def __init__(self,path:str,fileName:str):
+        self.path:str=path
+        self.fileName:str=fileName
 
 class missingDirectoryForImport(Exception):
     def __init__(self,path):
@@ -76,10 +77,10 @@ class notEnoughNodeConnections(Exception):
         return out
 
 class operationWithUnbuiltNode(Exception):
-    def __init__(self,nodeID,operation,nodeName=None):
-        self.operation=operation
-        self.nodeID=nodeID
-        self.nodeName=nodeName
+    def __init__(self,nodeID:int,operation:str,nodeName:Optional[str]=None):
+        self.operation:str=operation
+        self.nodeID:int=nodeID
+        self.nodeName:Optional[str]=nodeName
 
     def __str__(self):
         out="OPERATION WITH UNBUILT LAYER\tOperation:"

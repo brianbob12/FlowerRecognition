@@ -33,13 +33,18 @@
     },
     {
       "Name":"inputShape",
-      "Type":"List<int>",
+      "Type":"List[int]",
       "Description":"The functioning input shape of the node. This is created from connections."
     },
     {
       "Name":"padding",
       "Type":"int",
       "Description":"Padding applied to the convolution algorithm."
+    },
+    {
+      "Name":"strides",
+      "Type":"List[int]",
+      "Description":"The stride vector for the convolution."
     }
   ],
   "Functions":[

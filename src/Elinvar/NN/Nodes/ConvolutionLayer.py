@@ -1,5 +1,4 @@
-from multiprocessing import connection
-import numpy as np
+from typing import List
 from tensorflow import Variable,concat
 from tensorflow.nn import conv2d
 from tensorflow.random import normal
@@ -8,7 +7,17 @@ from .BuildableNode import BuildableNode
 from ..Exceptions import *
 
 class ConvolutionLayer(BuildableNode):
-  
+  __slots__=(
+    "kernelSize",
+    "numberOfKernels",
+    "inputChannels",
+    "filter",
+    "strideSize",
+    "inputShape",
+    "padding",
+    "strides"
+    )
+
   def __init__(self,name=None,protected=False,ID=None):
     super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=True
@@ -18,24 +27,24 @@ class ConvolutionLayer(BuildableNode):
     #filterSize is interger
     #stride is a single int
   def newLayer(self,kernelSize,numberOfKernels,stride,padding):
-    weightInitSTDDEV=0.1
-    self.kernelSize=kernelSize
-    self.padding=padding
-    self.numberOfKernels=numberOfKernels
-    self.inputChannels=0#until connections are set
-    self.imported=False
-    self.strideSize=stride 
-    self.strides=[1,stride,stride,1]
-    self.inputShape=None
+    
+    self.kernelSize:int=kernelSize
+    self.padding:int=padding
+    self.numberOfKernels:int=numberOfKernels
+    self.inputChannels:int=0#until connections are set
+    self.imported:bool=False
+    self.strideSize:int=stride 
+    self.strides:List[int]=[1,stride,stride,1]
+    self.inputShape:List[int]=[]
   
   def build(self,seed=None) -> int:
-    if self.built: return
+    if self.built: return self.totalTrainableVariables
 
     if len(self.inputConnections)<1:
       raise(notEnoughNodeConnections(len(self.inputConnections),1)) 
 
-
-    self.filter=Variable(normal(shape=[self.kernelSize,self.kernelSize,self.inputChannels,self.numberOfKernels],seed=seed))
+    weightInitSTDDEV=0.1
+    self.filter:Variable=Variable(normal(shape=[self.kernelSize,self.kernelSize,self.inputChannels,self.numberOfKernels],seed=seed,mean=0,stddev=weightInitSTDDEV))
     self.built=True
     self.totalTrainableVariables=self.kernelSize*self.kernelSize*self.inputChannels*self.numberOfKernels
     return self.totalTrainableVariables
@@ -76,7 +85,7 @@ class ConvolutionLayer(BuildableNode):
   #inputs have shape [None,a,a,3] tf.float32
   def execute(self,inputs):
     if not self.built:
-      raise(operationWithUnbuiltNode("execute"))
+      raise(operationWithUnbuiltNode(self.ID,"execute"))
     else:
       myInput=concat(inputs,-1)
       return conv2d(myInput,self.filter,self.strides,"VALID")
@@ -154,7 +163,7 @@ class ConvolutionLayer(BuildableNode):
         except ValueError as e:
           raise(invalidDataInFile(accessPath+"\\hyper.txt","padding",fileLines[4])) 
     except IOError:
-      raise(missingFileForImport(accessPath+"\\hyper.txt"))
+      raise(missingFileForImport(accessPath,"hyper.txt"))
 
   
     #import kernel

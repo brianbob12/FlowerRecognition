@@ -17,11 +17,13 @@
       "OptionalArgs":[],
       "Returns":[
         {
-          "Type":"Optional[type]",
+          "Type":"ABCmeta",
           "Description":"Corresponding Node class or None."
         }
       ],
-      "Throws":[],
+      "Throws":[
+        "Elinvar.NN.UnregisteredNode()"
+      ],
       "Description":"Produces a Node class from a name of a node."
     },
     {
@@ -40,7 +42,9 @@
           "Description":"Corresponding Name or None."
         }
       ],
-      "Throws":[],
+      "Throws":[
+        "Elinvar.NN.UnregisteredNode()"
+      ],
       "Description":"Produces a name from a node instance."
     }
   ]

@@ -9,7 +9,8 @@
 #
 #This class holds custom Exceptions used for error handeling 
 from typing import Optional
-from numpy import require
+
+from Elinvar.NN.Nodes import Node
 
 
 class unspecifiedActivation (Exception):
@@ -108,4 +109,17 @@ class invalidInputNodeShape(Exception):
     def __str__(self):
         out="INVALID INPUT NODE SHAPE\n"
         out+=f"This input node required shape {self.requiredShape} but received {self.receivedShape}."
+        return out
+
+class UnregisteredNode(Exception):
+    def __init__(self,nodeName:Optional[str]=None,nodeObject:Optional[Node]=None) -> None:
+        self.nodeName:Optional[str]=nodeName
+        self.nodeObject:Optional[Node]=nodeObject
+    
+    def __str__(self) -> str:
+        out="UNREGISTERED NODE\n"
+        if self.nodeName!=None:
+            out+=f"node name:{self.nodeName}"
+        if self.nodeObject!=None:
+            out+=f"node object:{self.nodeObject}"
         return out

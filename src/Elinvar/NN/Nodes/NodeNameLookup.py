@@ -1,11 +1,14 @@
 #used to lookup nodes
+from abc import ABCMeta
 from typing import Optional
+
+from Elinvar.NN.Exceptions import UnregisteredNode
 from . import *
 
 #static
 class NodeNameLookup:
   @staticmethod 
-  def getNodeFromName(name:str)->Optional[type]:
+  def getNodeFromName(name:str)->ABCMeta:
     if name=="AdaIN":
       return(AdaIN)
     if name=="Buildablenode":
@@ -26,10 +29,10 @@ class NodeNameLookup:
       return(Node)
     if name=="TransposeConvolutionLayer":
       return(TransposeConvolutionLayer)
-    return(None)
+    raise(UnregisteredNode(nodeName=name)) 
   
   @staticmethod
-  def getNameFromNode(node:Node):
+  def getNameFromNode(node:Node)->str:
     #must check from the bottom of the hierarchy
     if isinstance(node,TransposeConvolutionLayer):
       return("TransposeConvolutionLayer")
@@ -54,5 +57,5 @@ class NodeNameLookup:
     if isinstance(node,Node):
       return("Node")
     
-    return (None)
+    raise(UnregisteredNode(nodeObject=node)) 
 

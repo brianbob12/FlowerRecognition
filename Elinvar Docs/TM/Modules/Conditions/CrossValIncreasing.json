@@ -1,0 +1,84 @@
+{
+  "Name":"CrossValIncreasing",
+  "Superclasses":[
+    "Condition"
+  ],
+  "Subclasses":[],
+  "Description":"A condition that is met when the cross validation error has been increasing for a specified number of cross validation tests.",
+  "Properties":[
+    {
+      "Name":"target",
+      "Type":"int",
+      "Description":"The number of consecutive cross validation tests that need to be increasing for the condition to be met. "
+    },
+    {
+      "Name":"lastCrossVal",
+      "Type":"Optional[float]",
+      "Description":"The last recorded cross validation error."
+    },
+    {
+      "Name":"counter",
+      "Type":"int",
+      "Description":"The number of consecutive cross validation tests that have been increasing."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"target",
+          "Type":"int",
+          "Description":"The number of consecutive cross validation tests that need to be increasing for the condition to be met. "
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Sets up properties."
+    },
+    {
+      "Name":"startOfEpisode",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"episodeIndex",
+          "Type":"int",
+          "Description":"Index of the episode. Used for referring to TrainingEpisode generation parameters."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at the beginning of each TrainingEpisode run. Used to reset condition"
+    },
+    {
+      "Name":"endOfCrossVal",
+      "MandatoryArgs":[
+        {
+          "Name":"trainingEpisode",
+          "Type":"TrainingEpisode",
+          "Description":"The TrainingEpisode being run."
+        },
+        {
+          "Name":"index",
+          "Type":"int",
+          "Description":"The index of the iteration."
+        },
+        {
+          "Name":"crossValError",
+          "Type":"float",
+          "Description":"The cross validation error."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Is called at end of cross validation. Used to verify condition."
+    }
+  ]
+}

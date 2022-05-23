@@ -67,7 +67,7 @@ class Node(ABC):
     #get input values and pass to execute function which will be overridden
     myInputs=[]
     for node in self.inputConnections:
-      myInputs.append(node.getValue())
+      myInputs.append(node.getValueTraining())
 
     self.value=self.trainingExecute(myInputs)
     self.executed=True

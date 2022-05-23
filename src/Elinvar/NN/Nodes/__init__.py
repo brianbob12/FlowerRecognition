@@ -10,3 +10,4 @@ from .FlattenNode import FlattenNode
 from .MaxPoolingNode import MaxPoolingNode
 from .InputNode import InputNode
 from .NodeNameLookup import NodeNameLookup
+from .DropoutNode import DropoutNode

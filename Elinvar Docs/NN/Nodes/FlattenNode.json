@@ -1,10 +1,14 @@
 {
   "Name":"FlattenNode",
-  "Superclass":"Node",
+  "Superclasses":["Node"],
   "Subclasses":[],
   "Description":"Flattens all inputs into tensor of shape[None] whilst persevering batch shape.",
   "Properties":[
-
+    {
+      "Name":"imported",
+      "Type":"bool",
+      "Description":"Weather this node has been imported. Used for verifying outputShape."
+    }
   ],
   "Functions":[
     {

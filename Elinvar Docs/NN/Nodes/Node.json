@@ -10,14 +10,15 @@
     "MaxPoolingNode",
     "FlattenNode",
     "UpscalingLayer",
-    "InputNode"
+    "InputNode",
+    "DropoutNode"
   ],
   "Description":"Holds nodes in a network that input data perform an operation and output a variable.",
   "Properties":[
     {
       "Name":"name",
-      "Type":"str",
-      "Description":"Holds a name for the node."
+      "Type":"Optional[str]",
+      "Description":"Holds a name for the node. Used solely for debugging."
     },
     {
       "Name":"inputConnections",
@@ -31,7 +32,7 @@
     },
     {
       "Name":"value",
-      "Type":"Any",
+      "Type":"Optional[tensorflow.Tensor]",
       "Description":"The value of the node on this execution run"
     },
     {
@@ -67,8 +68,8 @@
       "OptionalArgs":[
         {
           "Name":"name",
-          "Type":"str",
-          "Description":"Sets name property."
+          "Type":"Optional[str]",
+          "Description":"Holds a name for the node. Used solely for debugging."
         },
         {
           "Name":"protected",
@@ -77,8 +78,8 @@
         },
         {
           "Name":"ID",
-          "Type":"int",
-          "Description":"Sets ID property."
+          "Type":"Optional[int]",
+          "Description":"A unique identifier of the node used for export and import"
         }
       ],
       "Returns":[],
@@ -91,26 +92,63 @@
       "OptionalArgs":[],
       "Returns":[
         {
-          "Type":"Any",
+          "Type":"tensorflow.Tensor",
           "Description":"output of shape outputShape"
         }
       ],
       "Throws":[],
-      "Description":"Returns Node output, will store value for future calls. Made to be overwritten"
+      "Description":"Returns Node output, will store value for future calls."
+    },
+    {
+      "Name":"getValueTraining",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tensorflow.Tensor",
+          "Description":"output of shape outputShape"
+        }
+      ],
+      "Throws":[],
+      "Description":"Returns Node output, will store value for future calls. Invokes trainingExecute instead of execute."
     },
     {
       "Name":"execute",
       "MandatoryArgs":[
         {
           "Name":"inputs",
-          "Type":"List",
+          "Type":"List[tensorflow.Tensor]",
           "Description":"Input has shape=[len(inputConnections)]."
         } 
       ],
       "OptionalArgs":[],
-      "Returns":[],
+      "Returns":[
+        {
+          "Type":"tensorflow.Tensor",
+          "Description":"Output of node."
+        }
+      ],
       "Throws":[],
       "Description":"Produces an output based on input connection values."
+    },
+    {
+      "Name":"trainingExecute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List[tensorflow.Tensor]",
+          "Description":"Input has shape=[len(inputConnections)]."
+        } 
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tensorflow.Tensor",
+          "Description":"Output of node."
+        }
+      ],
+      "Throws":[],
+      "Description":"Similar to execute function but differs for certain subclasses."
     },
     {
       "Name":"clear",
@@ -134,7 +172,7 @@
       "OptionalArgs":[],
       "Returns":[
         {
-          "Type":"List",
+          "Type":"List[tf.Variable]",
           "Description":"By default, empty list. This is overridden by children."
         }
       ],

@@ -43,7 +43,8 @@ class DenseLayer(BuildableNode):
 
   #TODO make it throw an error if inputShape not [None]
   def build(self,seed=None) -> int:
-    if self.built:return
+    if self.built:
+      self.totalTrainableVariables
 
     if len(self.inputConnections)<1:
       raise(notEnoughNodeConnections(len(self.inputConnections),1))
@@ -69,7 +70,7 @@ class DenseLayer(BuildableNode):
   #returns shape [None,outputSize] 
   def execute(self,inp):
     if not self.built:
-      raise(operationWithUnbuiltNode("execute"))
+      raise(operationWithUnbuiltNode(self.ID,"execute"))
     else:
       return((self.activation(matmul([inp],self.weights)+self.biases))[0])
 
@@ -162,7 +163,7 @@ class DenseLayer(BuildableNode):
         except KeyError as e:
           raise unknownActivationFunction(fileLines[2])
     except IOError:
-      raise(missingFileForImport(accessPath+"\\hyper.txt"))
+      raise(missingFileForImport(accessPath,"hyper.txt"))
 
     
     #import weights

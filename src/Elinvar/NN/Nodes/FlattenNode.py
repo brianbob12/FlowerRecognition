@@ -1,4 +1,5 @@
 
+from typing import List, Optional
 from numpy import prod
 
 from Elinvar.NN.Exceptions import invalidNodeConnection
@@ -10,14 +11,14 @@ from tensorflow import reshape
 
 class FlattenNode(Node):
 
-  def __init__(self, name=None, protected=False, ID=None):
+  def __init__(self, name:Optional[str]=None, protected:bool=False, ID:Optional[int]=None):
       super().__init__(name, protected=protected, ID=ID)
-      self.outputShape=[0]
-      self.imported=False
-      self.totalTrainableVariables=0
+      self.outputShape:List[int]=[0]
+      self.imported:bool=False
+      self.totalTrainableVariables:int=0
 
   #TODO count output shape
-  def connect(self, connections):
+  def connect(self, connections:List[Node])->None:
     tad=0
     for node in connections:
       tad+=prod(node.outputShape)

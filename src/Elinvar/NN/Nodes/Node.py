@@ -3,8 +3,8 @@
 #these nodes may be junctions, layers, inputs or outputs
 #each node has input connections to other nodes each connection has a shape
 from abc import ABC, abstractmethod
-from tensorflow import Variable
-from typing import Any, List, Tuple
+from tensorflow import Variable,Tensor
+from typing import  List, Tuple
 from ..Exceptions import *
 #each node has a stored value per execution
 #the node can be cleared to clear this value thorugh the function clear
@@ -23,13 +23,13 @@ class Node(ABC):
     "totalTrainableVariables"
   )
 
-  def __init__(self,name=None,protected=False,ID=None):
-    self.name:str=name
-    self.inputConnections:list[Node]=[]#list of nodes
-    self.outputShape:list[int]=[]#outputshape
+  def __init__(self,name:Optional[str]=None,protected:bool=False,ID:Optional[int]=None):
+    self.name:Optional[str]=name
+    self.inputConnections:List[Node]=[]#list of nodes
+    self.outputShape:List[int]=[]#outputshape
     self.executed:bool=False
     self.protected:bool=protected
-    self.value:Any=None
+    self.value:Optional[Tensor]=None
     self.hasTrainableVariables:bool=False
     self.totalTrainableVariables:int=0
     if ID!=None:
@@ -38,15 +38,16 @@ class Node(ABC):
       from random import randint
       self.ID:int=randint(0,2**31)
 
-  #private
-  #this is made to be overwritten
   @abstractmethod
-  def execute(self,inputs)->Any:
-    return None
+  def execute(self,inputs:List[Tensor])->Tensor:
+    pass
 
-  def getValue(self)->Any:
-    if self.executed:
-      return self.value
+  def trainingExecute(self,inputs:List[Tensor])->Tensor:
+    return self.execute(inputs)
+
+  def getValue(self)->Tensor:
+    if self.value!=None:
+      return self.value 
     #else
 
     #get input values and pass to execute function which will be overridden
@@ -55,6 +56,20 @@ class Node(ABC):
       myInputs.append(node.getValue())
 
     self.value=self.execute(myInputs)
+    self.executed=True
+    return self.value
+
+  def getValueTraining(self)->Tensor:
+    if self.value !=None:
+      return self.value 
+    #else
+
+    #get input values and pass to execute function which will be overridden
+    myInputs=[]
+    for node in self.inputConnections:
+      myInputs.append(node.getValue())
+
+    self.value=self.trainingExecute(myInputs)
     self.executed=True
     return self.value
 
@@ -70,7 +85,7 @@ class Node(ABC):
   def getTrainableVariables(self)->List[Variable]:
     return []
     
-  def connect(self,connections):
+  def connect(self,connections:List[Node]):
     self.inputConnections=connections
     return
 

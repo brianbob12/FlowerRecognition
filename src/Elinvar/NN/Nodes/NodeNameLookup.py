@@ -29,6 +29,8 @@ class NodeNameLookup:
       return(Node)
     if name=="TransposeConvolutionLayer":
       return(TransposeConvolutionLayer)
+    if name=="DropoutNode":
+      return(DropoutNode)
     raise(UnregisteredNode(nodeName=name)) 
   
   @staticmethod
@@ -50,6 +52,8 @@ class NodeNameLookup:
       return("MaxPoolingNode")
     if isinstance(node,InputNode):
       return("InputNode")
+    if isinstance(node,DropoutNode):
+      return("DropoutNode")
 
     #this must be below all subclasses of BuildableNode
     if isinstance(node,BuildableNode):

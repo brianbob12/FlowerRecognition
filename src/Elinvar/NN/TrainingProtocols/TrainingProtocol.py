@@ -11,5 +11,5 @@ class TrainingProtocol(ABC):
     self.requiredOutputNodes:List[Node]=requiredOutputNodes
 
   @abstractmethod
-  def getError(self,networkOutputs:List[Tensor],getErrorArgs:List[Any]):
+  def getError(self,networkOutputs:List[Tensor],getErrorArgs:List[Any])->Tensor:
     return(constant(0))

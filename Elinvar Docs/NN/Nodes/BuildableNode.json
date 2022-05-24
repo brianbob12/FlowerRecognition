@@ -42,7 +42,13 @@
     {
       "Name":"build",
       "MandatoryArgs":[],
-      "OptionalArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"seed",
+          "Type":"Optional[int]",
+          "Description":"Random seed for filter generation."
+        }
+      ],
       "Returns":[
         {
           "Type":"int",

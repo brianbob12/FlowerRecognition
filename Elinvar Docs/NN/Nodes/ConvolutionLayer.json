@@ -78,7 +78,7 @@
       "OptionalArgs":[
         {
           "Name":"seed",
-          "Type":"int",
+          "Type":"Optional[int]",
           "Description":"Random seed for filter generation"
         }
       ],

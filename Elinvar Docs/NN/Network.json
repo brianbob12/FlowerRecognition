@@ -100,19 +100,19 @@
       "MandatoryArgs":[
         {
           "Name":"inputs",
-          "Type":"Dict<int><tf.Tensor>",
+          "Type":"Dict[int,tensorflow.Tensor]",
           "Description":"Maps the IDs of input nodes to their value."
         },
         {
           "Name":"requestedOutputs",
-          "Type":"List<Node>",
+          "Type":"List[Node]",
           "Description":"A list of nodes that you want to get the value of."
         }
       ],
       "OptionalArgs":[],
       "Returns":[
         {
-          "Type":"List<tf.Tensor>",
+          "Type":"List[tensorflow.Tensor]",
           "Description":"Output of each node in requestedOutputs"
         }
       ],
@@ -122,11 +122,37 @@
       "Description":"Uses the network to process the inputs into the required output. Only executes the nodes necessary to calculate the requested outputs. "
     },
     {
+      "Name":"trainingExecute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"Dict[int,tensorflow.Tensor]",
+          "Description":"Maps the IDs of input nodes to their value."
+        },
+        {
+          "Name":"requestedOutputs",
+          "Type":"List[Node]",
+          "Description":"A list of nodes that you want to get the value of."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"List[tensorflow.Tensor]",
+          "Description":"Output of each node in requestedOutputs"
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.invalidInputNodeShape(receivedShape,inputShape)"
+      ],
+      "Description":"Uses the network to process the inputs into the required output. Only executes the nodes necessary to calculate the requested outputs. Unlike execute, this function invokes the trainingExecute methods of nodes."
+    },
+    {
       "Name":"train",
       "MandatoryArgs":[
         {
           "Name":"inputs",
-          "Type":"Dict<int><tf.Tensor>",
+          "Type":"Dict[int,tf.Tensor]",
           "Description":"Maps the IDs of input nodes to their value."
         },
         {
@@ -136,14 +162,14 @@
         },
         {
           "Name":"getErrorArgs",
-          "Type":"List<Any>",
+          "Type":"List[Any]",
           "Description":"The list of arguments needed to compute the error. What's in this depends on the training protocol used. "
         }
       ],
       "OptionalArgs":[],
       "Returns":[
         {
-          "Type":"tf.Tensor",
+          "Type":"tensorflow.Tensor",
           "Description":"error"
         }
       ],
@@ -157,7 +183,7 @@
       "MandatoryArgs":[
         {
           "Name":"inputs",
-          "Type":"Dict<int><tf.Tensor>",
+          "Type":"Dict[int,tensorflow.Tensor]",
           "Description":"Maps the IDs of input nodes to their value."
         },
         {
@@ -167,19 +193,48 @@
         },
         {
           "Name":"getErrorArgs",
-          "Type":"List<Any>",
+          "Type":"List[Any]",
           "Description":"The list of arguments needed to compute the error. What's in this depends on the training protocol used. "
         }
       ],
       "OptionalArgs":[],
       "Returns":[
         {
-          "Type":"tf.Tensor",
-          "Description":"error"
+          "Type":"Tensor",
+          "Description":"error, tensor of shape:[1]"
         }
       ],
       "Throws":[],
       "Description":"Produces the training error of the model for the given getErrorArgs."
+    },
+    {
+      "Name":"getTrainingError",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"Dict[int,tensorflow.Tensor]",
+          "Description":"Maps the IDs of input nodes to their value."
+        },
+        {
+          "Name":"trainingProtocol",
+          "Type":"TrainingProtocol",
+          "Description":"The training protocol used to update the trainable parameters."
+        },
+        {
+          "Name":"getErrorArgs",
+          "Type":"List[Any]",
+          "Description":"The list of arguments needed to compute the error. What's in this depends on the training protocol used. "
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"Tensor",
+          "Description":"error, tensor of shape:[1]"
+        }
+      ],
+      "Throws":[],
+      "Description":"Produces the training error of the model for the given getErrorArgs but invokes trainingExecute instead of execute."
     },
     {
       "Name":"clear",

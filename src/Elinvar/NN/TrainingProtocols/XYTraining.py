@@ -1,4 +1,6 @@
 
+from typing import List
+from Elinvar.NN.Nodes import Node
 from Elinvar.NN.TrainingProtocols.TrainingProtocol import TrainingProtocol
 
 from .TrainingProtocol import TrainingProtocol
@@ -6,9 +8,9 @@ from .TrainingProtocol import TrainingProtocol
 
 class XYTraining (TrainingProtocol):
   def __init__(self,
-  learningRate,
+  learningRate:float,
   optimizer,
-  requiredOutputNodes,
+  requiredOutputNodes:List[Node],
   errorFunction):
     super().__init__(learningRate,optimizer,requiredOutputNodes)
     self.errorFunction=errorFunction

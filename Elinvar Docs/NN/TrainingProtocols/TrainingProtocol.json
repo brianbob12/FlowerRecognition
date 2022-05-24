@@ -35,7 +35,7 @@
         },
         {
           "Name":"optimizer",
-          "Type":"tf.keras.optimizers.Optimizer",
+          "Type":"type",
           "Description":"Sets optimizer property"
         },
         {

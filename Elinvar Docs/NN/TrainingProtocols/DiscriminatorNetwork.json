@@ -1,0 +1,15 @@
+{
+  "Name":"DiscriminatorNetwork",
+  "Superclasses":[
+    "TrainingProtocol"
+  ],
+  "Subclasses":[],
+  "Description":"Protocol to use a discriminator network to calculate the error of the network being trained.",
+  "Properties":[
+    {
+      "Name":"DiscriminatorNetwork",
+      "Type":"Network",
+      "Description":""
+    }
+  ]
+}

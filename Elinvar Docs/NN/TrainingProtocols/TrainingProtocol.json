@@ -4,7 +4,8 @@
     "ABC"
   ],
   "Subclasses":[
-    "XYTraining"
+    "XYTraining",
+    "DiscriminatorNetwork"
   ],
   "Description":"Holds information for training a network for a given batch. This mostly deals with calculating error.",
   "Properties":[

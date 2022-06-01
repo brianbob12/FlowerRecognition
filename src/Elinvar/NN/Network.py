@@ -129,20 +129,17 @@ class Network:
       error=self.getTrainingError(inputs,trainingProtocol,getErrorArgs)
       grads=g.gradient(error,myTrainableVariables)
 
-    #TODO move this to TrainingProtocol.py
-    optimizer=trainingProtocol.optimizer(trainingProtocol.learningRate)
-
-    #check for nonexsistant gradients
+    #check for nonexistent gradients
     c=0
     while c<len(grads):
       if grads[c]==None:
-        #remove this trainable variable
+        #remove this trainable variable's nonexistent variable
         del grads[c]
         del myTrainableVariables[c]
       else:
         c+=1
 
-    optimizer.apply_gradients(zip(grads,myTrainableVariables))
+    trainingProtocol.applyGradients(grads,myTrainableVariables)
 
     return error
 

@@ -129,3 +129,7 @@ runs/**
 wandb/**
 testNet/**
 runs/r0/**
+runs/D0/Model/NODE801514498/mat.weights
+runs/D0/Model/NODE801514498/mat.weights
+runs/D0/Model/NODE801514498/mat.weights
+runs/r0/errorLogs/crossValRegressionData.csv

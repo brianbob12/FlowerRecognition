@@ -1,3 +1,43 @@
 {
-  "Name":"ErrorFunction"
+  "Name":"ErrorFunction",
+  "Superclasses":["ABC"],
+  "Subclasses":[
+    "MSE",
+    "SoftmaxCrossEntropyWithLogits"
+  ],
+  "Description":"A function to calculate error based on network output. Also holds information about the nature of the function.",
+  "Properties":[
+    {
+      "Name":"multipleLabels",
+      "Type":"bool",
+      "Description":"True if the ErrorFunction considers multiple labels per iteration."
+    }
+  ],
+  "Functions":[
+    {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"guess",
+          "Type":"List[Tensor]",
+          "Description":"The guess of the correct value."
+        },
+        {
+          "Name":"y",
+          "Type":"List[Tensor]",
+          "Description":"The expected values"
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"float",
+          "Description":"The average error for the given batch."
+        }
+      ],
+      "Throws":[],
+      "Description":"An abstract, static method to calculate an error."
+    }
+  ],
+  "Notes":""
 }

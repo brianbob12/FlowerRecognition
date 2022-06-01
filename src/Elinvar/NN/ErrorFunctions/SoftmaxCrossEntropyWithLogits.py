@@ -9,5 +9,6 @@ class SoftmaxCrossEntropyWithLogits(ErrorFunction):
   def __init__(self):
     super().__init__(True)
 
-  def execute(self,guess,y):
+  @staticmethod
+  def execute(guess,y):
     return reduce_mean(softmax_cross_entropy_with_logits(y,guess))

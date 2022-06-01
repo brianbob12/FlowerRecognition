@@ -1,11 +1,18 @@
 
 #a parent class holding error functions
 
-class ErrorFunction:
+from abc import ABC, abstractmethod
+from typing import List
+from tensorflow import Tensor
+
+class ErrorFunction(ABC):
   #multiple labels is a boolean
   #true for error functions that run for many labels each iteration
   #false for error functions that only run on one label per iteration
-  def __init__(self,multipleLabels):
-    self.multipleLabels=multipleLabels
+  def __init__(self,multipleLabels:bool):
+    self.multipleLabels:bool=multipleLabels
 
-  #there will be an execute function for all ErrorFunctions
+  @abstractmethod
+  @staticmethod
+  def execute(guess:List[Tensor],y:List[Tensor])->float:
+    pass

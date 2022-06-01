@@ -11,7 +11,7 @@
   "Properties":[
     {
       "Name":"requiredOutputNodes",
-      "Type":"List<Node>",
+      "Type":"List[Node]",
       "Description":"A list of nodes used for the error calculation."
     },
     {
@@ -21,8 +21,8 @@
     },
     {
       "Name":"optimizer",
-      "Type":"tensorflow.keras.optimizers.Optimizer",
-      "Description":"Optimizer used for changing perameters to reduce error."
+      "Type":"type",
+      "Description":"Optimizer used for changing parameters to reduce error."
     }
   ],
   "Functions":[
@@ -32,35 +32,54 @@
         {
           "Name":"learningRate",
           "Type":"float",
-          "Description":"Sets learningRate property"
+          "Description":"Learning rate for the given optimizer."
         },
         {
           "Name":"optimizer",
           "Type":"type",
-          "Description":"Sets optimizer property"
+          "Description":"Optimizer used for changing parameters to reduce error."
         },
         {
           "Name":"requiredOutputNodes",
-          "Type":"List<Node>",
+          "Type":"List[Node]",
           "Description":"Sets requiredOutputNodes property."
         }
       ],
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[],
-      "Description":""
-    }, 
+      "Description":"Sets up properties."
+    },
+    {
+      "Name":"applyGradients",
+      "MandatoryArgs":[
+        {
+          "Name":"grads",
+          "Type":"List[tensorflow.Tensor]",
+          "Description":"[𝛿e/𝛿v for v in variables]"
+        },
+        {
+          "Name":"trainableVariables",
+          "Type":"List[tensorflow.Tensor]",
+          "Description":"A list of all of the trainable parameters in the network."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":"Applies gradients to tf.Variables in the network to optimize the network."
+    },
     {
       "Name":"geError",
       "MandatoryArgs":[
         {
           "Name":"networkOutputs",
-          "Type":"List<tf.Tensor>",
+          "Type":"List[tf.Tensor]",
           "Description":"A list of the outputs of the requestedOutputs in the order they are in the property. "
         },
         {
           "Name":"getErrorArgs",
-          "Type":"List<Any>",
+          "Type":"List[Any]",
           "Description":"A list of arguments needed to compute the error."
         }
       ],

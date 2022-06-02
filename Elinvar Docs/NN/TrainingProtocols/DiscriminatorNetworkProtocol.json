@@ -1,5 +1,5 @@
 {
-  "Name":"DiscriminatorNetwork",
+  "Name":"DiscriminatorNetworkProtocol",
   "Superclasses":[
     "TrainingProtocol"
   ],
@@ -20,6 +20,11 @@
       "Name":"errorFunction",
       "Type":"ErrorFunction",
       "Description":"Error function used to compute error between discriminatorNetwork output values and Y. "
+    },
+    {
+      "Name":"outputToInputMap",
+      "Type":"Dict[Node,InputNode]",
+      "Description":"A dict mapping the output nodes of one network to the input nodes of the discriminator network."
     }
   ],
   "Functions":[
@@ -39,7 +44,7 @@
         {
           "Name":"requiredOutputNodes",
           "Type":"List[Node]",
-          "Description":"Sets requiredOutputNodes property."
+          "Description":"Sets requiredOutputNodes property. The order of this is important."
         },
         {
           "Name":"discriminatorNetwork",
@@ -50,6 +55,11 @@
           "Name":"discriminatorNetworkOutputNodes",
           "Type":"List[Node]",
           "Description":"A list of discriminatorNetwork nodes used for the error calculation."
+        },
+        {
+          "Name":"outputToInputMap",
+          "Type":"Dict[Node,InputNode]",
+          "Description":"A dict mapping the output nodes of one network to the input nodes of the discriminator network."
         },
         {
           "Name":"errorFunction",
@@ -68,7 +78,7 @@
         {
           "Name":"networkOutputs",
           "Type":"List[tf.Tensor]",
-          "Description":"A list of the outputs of the requestedOutputs in the order they are in the property. "
+          "Description":"A list of the outputs of the requestedOutputs in the order they are in the property 'requiredOutputNodes'."
         },
         {
           "Name":"getErrorArgs",

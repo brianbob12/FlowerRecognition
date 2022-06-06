@@ -109,6 +109,6 @@ class InstanceNormalizationNode(Node):
           except ValueError as e:
             raise(invalidDataInFile(accessPath+"\\hyper.txt","stddev",fileLines[1]))
       except IOError:
-        raise(missingFileForImport(accessPath+"\\hyper.txt"))
+        raise(missingFileForImport(accessPath,"hyper.txt"))
       self.imported=True
       return accessPath,connections 

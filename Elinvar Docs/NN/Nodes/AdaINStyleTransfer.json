@@ -1,0 +1,75 @@
+{
+  "Name":"AdaINStyleTransfer",
+  "Superclasses":[
+    "InstanceNormalization"
+  ],
+  "Subclasses":[],
+  "Description":"Adaptive instance normalization for style transfer. Applies the mean and stddev of the first connection to all subsequent connections.",
+  "Properties":[
+
+  ],
+  "Functions":[
+    {
+      "Name":"connect",
+      "MandatoryArgs":[
+        {
+          "Name":"connections",
+          "Type":"List[Node]",
+          "Description":"List of nodes. The first node sets the style which is applied to all subsequent nodes."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.invalidNodeConnection(receivedShape,requiredShape)"
+      ],
+      "Description":""
+    },
+    {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List[tf.Tensor]",
+          "Description":"A tf.Tensor from each input connection."
+        }
+      ],
+      "OptionalArgs":[],
+      "Throws":[],
+      "Returns":[
+        {
+          "Type":"tf.Tensor",
+          "Description":"Has shape outputShape"
+        }
+      ],
+      "Description":"Performs instance normalization on the last axis of the inputs. Transfers style from the first connection to the subsequent connections."
+    },
+    {
+      "Name":"exportNode",
+      "MandatoryArgs":[
+        {
+          "Name":"path",
+          "Type":"str",
+          "Description":"Path the network is being saved to."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)"
+      ],
+      "Description":"Exports ID, and connections. Checks directory existence and validity."
+    }
+  ],
+  "Notes":""
+}

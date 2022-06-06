@@ -74,7 +74,7 @@
       "MandatoryArgs":[
         {
           "Name":"connections",
-          "Type":"List<Node>",
+          "Type":"List[Node]",
           "Description":"List of nodes. All nodes after first will be ignored"
         }
       ],

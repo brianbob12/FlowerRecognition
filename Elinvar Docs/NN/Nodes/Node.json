@@ -5,7 +5,7 @@
   ],
   "Subclasses":[
     "BuildableNode",
-    "AdaIN",
+    "AdaINStyleTransfer",
     "InstanceNormalization",
     "MaxPoolingNode",
     "FlattenNode",

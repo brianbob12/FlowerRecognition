@@ -1,7 +1,7 @@
 {
   "Name":"AdaINStyleTransfer",
   "Superclasses":[
-    "InstanceNormalization"
+    "AdaINSetStyle"
   ],
   "Subclasses":[],
   "Description":"Adaptive instance normalization for style transfer. Applies the mean and stddev of the first connection to all subsequent connections.",
@@ -43,6 +43,14 @@
         }
       ],
       "Description":"Performs instance normalization on the last axis of the inputs. Transfers style from the first connection to the subsequent connections."
+    },
+    {
+      "Name":"inputNode",
+      "MandatoryArgs":[],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[],
+      "Description":""
     },
     {
       "Name":"exportNode",

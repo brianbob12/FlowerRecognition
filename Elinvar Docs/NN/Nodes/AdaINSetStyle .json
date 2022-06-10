@@ -1,28 +1,22 @@
 {
-  "Name":"InstanceNormalizationNode",
-  "Superclass":"Node",
-  "Subclasses":[],
-  "Description":"Node that does instance normalization. This is normalization across channels.",
+  "Name":"AdaINSetStyle",
+  "Superclasses":[
+    "BuildableNode"
+  ],
+  "Subclasses":[
+    "AdaINStyleTransfer"
+  ],
+  "Description":"Normalizes input channels to specified means and standard deviations.",
   "Properties":[
-    {
-      "Name":"mean",
-      "Type":"Float",
-      "Description":"Mean of the normalized outputs. Default 1."
-    },
-    {
-      "Name":"stddev",
-      "Type":"Float",
-      "Description":"Standard deviation of the normalized outputs. Default 1."
-    },
     {
       "Name":"imported",
       "Type":"bool",
-      "Description":"Wether this node has been imported or not. "
+      "Description":"Weather this node has been imported or not"
     },
     {
-      "Name":"inputChannels",
+      "Name":"numberOfChannels",
       "Type":"int",
-      "Description":"Number of channels of 2 dimensional images per input."
+      "Description":"Number of channels of 2 dimensional images per iteration"
     }
   ],
   "Functions":[
@@ -38,71 +32,38 @@
         {
           "Name":"protected",
           "Type":"bool",
-          "Description":"option to block clear function"
+          "Description":"Option to block clear function."
         },
         {
           "Name":"ID",
           "Type":"int",
-          "Description":"Sets ID property."
+          "Description":"Sets ID property"
         }
       ],
       "Returns":[],
       "Throws":[],
-      "Description":"init function sets up key variables."
+      "Description":"Sets up key variables."
     },
-    {
-      "Name":"newLayer",
-      "MandatoryArgs":[
-        {
-          "Name":"mean",
-          "Type":"Float",
-          "Description":"Sets mean property."
-        },
-        {
-          "Name":"stddev",
-          "Type":"Float",
-          "Description":"Sets stddev property."
-        }
-      ],
-      "OptionalArgs":[],
-      "Returns":[],
-      "Throws":[],
-      "Description":"Creates a new layer instead of importing the layer."
-    }, 
     {
       "Name":"connect",
       "MandatoryArgs":[
         {
           "Name":"connections",
           "Type":"List[Node]",
-          "Description":"List of nodes. All nodes after first will be ignored"
+          "Description":""
         }
       ],
       "OptionalArgs":[],
-      "Throws":[
-        "Elinvar.NN.invalidNodeConnection(receivedShape,requiredShape)"
-      ],
       "Returns":[],
-      "Description":"Sets specified nodes as inputConnections."
+      "Throws":[],
+      "Description":"First connection inputs style, all subsequent connections have style set upon them."
     },
     {
-      "Name":"execute",
-      "MandatoryArgs":[
-        {
-          "Name":"inputs",
-          "Type":"List[tensorflow.Tensor]",
-          "Description":"A tf.Tensor from each input connection."
-        }
-      ],
+      "Name":"newLayer",
+      "MandatoryArgs":[],
       "OptionalArgs":[],
-      "Throws":[],
-      "Returns":[
-        {
-          "Type":"tf.Tensor",
-          "Description":"Has shape outputShape"
-        }
-      ],
-      "Description":"Performs instance normalization on the last axis of the inputs"
+      "Returns":[],
+      "Description":"Creates a new layer instead of importing the layer."
     },
     {
       "Name":"exportNode",
@@ -162,6 +123,5 @@
       ],
       "Description":"Imports ID and connections."
     }
-  ],
-  "Notes":""
+  ]
 }

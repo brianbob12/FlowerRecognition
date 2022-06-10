@@ -2,6 +2,8 @@
 from abc import ABCMeta
 from typing import Optional
 
+from numpy import isin
+
 from Elinvar.NN.Exceptions import UnregisteredNode
 from . import *
 
@@ -9,8 +11,6 @@ from . import *
 class NodeNameLookup:
   @staticmethod 
   def getNodeFromName(name:str)->ABCMeta:
-    if name=="AdaIN":
-      return(AdaIN)
     if name=="Buildablenode":
       return(BuildableNode)
     if name=="ConvolutionLayer":
@@ -31,6 +31,10 @@ class NodeNameLookup:
       return(TransposeConvolutionLayer)
     if name=="DropoutNode":
       return(DropoutNode)
+    if name == "AdaINSetStyle":
+      return(AdaINSetStyle)
+    if name=="AdaINStyleTransfer":
+      return(AdaINStyleTransfer)
     raise(UnregisteredNode(nodeName=name)) 
   
   @staticmethod
@@ -40,8 +44,10 @@ class NodeNameLookup:
       return("TransposeConvolutionLayer")
     if isinstance(node,ConvolutionLayer):
       return("ConvolutionLayer")
-    if isinstance(node,AdaIN):
-      return("AdaIN")
+    if isinstance(node,AdaINStyleTransfer):
+      return("AdaINStyleTransfer")
+    if isinstance(node,AdaINSetStyle):
+      return("AdaINSetStyle")
     if isinstance(node,InstanceNormalizationNode):
       return("InstanceNormalizationNode")
     if isinstance(node,DenseLayer):

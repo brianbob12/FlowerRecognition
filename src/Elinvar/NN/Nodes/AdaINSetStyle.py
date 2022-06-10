@@ -1,5 +1,8 @@
-
+from email.mime import image
+from typing import List
+from debugpy import connect
 from tensorflow import reduce_mean,transpose,broadcast_to
+from Elinvar.NN.Nodes.BuildableNode import BuildableNode
 from tensorflow.math import reduce_std
 from tensorflow import concat
 from ..Exceptions import *
@@ -9,7 +12,7 @@ from .Node import Node
 #normalizes values within each channel
 #must take inputs of shape [batch,chanells,height,width]
 
-class InstanceNormalizationNode(Node):
+class InstanceNormalizationNode(BuildableNode):
 
   def __init__(self,name=None,protected=None,ID=None):
     super().__init__(name=name,protected=protected,ID=ID)
@@ -46,33 +49,41 @@ class InstanceNormalizationNode(Node):
     out=((myInputs-formattedMeans)/formattedStddev)*self.stddev + self.mean
     return out
 
-  def connect(self,connections):
+  def connect(self,connections:List[Node]):
     if len(connections)==0:
       return
+
+    imageConnections:List[Node]=[]
+    if len(self.inputConnections)==0:
+      self.numberOfChannels=connections[0].outputShape[0]
+      imageConnections=connections[1:]
+    else:
+      imageConnections=connections    
+
     #checks
     if len(self.inputConnections)>0:
       shape0=self.inputShape[0]
       shape1=self.inputShape[1]      
     else:
-      shape0=connections[0].outputShape[0]
-      shape1=connections[0].outputShape[1]
+      shape0=imageConnections[0].outputShape[0]
+      shape1=imageConnections[0].outputShape[1]
       #this check is important
       if shape0 ==None or shape1==None:
         #NOTE: this should really be a different error
-        raise(invalidNodeConnection(connections[0].outputShape,[None,None,None]))
+        raise(invalidNodeConnection(imageConnections[0].outputShape,[None,None,None]))
 
     for prospectNode in connections:
       if prospectNode.outputShape[0]!=shape0 or prospectNode.outputShape[1]!=shape1:
         raise(invalidNodeConnection(prospectNode.outputShape,[shape0,shape1,None]))
 
     #connect
-    if not self.imported:
-      for node in connections:
-        self.inputChannels+=node.outputShape[2]
 
     self.inputShape=[shape0,shape1,self.inputChannels]
-    self.outputShape=self.inputShape#NOTE: same memory adress
+    self.outputShape=self.inputShape#NOTE: same memory address
     super().connect(connections)
+
+  def build(self, seed: Optional[int] = None) -> int:
+      return super().build(seed)
   
   def exportNode(self, path, subdir):
       accessPath= super().exportNode(path, subdir)
@@ -111,4 +122,4 @@ class InstanceNormalizationNode(Node):
       except IOError:
         raise(missingFileForImport(accessPath,"hyper.txt"))
       self.imported=True
-      return accessPath,connections 
+      return accessPath,connections

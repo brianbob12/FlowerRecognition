@@ -1,10 +1,8 @@
-from email.mime import image
 from typing import List
-from debugpy import connect
-from tensorflow import reduce_mean,transpose,broadcast_to
+from tensorflow import reduce_mean,transpose,broadcast_to,split
 from Elinvar.NN.Nodes.BuildableNode import BuildableNode
 from tensorflow.math import reduce_std
-from tensorflow import concat
+from tensorflow import concat,Tensor
 from ..Exceptions import *
 from .Node import Node
 
@@ -16,23 +14,40 @@ class InstanceNormalizationNode(BuildableNode):
 
   def __init__(self,name=None,protected=None,ID=None):
     super().__init__(name=name,protected=protected,ID=ID)
-    self.hasTrainableVariables=False
-    self.totalTrainableVariables=0
-    self.imported=False
-    self.inputChannels=0
+    self.hasTrainableVariables:bool=False
+    self.totalTrainableVariables:int=0
+    self.imported:bool=False
+    self.inputChannels:int=0
 
-  def newLayer(self,mean,stddev):
-    self.stddev=stddev
-    self.mean=mean  
+    #variables used to manage connections
+    self.inputShape:List[int]=[0,0,0]
+    self.connectedChannels:int=0
 
   #outputs data with specified stddev and mean
   
   #WARNING: the following is complicated and not memory efficient
-  def execute(self,inputs):
-    myInputs=concat(inputs,-1)
-    inputShape=myInputs.shape
-    means=reduce_mean(myInputs,[-2,-3])
-    standardDeviations=reduce_std(myInputs,[-2,-3])
+  def execute(self,inputs:List[Tensor]):
+    #check that the inputs meet the required format
+    if len(inputs)!=len(self.inputConnections):
+      raise(invalidNumberOfNodeInputs(len(inputs),len(self.inputConnections)))
+
+    styleInput=inputs[0]
+
+    #split the style input into mean and stddev
+    targetMeans,targetStddevs=split(styleInput,num_or_size_splits=2,axis=-1)
+
+    imageInputs=inputs[1:]
+    #concat imageInputs
+    inputChannels=concat(imageInputs,-1)
+    inputShape=inputChannels.shape
+
+    #normalize inputChannels
+    #normalize each channel separately
+
+    means=reduce_mean(inputChannels,[-2,-3])#shape=[batch,channels]
+    standardDeviations=reduce_std(inputChannels,[-2,-3])#shape=[batch,channels]
+    standardDeviations=standardDeviations/targetStddevs
+    standardDeviations=standardDeviations+1e-8#add small value to prevent division by zero
     #NOTE: the following madness creates new memory addresses full of stuff
     #this should be updated at somepoint to make it much more vRAM efficient
 
@@ -41,12 +56,17 @@ class InstanceNormalizationNode(BuildableNode):
     formattedMeans=transpose(
       broadcast_to(means,[inputShape[1],inputShape[2],inputShape[0],inputShape[3]]),
       perm=[2,0,1,3])
+    formattedTargetMeans=transpose(
+      broadcast_to(targetMeans,[inputShape[1],inputShape[2],inputShape[0],inputShape[3]]),
+      perm=[2,0,1,3])
+
     #gets it ready for itemwise division
     formattedStddev=transpose(
       broadcast_to(standardDeviations,[inputShape[1],inputShape[2],inputShape[0],inputShape[3]]),
       perm=[2,0,1,3])
 
-    out=((myInputs-formattedMeans)/formattedStddev)*self.stddev + self.mean
+    out=((inputChannels-formattedMeans)/formattedStddev)+formattedTargetMeans  
+
     return out
 
   def connect(self,connections:List[Node]):
@@ -55,13 +75,19 @@ class InstanceNormalizationNode(BuildableNode):
 
     imageConnections:List[Node]=[]
     if len(self.inputConnections)==0:
-      self.numberOfChannels=connections[0].outputShape[0]
+      #the style input determines means and standard deviations
+      self.inputChannels=int(connections[0].outputShape[0]/2)
+      #check that there are an even number of floats in the style input
+      if connections[0].outputShape[0]%2!=0:
+        raise(invalidNodeConnection(connections[0].outputShape,["None*2"]))
+
       imageConnections=connections[1:]
     else:
       imageConnections=connections    
 
     #checks
-    if len(self.inputConnections)>0:
+    #if there are image connections already established
+    if len(self.inputConnections)>1:
       shape0=self.inputShape[0]
       shape1=self.inputShape[1]      
     else:
@@ -72,9 +98,10 @@ class InstanceNormalizationNode(BuildableNode):
         #NOTE: this should really be a different error
         raise(invalidNodeConnection(imageConnections[0].outputShape,[None,None,None]))
 
-    for prospectNode in connections:
+    for prospectNode in imageConnections:
       if prospectNode.outputShape[0]!=shape0 or prospectNode.outputShape[1]!=shape1:
         raise(invalidNodeConnection(prospectNode.outputShape,[shape0,shape1,None]))
+      self.connectedChannels+=prospectNode.outputShape[2]
 
     #connect
 
@@ -83,7 +110,11 @@ class InstanceNormalizationNode(BuildableNode):
     super().connect(connections)
 
   def build(self, seed: Optional[int] = None) -> int:
-      return super().build(seed)
+    #check that the right number of channels are connected
+    if self.connectedChannels!=self.inputChannels:
+      raise(invalidNumberOfNodeInputs(self.connectedChannels,self.inputChannels))
+
+    return super().build(seed)
   
   def exportNode(self, path, subdir):
       accessPath= super().exportNode(path, subdir)
@@ -92,7 +123,7 @@ class InstanceNormalizationNode(BuildableNode):
       #NOTE this will be overwritten by children
       #therefore this saves the lowest class of the node
       with open(accessPath+"\\type.txt","w") as f:
-        f.write("InstanceNormalizationNode") 
+        f.write("AdaINSetStyle") 
 
       #save hyper.txt
       #has data:size,stride

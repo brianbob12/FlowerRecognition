@@ -3,9 +3,7 @@
   "Superclasses":[
     "BuildableNode"
   ],
-  "Subclasses":[
-    "AdaINStyleTransfer"
-  ],
+  "Subclasses":[],
   "Description":"Normalizes input channels to specified means and standard deviations.",
   "Properties":[
     {
@@ -45,6 +43,28 @@
       "Description":"Sets up key variables."
     },
     {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List[tensorflow.Tensor]",
+          "Description":"First connection has shape=[batchSize,numberOfChannels] other connections have a combined number of channels equal to numberOfChannels"
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tensorflow.Tensor",
+          "Description":"Output of node."
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.invalidNumberOfInputs",
+        "Elinvar.NN.invalidNodeInputShape"
+      ],
+      "Description":"Produces an output based on input connected values."
+    },
+    {
       "Name":"connect",
       "MandatoryArgs":[
         {
@@ -56,7 +76,7 @@
       "OptionalArgs":[],
       "Returns":[],
       "Throws":[],
-      "Description":"First connection inputs style, all subsequent connections have style set upon them."
+      "Description":"First connection inputs style(means and standard deviations for the outputs), all subsequent connections have style set upon them."
     },
     {
       "Name":"newLayer",
@@ -64,6 +84,21 @@
       "OptionalArgs":[],
       "Returns":[],
       "Description":"Creates a new layer instead of importing the layer."
+    },
+    {
+      "Name":"build",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"seed",
+          "Type":"Optional[int]",
+          "Description":"Seed for random number generator."
+        }
+      ],
+      "Returns":[
+        "Elinvar.NN.invalidNumberOfNodeInputs"
+      ],
+      "Description":"Builds the node."
     },
     {
       "Name":"exportNode",

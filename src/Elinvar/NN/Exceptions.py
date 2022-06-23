@@ -65,6 +65,37 @@ class invalidNodeConnection(Exception):
         out+=str(self.inputShape)
         return out
 
+#error for when a node is given the wrong number of inputs
+class invalidNodeInputs(Exception):
+    def __str__(self):
+        return "INVALID NODE INPUTS"
+
+#error for when a node is given the wrong number of outputs
+class invalidNumberOfNodeInputs(invalidNodeInputs):
+    def __init__(self,numberOfInputsReceived:int,numberOfInputsRequired:int):
+        self.numberOfInputsReceived=numberOfInputsReceived
+        self.numberOfInputsRequired=numberOfInputsRequired
+
+    def __str__(self):
+        out="INVALID NODE INPUTS\tRequired "
+        out+=str(self.numberOfInputsRequired)
+        out+=" inputs but only has "
+        out+=str(self.numberOfInputsReceived)
+        return out
+
+#error for when a node is given inputs of the wrong shape
+class invalidNodeInputShape(invalidNodeInputs):
+    def __init__(self,inputShape,requiredShape):
+        self.inputShape=inputShape
+        self.requiredShape=requiredShape
+
+    def __str__(self):
+        out="INVALID NODE INPUTS\tRequired shape of "
+        out+=str(self.requiredShape)
+        out+=" but received shape of "
+        out+=str(self.inputShape)
+        return out
+
 class notEnoughNodeConnections(Exception):
     def __init__(self,numberOfConnectionsReceived,requiredConnections):
         self.numberOfConnectionsReceived=numberOfConnectionsReceived

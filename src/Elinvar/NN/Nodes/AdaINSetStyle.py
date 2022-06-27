@@ -115,6 +115,7 @@ class InstanceNormalizationNode(BuildableNode):
       raise(invalidNumberOfNodeInputs(self.connectedChannels,self.inputChannels))
 
     return super().build(seed)
+
   
   def exportNode(self, path, subdir):
       accessPath= super().exportNode(path, subdir)

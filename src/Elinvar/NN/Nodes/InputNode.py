@@ -1,16 +1,17 @@
-from re import L
+from typing import Callable, List,Optional
+from tensorflow import Tensor
 from .Node import Node
 from Elinvar.NN.Exceptions import nodeNotSetup,missingFileForImport,invalidDataInFile
 
 
 class InputNode(Node):
   def __init__(self, name=None, protected=False,ID=None):
-    self.onExecute=None
+    self.onExecute:Optional[Callable[[],Tensor]]=None
     super().__init__(name=name, protected=protected,ID=ID)
-    self.totalTrainableVariables=0
+    self.totalTrainableVariables:int=0
 
-  def setup(self,outputShape):
-    self.outputShape=outputShape
+  def setup(self,outputShape:List[int]):
+    self.outputShape:List[int]=outputShape
 
 
   def execute(self,inputs):

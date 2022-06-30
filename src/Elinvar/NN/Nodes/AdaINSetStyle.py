@@ -10,9 +10,9 @@ from .Node import Node
 #normalizes values within each channel
 #must take inputs of shape [batch,chanells,height,width]
 
-class InstanceNormalizationNode(BuildableNode):
+class AdaINSetStyle(BuildableNode):
 
-  def __init__(self,name=None,protected=None,ID=None):
+  def __init__(self,name:Optional[str]=None,protected:Optional[bool]=None,ID:Optional[int]=None):
     super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables:bool=False
     self.totalTrainableVariables:int=0

@@ -1,4 +1,5 @@
 
+from typing import List
 from tensorflow import reduce_mean,transpose,broadcast_to
 from tensorflow.math import reduce_std
 from tensorflow import concat
@@ -17,6 +18,7 @@ class InstanceNormalizationNode(Node):
     self.totalTrainableVariables=0
     self.imported=False
     self.inputChannels=0
+    self.inputShape:List[int]=[]
 
   def newLayer(self,mean,stddev):
     self.stddev=stddev

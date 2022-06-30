@@ -35,6 +35,12 @@ class NodeNameLookup:
       return(AdaINSetStyle)
     if name=="AdaINStyleTransfer":
       return(AdaINStyleTransfer)
+    if name=="ElementwiseAddition":
+      return(ElementwiseAddition)
+    if name=="ScalingLayer":
+      return(ScalingLayer)
+    if name=="TrainableConstant":
+      return(TrainableConstant)
     raise(UnregisteredNode(nodeName=name)) 
   
   @staticmethod
@@ -60,6 +66,12 @@ class NodeNameLookup:
       return("InputNode")
     if isinstance(node,DropoutNode):
       return("DropoutNode")
+    if isinstance(node,ElementwiseAddition):
+      return("ElementwiseAddition")
+    if isinstance(node,ScalingLayer):
+      return("ScalingLayer")
+    if isinstance(node,TrainableConstant):
+      return("TrainableConstant")
 
     #this must be below all subclasses of BuildableNode
     if isinstance(node,BuildableNode):

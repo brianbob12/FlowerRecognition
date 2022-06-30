@@ -11,7 +11,9 @@
     "FlattenNode",
     "UpscalingLayer",
     "InputNode",
-    "DropoutNode"
+    "DropoutNode",
+    "ElementwiseAddition",
+    "ScalingLayer"
   ],
   "Description":"Holds nodes in a network that input data perform an operation and output a variable.",
   "Properties":[

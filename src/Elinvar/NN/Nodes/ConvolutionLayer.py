@@ -18,15 +18,15 @@ class ConvolutionLayer(BuildableNode):
     "strides"
     )
 
-  def __init__(self,name=None,protected=False,ID=None):
+  def __init__(self,name:Optional[str]=None,protected:bool=False,ID:Optional[int]=None):
     super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=True
     #tracks if network has been imported
-    self.imported=False
+    self.imported:bool=False
 
     #filterSize is interger
     #stride is a single int
-  def newLayer(self,kernelSize,numberOfKernels,stride,padding):
+  def newLayer(self,kernelSize:int,numberOfKernels:int,stride:int,padding:int):
     
     self.kernelSize:int=kernelSize
     self.padding:int=padding

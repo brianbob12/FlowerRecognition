@@ -12,3 +12,6 @@ from .MaxPoolingNode import MaxPoolingNode
 from .InputNode import InputNode
 from .NodeNameLookup import NodeNameLookup
 from .DropoutNode import DropoutNode
+from .ElementwiseAddition import ElementwiseAddition
+from .ScalingLayer import ScalingLayer
+from .TrainableConstant import TrainableConstant

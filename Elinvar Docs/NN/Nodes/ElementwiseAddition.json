@@ -1,0 +1,96 @@
+{
+  "Name":"ElementwiseAddition",
+  "Superclasses":[
+    "Node"
+  ],
+  "Subclasses":[],
+  "Description":"Adds inputs(of same shape) elementwise",
+  "Properties":[],
+  "Functions":[
+    {
+      "Name":"__init__",
+      "MandatoryArgs":[],
+      "OptionalArgs":[
+        {
+          "Name":"name",
+          "Type":"Optional[str]",
+          "Description":"Holds a name for the node. Used solely for debugging."
+        },
+        {
+          "Name":"protected",
+          "Type":"bool",
+          "Description":"option to block clear function"
+        },
+        {
+          "Name":"ID",
+          "Type":"Optional[int]",
+          "Description":"A unique identifier of the node used for export and import"
+        }
+      ],
+      "Returns":[],
+      "Throws":[],
+      "Description":"init function sets up key variables."
+    },
+    {
+      "Name":"connect",
+      "MandatoryArgs":[
+        {
+          "Name":"connections",
+          "Type":"List[Node]",
+          "Description":"A list of nodes to connect to. All inputs must be of the same shape."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[],
+      "Throws":[
+        "Elinvar.NN.invalidNodeConnection(receivedShape,requiredShape)"
+      ],
+      "Description":"Adds specified Node to inputConnections."
+    },
+    {
+      "Name":"execute",
+      "MandatoryArgs":[
+        {
+          "Name":"inputs",
+          "Type":"List[tensorflow.Tensor]",
+          "Description":"Input has shape=[len(inputConnections)]."
+        } 
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"tensorflow.Tensor",
+          "Description":"Output of node."
+        }
+      ],
+      "Throws":[],
+      "Description":"Produces an output based on input connection values."
+    },
+    {
+      "Name":"exportNode",
+      "MandatoryArgs":[
+        {
+          "Name":"path",
+          "Type":"str",
+          "Description":"Path the network is being saved to."
+        },
+        {
+          "Name":"subdir",
+          "Type":"str",
+          "Description":"Subdirectory within path where this layer is being saved to."
+        }
+      ],
+      "OptionalArgs":[],
+      "Returns":[
+        {
+          "Type":"str",
+          "Description":"The access path used. This is used for overloading."
+        }
+      ],
+      "Throws":[
+        "Elinvar.NN.invalidPath(path)"
+      ],
+      "Description":"Exports ID, and connections. Checks directory existence and validity."
+    }
+  ]
+}

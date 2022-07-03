@@ -3,6 +3,7 @@
     "Buildable",
     "Logits",
     "struct",
+    "Upsample",
     "Upscaling",
     "wandb"
   ],

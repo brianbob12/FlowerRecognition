@@ -12,28 +12,31 @@
 
 #dependencies
 
+from typing import Callable, Dict, List
 from tensorflow import (Variable,matmul,constant)
 from .BuildableNode import BuildableNode
 from tensorflow.random import normal
 from tensorflow.nn import relu,sigmoid
 from tensorflow.math import tanh
+from tensorflow import Tensor
 
 from ..Exceptions import *
 
 class DenseLayer(BuildableNode):
-  def __init__(self,name=None,protected=False,ID=None):
+  def __init__(self,name:Optional[str]=None,protected:bool=False,ID:Optional[int]=None):
     super().__init__(name=name,protected=protected,ID=ID)
     self.hasTrainableVariables=True 
-    self.activationLookup={"relu":relu,"linear":self.linear,"sigmoid":sigmoid,"tanh":tanh}
+    self.activationLookup:Dict[str,Callable[[Tensor],Tensor]]={"relu":relu,"linear":self.linear,"sigmoid":sigmoid,"tanh":tanh}
   
-  def linear(self,x):
+  def linear(self,x:Tensor)->Tensor:
     return (x)
 
   #throws unknownActivationFunction if activation function not it activationLookup
-  def newLayer(self,layerSize,activationFunction):
+  #TODO replace activationFunction with class or Enum
+  def newLayer(self,layerSize:int,activationFunction:str):
     self.size=layerSize
-    self.outputShape=[layerSize]
-    self.activationKey=activationFunction
+    self.outputShape:List[int]=[layerSize]
+    self.activationKey:str=activationFunction
     try:
       self.activation=self.activationLookup[activationFunction]
     except KeyError as e:

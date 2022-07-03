@@ -1,5 +1,6 @@
 from copy import copy
 import Elinvar
+from Elinvar.NN.Nodes.DenseLayer import DenseLayer
 
 #discriminator
 def newDiscriminator():
@@ -78,9 +79,17 @@ def newGenerator():
     addLayer.connect([conv,noiseInput])
 
     #create a dense layer to connect style input to the correct size
+    dense=Elinvar.NN.Nodes.DenseLayer()
+    dense.newLayer(numberOfFilters,"linear")
+    dense.connect([styleInput])
 
     #create layer to add style
     ada=Elinvar.NN.Nodes.AdaINSetStyle()
+    ada.connect([dense,addLayer])
+
+    #return nodes of the block
+    #format ([newInputNodes],[nodes],[outputNodes])
+    return ([noiseInput],[conv,addLayer,dense],[ada])
 
 
   #important parameters
@@ -92,9 +101,24 @@ def newGenerator():
   latentInput=Elinvar.NN.Nodes.InputNode()
   latentInput.setup([256,256,3])
 
-  noiseInput=Elinvar.NN.Nodes.InputNode()
-  noiseInput.setup([128,128,noiseChannels])
-
   styleInput=Elinvar.NN.Nodes.InputNode()
   styleInput.setup([5])
+
+  noiseInputs=[]
+  nodes=[]
+
+  preUpsample=[(11,48),(3,24)]
+  postUpsample=[(3,12),(3,3)]
+
+  previousOutput=latentInput
+  for size,number in preUpsample:
+    # add a convolution block
+    newInputs,newNodes,newOutputs=convBlock(previousOutput,styleInput,size,number)
+    noiseInputs.extend(newInputs)
+    nodes.extend(newNodes)
+    nodes.extend(newOutputs)
+    previousOutput=newOutputs[0]
+
+  # add upsampling layer
+  upSample=Elinvar.NN.Nodes.UpsampleNode()
 

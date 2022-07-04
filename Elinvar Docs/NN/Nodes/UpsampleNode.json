@@ -1,0 +1,6 @@
+{
+  "Name":"UpsampleNode",
+  "Superclass":"Node",
+  "Subclasses":[],
+  "Description":"Upsamples using bilinear interpolation."
+}

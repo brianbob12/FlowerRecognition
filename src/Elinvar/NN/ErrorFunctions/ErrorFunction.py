@@ -12,7 +12,7 @@ class ErrorFunction(ABC):
   def __init__(self,multipleLabels:bool):
     self.multipleLabels:bool=multipleLabels
 
-  @abstractmethod
   @staticmethod
+  @abstractmethod
   def execute(guess:List[Tensor],y:List[Tensor])->float:
     pass

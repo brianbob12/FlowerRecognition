@@ -59,7 +59,7 @@
         }
       ],
       "Throws":[
-        "Elinvar.NN.invalidNumberOfInputs",
+        "Elinvar.NN.invalidNumberOfNodeInputs",
         "Elinvar.NN.invalidNodeInputShape"
       ],
       "Description":"Produces an output based on input connected values."
@@ -70,7 +70,7 @@
         {
           "Name":"connections",
           "Type":"List[Node]",
-          "Description":""
+          "Description":"A list of nodes to connect to."
         }
       ],
       "OptionalArgs":[],

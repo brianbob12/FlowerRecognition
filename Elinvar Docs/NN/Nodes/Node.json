@@ -9,7 +9,7 @@
     "InstanceNormalization",
     "MaxPoolingNode",
     "FlattenNode",
-    "UpscalingLayer",
+    "UpsampleNode",
     "InputNode",
     "DropoutNode",
     "ElementwiseAddition",

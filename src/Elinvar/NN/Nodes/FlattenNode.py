@@ -1,5 +1,5 @@
 
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from numpy import prod
 
 from Elinvar.NN.Exceptions import invalidNodeConnection
@@ -37,11 +37,11 @@ class FlattenNode(Node):
 
     return reshape(myInput,shape=[batchSize,self.outputShape[0]])
 
-  def importNode(self, myPath: str, subdir: str):
+  def importNode(self, myPath: str, subdir: str)-> Tuple[str,List[int]]:
     self.imported=True
     return super().importNode(myPath, subdir)
 
-  def exportNode(self, path:str, subdir:str):
+  def exportNode(self, path:str, subdir:str)->str:
       accessPath= super().exportNode(path, subdir)
       #save type
       #NOTE this will be overwritten by children

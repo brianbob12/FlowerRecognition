@@ -4,6 +4,8 @@
     "Logits",
     "struct",
     "Upsample",
+    "Upsamples",
+    "Upsampling",
     "Upscaling",
     "wandb"
   ],

@@ -17,7 +17,7 @@
       "OptionalArgs":[
         {
           "Name":"name",
-          "Type":"str",
+          "Type":"Optional[str]",
           "Description":"Sets name property."
         },
         {
@@ -29,11 +29,6 @@
           "Name":"ID",
           "Type":"int",
           "Description":"Sets ID property."
-        },
-        {
-          "Name":"imported",
-          "Type":"bool",
-          "Description":"Weather this node has been imported. Used for verifying outputShape."
         }
       ],
       "Returns":[],
@@ -45,7 +40,7 @@
       "MandatoryArgs":[
         {
           "Name":"inputs",
-          "Type":"List",
+          "Type":"List[tf.Tensor]",
           "Description":"Input has any shape" 
         }
       ],
@@ -53,7 +48,7 @@
       "Returns":[
         {
           "Type":"tf.Tensor",
-          "Description":"Has shape:[batchSize,None]"
+          "Description":"Has shape: batch + [None]"
         }
       ],
       "Description":"Flattens tensors whilst preserving batch shape."

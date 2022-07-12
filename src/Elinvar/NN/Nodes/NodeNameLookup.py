@@ -1,8 +1,5 @@
 #used to lookup nodes
 from abc import ABCMeta
-from typing import Optional
-
-from numpy import isin
 
 from Elinvar.NN.Exceptions import UnregisteredNode
 from . import *
@@ -11,7 +8,7 @@ from . import *
 class NodeNameLookup:
   @staticmethod 
   def getNodeFromName(name:str)->ABCMeta:
-    if name=="Buildablenode":
+    if name=="BuildableNode":
       return(BuildableNode)
     if name=="ConvolutionLayer":
       return(ConvolutionLayer)
@@ -41,6 +38,8 @@ class NodeNameLookup:
       return(ScalingLayer)
     if name=="TrainableConstant":
       return(TrainableConstant)
+    if name=="UpsampeNode":
+      return(UpsampleNode)
     raise(UnregisteredNode(nodeName=name)) 
   
   @staticmethod
@@ -72,6 +71,8 @@ class NodeNameLookup:
       return("ScalingLayer")
     if isinstance(node,TrainableConstant):
       return("TrainableConstant")
+    if isinstance(node,UpsampleNode):
+      return("UpsampleNode")
 
     #this must be below all subclasses of BuildableNode
     if isinstance(node,BuildableNode):

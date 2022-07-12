@@ -121,4 +121,15 @@ def newGenerator():
 
   # add upsampling layer
   upSample=Elinvar.NN.Nodes.UpsampleNode()
+  upSample.new(300,300)
+  upSample.connect([previousOutput])
+  previousOutput=upSample
+
+  for size,number in postUpsample:
+    # add a convolution block
+    newInputs,newNodes,newOutputs=convBlock(previousOutput,styleInput,size,number)
+    noiseInputs.extend(newInputs)
+    nodes.extend(newNodes)
+    nodes.extend(newOutputs)
+    previousOutput=newOutputs[0]
 

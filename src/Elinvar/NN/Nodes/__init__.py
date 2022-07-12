@@ -13,5 +13,6 @@ from .InputNode import InputNode
 from .NodeNameLookup import NodeNameLookup
 from .DropoutNode import DropoutNode
 from .ElementwiseAddition import ElementwiseAddition
+from .UpsampleNode import UpsampleNode
 from .ScalingLayer import ScalingLayer
 from .TrainableConstant import TrainableConstant

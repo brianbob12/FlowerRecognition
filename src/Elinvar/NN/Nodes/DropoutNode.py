@@ -9,7 +9,6 @@ from .Node import Node
 #function that gets an input of any shape and has output shape [None]
 
 class DropoutNode(Node):
-  __slots__=("")
   def __init__(self,rate:float, name:Optional[str]=None, protected:bool=False, ID:Optional[int]=None):
       super().__init__(name, protected=protected, ID=ID)
       self.outputShape:List[int]=[0]

@@ -25,7 +25,7 @@ class Node(ABC):
 
   def __init__(self,name:Optional[str]=None,protected:bool=False,ID:Optional[int]=None):
     self.name:Optional[str]=name
-    self.inputConnections:List[Node]=[]#list of nodes
+    self.inputConnections:List[Any]=[]#list of nodes
     self.outputShape:List[int]=[]#outputshape
     self.executed:bool=False
     self.protected:bool=protected

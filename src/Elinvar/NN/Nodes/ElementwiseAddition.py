@@ -1,7 +1,7 @@
 
 from copy import copy
 from typing import List, Optional
-from tensorlow.math import add_n
+from tensorflow.math import add_n
 from tensorflow import Tensor
 from Elinvar.NN.Exceptions import invalidNodeConnection
 from .Node import Node

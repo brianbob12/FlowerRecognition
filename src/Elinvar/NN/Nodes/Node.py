@@ -4,7 +4,7 @@
 #each node has input connections to other nodes each connection has a shape
 from abc import ABC, abstractmethod
 from tensorflow import Variable,Tensor
-from typing import  List, Tuple
+from typing import  Any, List, Tuple
 from ..Exceptions import *
 #each node has a stored value per execution
 #the node can be cleared to clear this value thorugh the function clear
@@ -85,7 +85,8 @@ class Node(ABC):
   def getTrainableVariables(self)->List[Variable]:
     return []
     
-  def connect(self,connections:List[Node]):
+  def connect(self,connections:List[Any])->None:
+    #Can't specify List[Node] because Node is not yet created
     self.inputConnections=connections
     return
 

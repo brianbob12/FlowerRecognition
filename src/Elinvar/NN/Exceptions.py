@@ -143,14 +143,9 @@ class invalidInputNodeShape(Exception):
         return out
 
 class UnregisteredNode(Exception):
-    def __init__(self,nodeName:Optional[str]=None,nodeObject:Optional[Node]=None):
-        self.nodeName:Optional[str]=nodeName
-        self.nodeObject:Optional[Node]=nodeObject
+    def __init__(self):
+        pass
     
     def __str__(self) -> str:
         out="UNREGISTERED NODE\n"
-        if self.nodeName!=None:
-            out+=f"node name:{self.nodeName}"
-        if self.nodeObject!=None:
-            out+=f"node object:{self.nodeObject}"
         return out

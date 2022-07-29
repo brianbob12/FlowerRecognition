@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 from random import randint
 from typing import Any, Dict, List
 
@@ -73,7 +72,7 @@ class Network:
         out+=node.totalTrainableVariables
     return out
 
-  def execute(self,inputs:Dict[int,Tensor],requestedOutputs:List[Node])->List[Tensor]:
+  def execute(self,inputs:Dict[int,Tensor],requestedOutputs)->List[Tensor]:
     #clear
     self.clear()
     #deal with inputs
@@ -88,7 +87,7 @@ class Network:
     error=trainingProtocol.getError(networkOutputs,getErrorArgs)
     return error
 
-  def trainingExecute(self,inputs:Dict[int,Tensor],requestedOutputs:List[Node])->List[Tensor]:
+  def trainingExecute(self,inputs:Dict[int,Tensor],requestedOutputs)->List[Tensor]:
     #clear
     self.clear()
     #deal with inputs

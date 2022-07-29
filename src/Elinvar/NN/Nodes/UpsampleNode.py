@@ -25,13 +25,16 @@ class UpsampleNode(Node):
     if len(connections)>1:
       raise(invalidNumberOfNodeInputs(len(connections),1))
 
+    #check the connection has batch + 3 dimensions
+    if len(connections[0].outputShape)<3:
+      raise(invalidNodeConnection(connections[0].outputShape,[None,None,None]))
 
     if self.imported:
       #check that the connection meets the expected shape
       if self.outputShape[2]!=connections[0].outputShape[2]:
         raise(invalidNodeConnection(connections[0].outputShape,[None,None,self.outputShape[2]]))
     else: 
-      self.outputShape=[self.newHeight,self.newWidth,self.inputConnections[0].outputShape[2]]
+      self.outputShape=[self.newHeight,self.newWidth,connections[0].outputShape[2]]
 
     return super().connect(connections)
 

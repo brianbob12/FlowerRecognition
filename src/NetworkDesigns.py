@@ -80,7 +80,8 @@ def newGenerator():
 
     #create a dense layer to connect style input to the correct size
     dense=Elinvar.NN.Nodes.DenseLayer()
-    dense.newLayer(numberOfFilters,"linear")
+    #each filter has a mean and standard deviation set by the dense layer
+    dense.newLayer(numberOfFilters*2,"linear")
     dense.connect([styleInput])
 
     #create layer to add style

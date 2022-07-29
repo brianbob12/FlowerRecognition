@@ -132,16 +132,6 @@ class nodeNotSetup(Exception):
         out+=self.attemptedOperation
         return out
 
-class invalidInputNodeShape(Exception):
-    def __init__(self,receivedShape,requiredShape):
-        self.receivedShape=receivedShape
-        self.requiredShape=requiredShape
-
-    def __str__(self):
-        out="INVALID INPUT NODE SHAPE\n"
-        out+=f"This input node required shape {self.requiredShape} but received {self.receivedShape}."
-        return out
-
 class UnregisteredNode(Exception):
     def __init__(self):
         pass

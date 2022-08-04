@@ -106,7 +106,9 @@ def newGenerator():
   styleInput.setup([5])
 
   noiseInputs=[]
+
   nodes=[]
+  #nodes excludes input and output nodes
 
   preUpsample=[(11,48),(3,24)]
   postUpsample=[(3,12),(3,3)]
@@ -134,3 +136,8 @@ def newGenerator():
     nodes.extend(newOutputs)
     previousOutput=newOutputs[0]
 
+  myNet.addInputNodes([latentInput,styleInput]+noiseInputs)
+  myNet.addNodes(nodes)
+  myNet.addOutputNodes([previousOutput])
+
+  return myNet
